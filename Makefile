@@ -1,11 +1,17 @@
 CXX = g++
-CXXFLAGS = -std=c++11 -Wall
+CXXFLAGS = -std=c++11 -Wall -I.
 TARGET = tp_c2_2025
 SRCS = main.cpp \
+       bash/bash.cpp \
+       mocks/mockData.cpp \
        entities/employee/Employee.cpp \
        entities/distributionCenter/DistributionCenter.cpp \
-       entities/managers/ShipmentManager.cpp \
-       entities/shipment/Shipment.cpp
+       entities/package/Package.cpp \
+       entities/shipment/Shipment.cpp \
+       entities/shipmentManager/ShipmentManager.cpp \
+       entities/transport/Transport.cpp \
+       entities/client/Client.cpp \
+       entities/connection/Connection.cpp
 
 $(TARGET): $(SRCS)
 	$(CXX) $(CXXFLAGS) -o $(TARGET) $(SRCS)

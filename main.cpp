@@ -2,19 +2,15 @@
 #include "entities/employee/Employee.h"
 #include "entities/managers/ShipmentManager.h"
 #include <iostream>
+#include "mocks/mockData.h"
+#include "bash/bash.h"
 
 int main() {
-    Employee employee1(1, "Tomas Vasquez", "123456");
-    employee1.display();
+    // Instantiate all mock data
+    // Note: Mock data is already defined in mockData.cpp and externed in mockData.h
 
-    DistributionCenter distributionCenter1(
-        1,
-        "Correo Argentino - Pedro diaz",
-        "Tesei",
-        100,
-        5
-    );
-    distributionCenter1.display();
+    // Call the menu function from bash.cpp
+    showMenu();
 
     std::cout << "\n=== PROBANDO SHIPMENT MANAGER ===" << std::endl;
     ShipmentManager manager;
