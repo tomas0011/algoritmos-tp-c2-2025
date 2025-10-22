@@ -6,6 +6,9 @@ Este proyecto es una implementación en C++ de un sistema de gestión de envíos
 
 El programa demuestra el uso de clases en C++ para modelar entidades como paquetes, envíos, empleados, centros de distribución, transportes, clientes, conexiones y gestores de envíos, con funcionalidades de visualización de datos mock a través de un menú interactivo.
 
+<img width="1198" height="762" alt="image" src="https://github.com/user-attachments/assets/80745e64-49a1-42aa-b1f7-abc35e0d320f" />
+
+
 ## Características
 
 - **Clase Package**: Representa un paquete con ID, precio, prioridad y peso.
