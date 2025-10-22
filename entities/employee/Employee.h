@@ -7,11 +7,16 @@ class Employee {
 private:
     int id;
     std::string name;
-    std::string dni;
+    int distributionCenterId;
 
 public:
-    Employee(int id, const std::string& name, const std::string& dni);
+    Employee(int id, const std::string& name, int distributionCenterId);
     void display() const;
+
+    // Getters
+    int getId() const;
+    const std::string& getName() const;
+    int getDistributionCenterId() const;
 };
 
 #endif // EMPLOYEE_H
