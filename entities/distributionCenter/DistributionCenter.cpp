@@ -5,14 +5,23 @@ DistributionCenter::DistributionCenter(
     int id,
     const std::string& name,
     const std::string& city,
-    int capacity,
+    const std::vector<Employee>& employees,
+    const std::vector<Connection>& connections,
     const std::vector<Package>& warehouse
 )
-    : id(id), name(name), city(city), capacity(capacity), warehouse(warehouse) {}
+    : id(id), name(name), city(city), employees(employees), connections(connections), warehouse(warehouse) {}
 
 void DistributionCenter::display() const {
-    std::cout << "ID: " << id << ", Name: " << name << ", City: " << city << ", Capacity: " << capacity << std::endl;
-    std::cout << "Warehouse Packages:" << std::endl;
+    std::cout << "ID: " << id << ", Name: " << name << ", City: " << city << std::endl;
+    std::cout << "Employees (" << employees.size() << "):" << std::endl;
+    for (const auto& emp : employees) {
+        emp.display();
+    }
+    std::cout << "Connections (" << connections.size() << "):" << std::endl;
+    for (const auto& conn : connections) {
+        conn.display();
+    }
+    std::cout << "Warehouse Packages (" << warehouse.size() << "):" << std::endl;
     for (const auto& pkg : warehouse) {
         pkg.display();
     }
@@ -21,5 +30,6 @@ void DistributionCenter::display() const {
 int DistributionCenter::getId() const { return id; }
 const std::string& DistributionCenter::getName() const { return name; }
 const std::string& DistributionCenter::getCity() const { return city; }
-int DistributionCenter::getCapacity() const { return capacity; }
+const std::vector<Employee>& DistributionCenter::getEmployees() const { return employees; }
+const std::vector<Connection>& DistributionCenter::getConnections() const { return connections; }
 const std::vector<Package>& DistributionCenter::getWarehouse() const { return warehouse; }

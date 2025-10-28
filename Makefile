@@ -6,6 +6,7 @@ SRCS = main.cpp \
        mocks/mockData.cpp \
        entities/employee/Employee.cpp \
        entities/distributionCenter/DistributionCenter.cpp \
+       entities/distributionCenterManager/DistributionCenterManager.cpp \
        entities/package/Package.cpp \
        entities/shipment/Shipment.cpp \
        entities/shipmentManager/ShipmentManager.cpp \

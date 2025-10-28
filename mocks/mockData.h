@@ -9,6 +9,7 @@
 #include "entities/client/Client.h"
 #include "entities/connection/Connection.h"
 #include "entities/distributionCenter/DistributionCenter.h"
+#include "entities/distributionCenterManager/DistributionCenterManager.h"
 #include "entities/employee/Employee.h"
 
 // Mock data for testing
@@ -19,6 +20,7 @@ extern std::vector<Transport> mockTransports;
 extern std::vector<Client> mockClients;
 extern std::vector<Connection> mockConnections;
 extern std::vector<DistributionCenter> mockDistributionCenters;
+extern std::vector<DistributionCenterManager*> mockDistributionCenterManagers;
 extern std::vector<Employee> mockEmployees;
 
 // Functions to display mock data
@@ -29,6 +31,10 @@ void displayMockTransports();
 void displayMockClients();
 void displayMockConnections();
 void displayMockDistributionCenters();
+void displayMockDistributionCenterManagers();
 void displayMockEmployees();
+
+// Initialization functions
+void initializeMockDistributionCenterManagers();
 
 #endif // MOCK_DATA_H
