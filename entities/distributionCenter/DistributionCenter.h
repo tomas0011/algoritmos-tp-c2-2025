@@ -4,13 +4,16 @@
 #include <string>
 #include <vector>
 #include "../package/Package.h"
+#include "../employee/Employee.h"
+#include "../connection/Connection.h"
 
 class DistributionCenter {
 private:
     int id;
     std::string name;
     std::string city;
-    int capacity;
+    std::vector<Employee> employees;
+    std::vector<Connection> connections;
     std::vector<Package> warehouse;
 
 public:
@@ -18,8 +21,9 @@ public:
         int id,
         const std::string& name,
         const std::string& city,
-        int capacity,
-        const std::vector<Package>& warehouse
+        const std::vector<Employee>& employees = {},
+        const std::vector<Connection>& connections = {},
+        const std::vector<Package>& warehouse = {}
     );
     void display() const;
 
@@ -27,7 +31,8 @@ public:
     int getId() const;
     const std::string& getName() const;
     const std::string& getCity() const;
-    int getCapacity() const;
+    const std::vector<Employee>& getEmployees() const;
+    const std::vector<Connection>& getConnections() const;
     const std::vector<Package>& getWarehouse() const;
 };
 

@@ -8,6 +8,9 @@ int main() {
     // Instantiate all mock data
     // Note: Mock data is already defined in mockData.cpp and externed in mockData.h
 
+    // Initialize mock distribution center managers
+    initializeMockDistributionCenterManagers();
+
     // Call the menu function from bash.cpp
     showMenu();
 
