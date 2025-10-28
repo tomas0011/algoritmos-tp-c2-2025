@@ -64,4 +64,3 @@ Proyecto desarrollado como parte del curso de Algoritmos en UNAHUR.
 ## Licencia
 
 Este proyecto es de uso educativo y no tiene una licencia específica.
-AA
