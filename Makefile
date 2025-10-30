@@ -1,9 +1,13 @@
 CXX = g++
-CXXFLAGS = -std=c++11 -Wall -I.
+CXXFLAGS = -std=c++17 -Wall -I.
 TARGET = tp_c2_2025
 SRCS = main.cpp \
        bash/bash.cpp \
-       mocks/mockData.cpp \
+       storage/mockData.cpp \
+       storage/storage.cpp \
+       services/initializeServices.cpp \
+       services/package/packageService.cpp \
+       services/shipment/shipmentService.cpp \
        entities/employee/Employee.cpp \
        entities/distributionCenter/DistributionCenter.cpp \
        entities/distributionCenterManager/DistributionCenterManager.cpp \
