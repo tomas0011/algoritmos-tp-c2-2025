@@ -1,5 +1,6 @@
 #include "bash.h"
-#include "mocks/mockData.h"
+#include "services/initializeServices.h"
+#include "storage/mockData.h"
 #include <iostream>
 #include <string>
 
@@ -22,10 +23,10 @@ void showMenu() {
 
         switch (choice) {
             case 1:
-                displayMockPackages();
+                packageService->displayAllPackages();
                 break;
             case 2:
-                displayMockShipments();
+                shipmentService->displayAllShipments();
                 break;
             case 3:
                 displayMockShipmentManagers();
