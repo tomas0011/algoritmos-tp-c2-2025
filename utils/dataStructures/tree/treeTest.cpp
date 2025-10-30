@@ -3,6 +3,8 @@
 #include <iostream>
 using namespace std;
 
+// Test: cd utils/dataStructures/tree && g++ treeTest.cpp -o treeTest && ./treeTest
+
 int main() {
     Tree arbol = Tree(5);
 
