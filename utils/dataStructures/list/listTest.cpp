@@ -1,7 +1,10 @@
 #include "List.h"
+#include "../../algorithms/sort/mergeSort.cpp"
 #include <string>
 #include <iostream>
 using namespace std;
+
+// Test: cd utils/dataStructures/list && g++ listTest.cpp -o listTest && ./listTest
 
 // Definimos la clase Persona fuera de main
 struct Persona {
@@ -31,7 +34,7 @@ int main() {
     lista.display();
 
     cout << "\n¿Contiene a Laura? "
-         << (lista.contains(p1) ? "Sí ✅" : "No ❌") << endl;
+          << (lista.contains(p1) ? "Sí ✅" : "No ❌") << endl;
 
     return 0;
 }

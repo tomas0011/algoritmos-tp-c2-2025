@@ -24,8 +24,41 @@ class List {
 private:
     Node* head;
 
+    void copyFrom(const List& other) {
+        if (other.head == nullptr) {
+            head = nullptr;
+            return;
+        }
+        head = new Node(other.head->getData());
+        Node* currentOther = other.head->getNext();
+        Node* currentThis = head;
+        while (currentOther != nullptr) {
+            currentThis->setNext(new Node(currentOther->getData()));
+            currentThis = currentThis->getNext();
+            currentOther = currentOther->getNext();
+        }
+    }
+
 public:
     List() : head(nullptr) {}
+
+    List(const List& other) : head(nullptr) {
+        copyFrom(other);
+    }
+
+    List& operator=(const List& other) {
+        if (this != &other) {
+            // Delete existing nodes
+            Node* current = head;
+            while (current != nullptr) {
+                Node* temp = current;
+                current = current->getNext();
+                delete temp;
+            }
+            copyFrom(other);
+        }
+        return *this;
+    }
 
     ~List() {
         Node* current = head;
@@ -80,12 +113,45 @@ public:
                     any_cast<int>(current->getData()) == any_cast<int>(value))
                     return true;
                 else if (current->getData().type() == typeid(string) &&
-                         any_cast<string>(current->getData()) == any_cast<string>(value))
+                          any_cast<string>(current->getData()) == any_cast<string>(value))
                     return true;
             }
             current = current->getNext();
         }
         return false;
+    }
+
+    int getSize() const {
+        int size = 0;
+        Node* current = head;
+        while (current != nullptr) {
+            size++;
+            current = current->getNext();
+        }
+        return size;
+    }
+
+    Node* getHead() const {
+        return head;
+    }
+
+    Node* getNodeAt(int index) const {
+        if (index < 0) return nullptr;
+        Node* current = head;
+        for (int i = 0; i < index && current != nullptr; i++) {
+            current = current->getNext();
+        }
+        return current;
+    }
+
+    List getSublist(int start, int end) const {
+        List sublist;
+        Node* current = getNodeAt(start);
+        for (int i = start; i < end && current != nullptr; i++) {
+            sublist.push(current->getData());
+            current = current->getNext();
+        }
+        return sublist;
     }
 };
 
