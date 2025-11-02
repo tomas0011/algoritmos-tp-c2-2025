@@ -23,7 +23,10 @@ El programa demuestra el uso de estructuras de datos personalizadas (como la cla
 - **DistributionCenterManager**: Gestiona múltiples centros de distribución
 
 ### Arquitectura del Sistema
-- **Estructuras de Datos Personalizadas**: Implementación propia de la clase `List` usando `std::any` para almacenamiento genérico
+- **Estructuras de Datos Personalizadas**: 
+  - `List`: Lista enlazada con `std::any` para almacenamiento genérico
+  - `HashTable`: Tabla hash con función Folding + División y sondeo lineal
+  - `Tree`: Árbol binario genérico
 - **Almacenamiento Centralizado**: Módulo `storage/` con listas globales para todas las entidades
 - **Capa de Servicios**: Servicios CRUD para operaciones de negocio (PackageService, ShipmentService)
 - **Inicialización Centralizada**: Módulo `initializeServices/` para configuración de servicios
@@ -98,9 +101,12 @@ algoritmos-tp-c2-2025/
 │   │       ├── mergeSort.cpp         # Algoritmo de ordenamiento
 │   │       └── mergeSortTest.cpp     # Tests del algoritmo
 │   └── dataStructures/
+│       ├── hashtable/
+│       │   ├── HashTable.h           # Implementación propia de tabla hash
+│       │   └── hashTableTest.cpp     # Tests de la tabla hash
 │       ├── list/
 │       │   ├── List.h                # Implementación propia de lista enlazada con std::any
-│       │   ├── listTest.cpp          # Tests de la estructura de datos
+│       │   └── listTest.cpp          # Tests de la estructura de datos
 │       └── tree/
 │           ├── Tree.h                # Implementación de árbol
 │           └── treeTest.cpp          # Tests del árbol
@@ -133,8 +139,11 @@ algoritmos-tp-c2-2025/
 - Menú interactivo que consume servicios para mostrar datos
 
 #### `utils/`
-- Estructuras de datos personalizadas (`List`, `Tree`)
-- Algoritmos reutilizables (`mergeSort`)
+- **dataStructures/**: Estructuras de datos personalizadas
+  - `HashTable` - Tabla hash con función Folding + División y sondeo lineal
+  - `List` - Lista enlazada genérica con `std::any`
+  - `Tree` - Árbol binario genérico
+- **algorithms/**: Algoritmos reutilizables (`mergeSort`)
 
 ## Requisitos del Sistema
 

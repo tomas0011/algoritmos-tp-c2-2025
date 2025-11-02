@@ -10,8 +10,8 @@ Package pkg3(3, 8.0, 1, 1.5);
 Shipment ship1(1, "In Transit", 50.0, 1, 100.0, 10.0, 1, 1, {pkg1, pkg2}, 1, 2, 1, time(nullptr), time(nullptr), time(nullptr), time(nullptr));
 Shipment ship2(2, "Delivered", 75.0, 2, 150.0, 15.0, 2, 2, {pkg3}, 2, 3, 2, time(nullptr), time(nullptr), time(nullptr), time(nullptr));
 
-ShipmentManager sm1(1, 1, {}, 1);
-ShipmentManager sm2(2, 2, {}, 2);
+ShipmentManager sm1;
+ShipmentManager sm2;
 
 Transport trans1(1, "Truck", 1000.0);
 Transport trans2(2, "Van", 500.0);
@@ -25,11 +25,13 @@ Connection conn2(2, 2, 3, 75.0);
 Employee emp1(1, "Alice", 1);
 Employee emp2(2, "Bob", 2);
 
-DistributionCenter dc1(1, "Center A", "City A", std::vector<Employee>{emp1}, std::vector<Connection>{conn1}, std::vector<Package>{pkg1});
-DistributionCenter dc2(2, "Center B", "City B", std::vector<Employee>{emp2}, std::vector<Connection>{conn2}, std::vector<Package>{pkg2, pkg3});
+// Usando el constructor simplificado: code, name, city, capacity, dailyPackages, employeeCount
+DistributionCenter dc1("CEN1", "Center A", "City A", 100, 50, 10);
+DistributionCenter dc2("CEN2", "Center B", "City B", 200, 75, 15);
 
-DistributionCenterManager manager1;
-DistributionCenterManager manager2;
+// El nuevo DistributionCenterManager usa hash table y no se instancia así
+// DistributionCenterManager manager1;
+// DistributionCenterManager manager2;
 
 void initializeMockData() {
     // Push packages to storage
@@ -66,13 +68,11 @@ void initializeMockData() {
     distributionCenters.push(dc2);
 
     // Push distribution center managers to storage
-    distributionCenterManagers.push(manager1);
-    distributionCenterManagers.push(manager2);
+    // distributionCenterManagers.push(manager1);
+    // distributionCenterManagers.push(manager2);
 
-    // Initialize distribution center managers
-    manager1.createDistributionCenter(1, "Center A", "City A", 100, 50, 10);
-    manager1.createDistributionCenter(2, "Center B", "City B", 200, 75, 15);
-    manager2.createDistributionCenter(3, "Center C", "City C", 150, 60, 12);
+    // Los managers nuevos no tienen createDistributionCenter así
+    // El nuevo manager usa addCenter() con código único
 }
 
 // Display functions - now using storage lists
@@ -110,7 +110,7 @@ void displayMockShipmentManagers() {
     while (current != nullptr) {
         try {
             ShipmentManager sm = std::any_cast<ShipmentManager>(current->getData());
-            sm.display();
+            std::cout << "Total shipments: " << sm.getTotalShipments() << std::endl;
         } catch (const std::bad_any_cast& e) {
             std::cout << "Error casting shipment manager" << std::endl;
         }

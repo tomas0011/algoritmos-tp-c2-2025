@@ -10,10 +10,10 @@ SRCS = main.cpp \
        services/shipment/shipmentService.cpp \
        entities/employee/Employee.cpp \
        entities/distributionCenter/DistributionCenter.cpp \
-       entities/distributionCenterManager/DistributionCenterManager.cpp \
+       entities/managers/DistributionCenterManager.cpp \
+       entities/shipmentManager/ShipmentManager.cpp \
        entities/package/Package.cpp \
        entities/shipment/Shipment.cpp \
-       entities/shipmentManager/ShipmentManager.cpp \
        entities/transport/Transport.cpp \
        entities/client/Client.cpp \
        entities/connection/Connection.cpp
