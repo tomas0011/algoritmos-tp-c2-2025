@@ -3,7 +3,10 @@
 
 #include "../../entities/shipment/Shipment.h"
 #include "../../utils/dataStructures/list/List.h"
+#include "../../storage/storage.h"
 #include <vector>
+#include <ctime>
+#include <unordered_map>
 
 class ShipmentService {
 private:
@@ -29,6 +32,18 @@ public:
     // Utility functions
     void displayAllShipments();
     int getShipmentCount();
+
+    //Punto B
+
+    //cantidad total de envios por centro de distribucion entre dos fechas
+    int totalShipmentsByCenterAndDate(int centerId, time_t start, time_t end);
+    
+    // centros de distribucion que han sobrepasado un limite semanal de envios
+    std::vector<int> overloadedCenters(int weeklyLimit);
+
+    // envios pertenecientes a un cliente
+    std::vector<Shipment> findShipmentsByClient(int clientId);
+
 };
 
 #endif // SHIPMENT_SERVICE_H
