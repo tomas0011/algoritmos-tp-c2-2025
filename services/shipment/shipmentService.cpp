@@ -1,5 +1,6 @@
 #include "shipmentService.h"
 #include <iostream>
+#include <unordered_map>
 
 ShipmentService::ShipmentService(List& shipmentsList) : shipments(shipmentsList) {}
 
@@ -109,4 +110,68 @@ void ShipmentService::displayAllShipments() {
 
 int ShipmentService::getShipmentCount() {
     return shipments.getSize();
+}
+
+
+
+//Punto B
+
+int ShipmentService::totalShipmentsByCenterAndDate(int centerId, time_t start, time_t end) {
+    int count = 0;
+    Node* current = shipments.getHead();
+
+    while (current != nullptr) {
+        try {
+            Shipment ship = std::any_cast<Shipment>(current->getData());
+            if (ship.getDistributionCenterId() == centerId &&
+                ship.getCreateDate() >= start && ship.getCreateDate() <= end) {
+                count++;
+            }
+        } catch (const std::bad_any_cast&) {}
+        current = current->getNext();
+    }
+
+    // Complejidad temporal: O(n)
+    return count;
+}
+
+std::vector<int> ShipmentService::overloadedCenters(int weeklyLimit) {
+    std::unordered_map<int, int> shipmentCount;
+    std::vector<int> overloaded;
+    Node* current = shipments.getHead();
+
+    while (current != nullptr) {
+        try {
+            Shipment ship = std::any_cast<Shipment>(current->getData());
+            shipmentCount[ship.getDistributionCenterId()]++;
+        } catch (const std::bad_any_cast&) {}
+        current = current->getNext();
+    }
+
+    for (const auto& [centerId, count] : shipmentCount) {
+        if (count > weeklyLimit) {
+            overloaded.push_back(centerId);
+        }
+    }
+
+    // Complejidad temporal: O(n)
+    return overloaded;
+}
+
+std::vector<Shipment> ShipmentService::findShipmentsByClient(int clientId) {
+    std::vector<Shipment> result;
+    Node* current = shipments.getHead();
+
+    while (current != nullptr) {
+        try {
+            Shipment ship = std::any_cast<Shipment>(current->getData());
+            if (ship.getClientId() == clientId) {
+                result.push_back(ship);
+            }
+        } catch (const std::bad_any_cast&) {}
+        current = current->getNext();
+    }
+
+    // Complejidad temporal: O(n)
+    return result;
 }

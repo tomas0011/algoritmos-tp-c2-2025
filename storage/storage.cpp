@@ -1,5 +1,7 @@
 #include "storage.h"
 
+#include "../entities/distributionCenter/DistributionCenter.h"
+
 // Instantiate global storage lists
 List packages;
 List shipments;
@@ -10,3 +12,5 @@ List connections;
 List distributionCenters;
 List distributionCenterManagers;
 List employees;
+
+Graph distributionNetwork;
