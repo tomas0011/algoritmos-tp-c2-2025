@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <any>
-#include <vector>
+#include "../list/List.h"
 #include <sstream>
 #include <string>
 #include <typeinfo>
@@ -45,7 +45,7 @@ public:
 class Node {
 private:
     any data;                 // dato genérico
-    vector<Edge> edges;       // lista de aristas
+    List edges;       // lista de aristas
 
 public:
     Node(any newData)
@@ -56,10 +56,10 @@ public:
 
     //esta función la usa la clase grafo, agrega validación
     void addEdge(int origen, int destino, double peso = 1.0) {
-    edges.emplace_back(origen, destino, peso);
+    edges.push(Edge(origen, destino, peso));
     }
 
-    const vector<Edge>& getEdges() const {
+    const List& getEdges() const {
         return edges;
     }
 
@@ -85,8 +85,12 @@ public:
     string toString() const {
         ostringstream oss;
         oss << dataToString() << " -> ";
-        for (const auto& edge : edges)
+        Node* current = edges.getHead();
+        while (current != nullptr) {
+            Edge edge = any_cast<Edge>(current->getData());
             oss << edge.toString() << " ";
+            current = current->getNext();
+        }
         return oss.str();
     }
 };
@@ -96,42 +100,53 @@ public:
 // =======================================================
 class Graph {
 private:
-    vector<Node*> nodes;  // todos los nodos
+    List nodes;  // todos los nodos
 
 public:
     Graph() = default;
 
     ~Graph() {
-        for (auto n : nodes)
-            delete n;
+        Node* current = nodes.getHead();
+        while (current != nullptr) {
+            delete any_cast<Node*>(current->getData());
+            current = current->getNext();
+        }
     }
 
     // agrega un nodo y devuelve su índice
     int addNode(any data) {
-        nodes.push_back(new Node(data));
-        return nodes.size() - 1;
+        nodes.push(new Node(data));
+        return nodes.getSize() - 1;
     }
 
     // agrega una arista desde origen a destino
 void addEdge(int origen, int destino, double peso = 1.0) {
-    if (origen >= 0 && origen < nodes.size() &&
-        destino >= 0 && destino < nodes.size()) {
-        nodes[origen]->addEdge(origen, destino, peso);
+    if (origen >= 0 && origen < nodes.getSize() &&
+        destino >= 0 && destino < nodes.getSize()) {
+        Node* nodeOrigen = any_cast<Node*>(nodes.getNodeAt(origen)->getData());
+        nodeOrigen->addEdge(origen, destino, peso);
     } else {
         cerr << "Error: índice de nodo inválido." << endl;
     }
 }
 
     Node* getNode(int index) const {
-        if (index >= 0 && index < nodes.size())
-            return nodes[index];
+        if (index >= 0 && index < nodes.getSize()) {
+            return any_cast<Node*>(nodes.getNodeAt(index)->getData());
+        }
         return nullptr;
     }
 
     string toString() const {
         ostringstream oss;
-        for (int i = 0; i < nodes.size(); ++i)
-            oss << "Nodo " << i << ": " << nodes[i]->toString() << "\n";
+        Node* current = nodes.getHead();
+        int i = 0;
+        while (current != nullptr) {
+            Node* n = any_cast<Node*>(current->getData());
+            oss << "Nodo " << i << ": " << n->toString() << "\n";
+            current = current->getNext();
+            i++;
+        }
         return oss.str();
     }
 
