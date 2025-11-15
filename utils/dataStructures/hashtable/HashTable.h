@@ -17,7 +17,7 @@ class HashEntry {
 private:
     string key;
     any value;
-    bool occupied;  // indica si la celda está ocupada
+    bool occupied;  // indica si la celda esta ocupada
     bool deleted;   // indica si la celda fue eliminada (para linear probing)
 
 public:
@@ -73,7 +73,7 @@ private:
     int size;           // número de elementos actualmente en la tabla
     int numDeleted;     // número de elementos marcados como eliminados
 
-    // Función hash: Division + Folding
+    // Funcion hash: Division + Folding
     int hashFunction(const string& key) const {
         // Folding: dividir la clave en partes y sumarlas
         int sum = 0;
@@ -83,18 +83,18 @@ private:
             string fold = key.substr(i, foldSize);
             int foldValue = 0;
             
-            // Convertir cada carácter a su valor ASCII y combinarlo
+            // Convertir cada caracter a su valor ASCII y combinarlo
             for (char c : fold) {
                 foldValue = foldValue * 256 + static_cast<int>(c);
             }
             sum += foldValue;
         }
         
-        // Division: aplicar módulo con el tamaño de la tabla
+        // Division: aplicar modulo con el tamaño de la tabla
         return abs(sum) % capacity;
     }
 
-    // Linear Probing: buscar la siguiente posición disponible
+    // Linear Probing: buscar la siguiente posicion disponible
     int findSlot(const string& key, bool forInsertion = true) const {
         int index = hashFunction(key);
         int originalIndex = index;
@@ -107,22 +107,22 @@ private:
                 return index;
             }
             
-            // Para inserción: guardar el primer slot eliminado encontrado
+            // Para insercion: guardar el primer slot eliminado encontrado
             if (forInsertion && firstDeletedIndex == -1 
                 && table[index].isDeleted()) {
                 firstDeletedIndex = index;
             }
             
-            // Si encontramos un slot vacío (nunca ocupado)
+            // Si encontramos un slot vacio (nunca ocupado)
             if (!table[index].isOccupied()) {
-                // Para inserción, preferir reutilizar un slot eliminado
+                // Para insercion, preferir reutilizar un slot eliminado
                 if (forInsertion && firstDeletedIndex != -1) {
                     return firstDeletedIndex;
                 }
                 return index;
             }
             
-            // Linear probing: avanzar a la siguiente posición
+            // Linear probing: avanzar a la siguiente posicion
             index = (index + 1) % capacity;
             
         } while (index != originalIndex);
@@ -177,7 +177,7 @@ public:
         int index = findSlot(key, true);
         
         if (index == -1) {
-            cerr << "Error: HashTable está llena" << endl;
+            cerr << "Error: HashTable esta llena" << endl;
             return false;
         }
         
@@ -208,7 +208,7 @@ public:
             return table[index].getValue();
         }
         
-        return any(); // Retornar any vacío si no se encuentra
+        return any(); // Retornar any vacio si no se encuentra
     }
 
     // Verificar si una clave existe
@@ -219,7 +219,7 @@ public:
                 && table[index].getKey() == key);
     }
 
-    // Eliminar un elemento por clave (eliminación lógica)
+    // Eliminar un elemento por clave (eliminacion logica)
     bool remove(const string& key) {
         int index = findSlot(key, false);
         
@@ -310,7 +310,7 @@ public:
         return oss.str();
     }
 
-    // Obtener estadísticas de colisiones
+    // Obtener estadisticas de colisiones
     void displayStatistics() const {
         int emptySlots = 0;
         int occupiedSlots = 0;

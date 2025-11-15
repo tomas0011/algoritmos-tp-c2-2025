@@ -2,5 +2,6 @@
 #define BASH_H
 
 void showMenu();
+void showDistributionCenterMenu();
 
 #endif // BASH_H

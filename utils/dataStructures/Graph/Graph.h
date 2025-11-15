@@ -11,21 +11,17 @@
 using namespace std;
 
 
-// =======================================================
-// Clase Edge (Arista)
-// =======================================================
-
-class Edge {
+class Arista {
 private:
-    int origen;   // índice del nodo origen
-    int destino;  // índice del nodo destino
+    int origen;   // indice del nodo origen
+    int destino;  // indice del nodo destino
     double peso;  // peso de la arista
 
-    //no se guarda explícitamente un índice dentro de la clase node, pero su índice está implícito: 
-    //es su posición dentro del vector<Node*> nodes del Graph.
+    //no se guarda explicitamente un indice dentro de la clase node, pero su indice esta implicito: 
+    //es su posicion dentro del vector<Node*> nodes del Graph.
 
 public:
-    Edge(int origen, int destino, double peso = 1.0) //peso por defecto, si no le pones, es 1
+    Arista(int origen, int destino, double peso = 1.0) //peso por defecto, si no le pones, es 1
         : origen(origen), destino(destino), peso(peso) {}
 
     int getOrigen() const { return origen; }
@@ -39,28 +35,25 @@ public:
     }
 };
 
-// =======================================================
-// Clase Node (Nodo)
-// =======================================================
-class Node {
+class GraphNode {
 private:
-    any data;                 // dato genérico
-    List edges;       // lista de aristas
+    any data;                 // dato generico
+    List aristas;       // lista de aristas
 
 public:
-    Node(any newData)
+    GraphNode(any newData)
         : data(newData) {}
 
     any getData() const { return data; }
 
 
-    //esta función la usa la clase grafo, agrega validación
-    void addEdge(int origen, int destino, double peso = 1.0) {
-    edges.push(Edge(origen, destino, peso));
+    //esta funcion la usa la clase grafo, agrega validacion
+    void addArista(int origen, int destino, double peso = 1.0) {
+    aristas.push(Arista(origen, destino, peso));
     }
 
-    const List& getEdges() const {
-        return edges;
+    const List& getAristas() const {
+        return aristas;
     }
 
     string dataToString() const {
@@ -85,19 +78,16 @@ public:
     string toString() const {
         ostringstream oss;
         oss << dataToString() << " -> ";
-        Node* current = edges.getHead();
+        ::Node* current = aristas.getHead();
         while (current != nullptr) {
-            Edge edge = any_cast<Edge>(current->getData());
-            oss << edge.toString() << " ";
+            Arista arista = any_cast<Arista>(current->getData());
+            oss << arista.toString() << " ";
             current = current->getNext();
         }
         return oss.str();
     }
 };
 
-// =======================================================
-// Clase Graph (Grafo)
-// =======================================================
 class Graph {
 private:
     List nodes;  // todos los nodos
@@ -106,43 +96,43 @@ public:
     Graph() = default;
 
     ~Graph() {
-        Node* current = nodes.getHead();
+        ::Node* current = nodes.getHead();
         while (current != nullptr) {
-            delete any_cast<Node*>(current->getData());
+            delete any_cast<GraphNode*>(current->getData());
             current = current->getNext();
         }
     }
 
-    // agrega un nodo y devuelve su índice
+    // agrega un nodo y devuelve su indice
     int addNode(any data) {
-        nodes.push(new Node(data));
+        nodes.push(new GraphNode(data));
         return nodes.getSize() - 1;
     }
 
     // agrega una arista desde origen a destino
-void addEdge(int origen, int destino, double peso = 1.0) {
+void addArista(int origen, int destino, double peso = 1.0) {
     if (origen >= 0 && origen < nodes.getSize() &&
         destino >= 0 && destino < nodes.getSize()) {
-        Node* nodeOrigen = any_cast<Node*>(nodes.getNodeAt(origen)->getData());
-        nodeOrigen->addEdge(origen, destino, peso);
+        GraphNode* nodeOrigen = any_cast<GraphNode*>(nodes.getNodeAt(origen)->getData());
+        nodeOrigen->addArista(origen, destino, peso);
     } else {
-        cerr << "Error: índice de nodo inválido." << endl;
+        cerr << "Error: indice de nodo invalido." << endl;
     }
 }
 
-    Node* getNode(int index) const {
+    GraphNode* getNode(int index) const {
         if (index >= 0 && index < nodes.getSize()) {
-            return any_cast<Node*>(nodes.getNodeAt(index)->getData());
+            return any_cast<GraphNode*>(nodes.getNodeAt(index)->getData());
         }
         return nullptr;
     }
 
     string toString() const {
         ostringstream oss;
-        Node* current = nodes.getHead();
+        ::Node* current = nodes.getHead();
         int i = 0;
         while (current != nullptr) {
-            Node* n = any_cast<Node*>(current->getData());
+            GraphNode* n = any_cast<GraphNode*>(current->getData());
             oss << "Nodo " << i << ": " << n->toString() << "\n";
             current = current->getNext();
             i++;
