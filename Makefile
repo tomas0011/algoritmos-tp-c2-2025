@@ -8,6 +8,9 @@ SRCS = main.cpp \
        services/initializeServices.cpp \
        services/package/packageService.cpp \
        services/shipment/shipmentService.cpp \
+       services/distributionCenter/distributionCenterService.cpp \
+       utils/algorithms/dijkstra/dijkstraHashTable.cpp \
+       utils/algorithms/dijkstra/dijkstraGraph.cpp \
        entities/employee/Employee.cpp \
        entities/distributionCenter/DistributionCenter.cpp \
        entities/distributionCenterManager/DistributionCenterManager.cpp \
@@ -21,7 +24,24 @@ SRCS = main.cpp \
 $(TARGET): $(SRCS)
 	$(CXX) $(CXXFLAGS) -o $(TARGET) $(SRCS)
 
-clean:
-	rm -f $(TARGET)
+# Test targets
+test-hashtable:
+	$(CXX) $(CXXFLAGS) -o test_hashtable utils/dataStructures/hashtable/hashTableTest.cpp
+	./test_hashtable
 
-.PHONY: clean
+test-graphhashtable:
+	$(CXX) $(CXXFLAGS) -o test_graphhashtable utils/dataStructures/graph/graphHashTableTest.cpp
+	./test_graphhashtable
+
+test-list:
+	$(CXX) $(CXXFLAGS) -o test_list utils/dataStructures/list/listTest.cpp
+	./test_list
+
+test-tree:
+	$(CXX) $(CXXFLAGS) -o test_tree utils/dataStructures/tree/treeTest.cpp
+	./test_tree
+
+clean:
+	rm -f $(TARGET) test_hashtable test_graphhashtable test_list test_tree
+
+.PHONY: clean test-hashtable test-graphhashtable test-list test-tree

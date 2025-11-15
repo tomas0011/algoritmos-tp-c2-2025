@@ -8,6 +8,7 @@
 #include "employee/employeeService.h"
 #include "connection/connectionService.h"
 #include "shipmentManager/shipmentManagerService.h"
+#include "distributionCenter/distributionCenterService.h"
 
 
 // Global service instances
@@ -17,6 +18,7 @@ extern ClientService* clientService;
 extern EmployeeService* employeeService;
 extern ConnectionService* connectionService;
 extern ShipmentManagerService* shipmentManagerService;
+extern DistributionCenterService* distributionCenterService;
 
 
 // Initialization function
