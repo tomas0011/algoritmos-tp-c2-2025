@@ -11,6 +11,7 @@
 #include "../entities/managers/ShipmentManager.h"
 #include "../entities/managers/DistributionCenterManager.h"
 #include "../entities/employee/Employee.h"
+#include "../utils/dataStructures/matias/graph/Graph.h"
 
 // Global storage lists for all entities
 extern List packages;
@@ -22,5 +23,6 @@ extern List connections;
 extern List distributionCenters;
 extern List distributionCenterManagers;
 extern List employees;
+extern Graph distributionNetwork;
 
 #endif // STORAGE_H
