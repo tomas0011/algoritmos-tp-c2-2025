@@ -15,11 +15,11 @@ void initializeServices() {
     shipmentService = new ShipmentService(shipments);
     clientService = new ClientService(clients);
     employeeService = new EmployeeService(employees);
-    connectionService = new ConnectionService();
+    connectionService = new ConnectionService(connections);
     shipmentManagerService = new ShipmentManagerService(shipmentManagers);
     distributionCenterService = new DistributionCenterService();
     
-    // Cargar centros de distribución de ejemplo
+    // Cargar centros de distribucion de ejemplo
     distributionCenterService->loadMockCenters();
     
     // Cargar conexiones entre centros

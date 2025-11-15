@@ -60,24 +60,24 @@ struct Connection {
 };
 
 // =======================================================
-// Tests del Sistema de Distribución
+// Tests del Sistema de Distribucion
 // =======================================================
 
 void testDistributionCenters() {
-    cout << "\n=== Test 1: Gestión de Centros de Distribución ===" << endl;
+    cout << "\n=== Test 1: Gestion de Centros de Distribucion ===" << endl;
     cout << "Simulando archivo centros.txt" << endl;
     
-    // HashTable para almacenar centros por código (búsqueda O(1))
-    HashTable centers(23);  // Número primo para mejor distribución
+    // HashTable para almacenar centros por codigo (búsqueda O(1))
+    HashTable centers(23);  // Número primo para mejor distribucion
     
-    // Crear centros de distribución
-    DistributionCenter* cba = new DistributionCenter("CBA", "CentroCordoba", "Córdoba", 5000, 2000, 120);
+    // Crear centros de distribucion
+    DistributionCenter* cba = new DistributionCenter("CBA", "CentroCordoba", "Cordoba", 5000, 2000, 120);
     DistributionCenter* mza = new DistributionCenter("MZA", "CentroMendoza", "Mendoza", 3000, 1200, 80);
     DistributionCenter* bue = new DistributionCenter("BUE", "CentroBuenosAires", "Buenos Aires", 8000, 5000, 200);
     DistributionCenter* ros = new DistributionCenter("ROS", "CentroRosario", "Rosario", 4000, 1800, 100);
-    DistributionCenter* tuc = new DistributionCenter("TUC", "CentroTucuman", "Tucumán", 2500, 900, 60);
+    DistributionCenter* tuc = new DistributionCenter("TUC", "CentroTucuman", "Tucuman", 2500, 900, 60);
     
-    // Insertar en la HashTable usando código como clave
+    // Insertar en la HashTable usando codigo como clave
     centers.insert("CBA", cba);
     centers.insert("MZA", mza);
     centers.insert("BUE", bue);
@@ -86,8 +86,8 @@ void testDistributionCenters() {
     
     cout << "\n Centros cargados: " << centers.getSize() << endl;
     
-    // Búsqueda rápida O(1) por código
-    cout << "\n--- Búsqueda de Centro por Código ---" << endl;
+    // Búsqueda rapida O(1) por codigo
+    cout << "\n--- Búsqueda de Centro por Codigo ---" << endl;
     string searchCode = "CBA";
     if (centers.contains(searchCode)) {
         DistributionCenter* found = any_cast<DistributionCenter*>(centers.search(searchCode));
@@ -116,27 +116,27 @@ void testDistributionCenters() {
 }
 
 void testShipmentManagement() {
-    cout << "\n=== Test 2: Gestión de Envíos por Centro ===" << endl;
+    cout << "\n=== Test 2: Gestion de Envios por Centro ===" << endl;
     cout << "Simulando archivo envios.txt" << endl;
     
-    // HashTable: código_centro -> Lista de envíos
+    // HashTable: codigo_centro -> Lista de envios
     HashTable shipmentsByCenter(23);
     
-    // Crear listas de envíos para cada centro
+    // Crear listas de envios para cada centro
     List* shipmentsCBA = new List();
     List* shipmentsMZA = new List();
     List* shipmentsBUE = new List();
     
-    // Agregar envíos a CBA
+    // Agregar envios a CBA
     shipmentsCBA->push(new Shipment("CBA", 1245, 302, "20250412", 3.5));
     shipmentsCBA->push(new Shipment("CBA", 1246, 305, "20250412", 2.1));
     shipmentsCBA->push(new Shipment("CBA", 1247, 310, "20250413", 5.0));
     
-    // Agregar envíos a MZA
+    // Agregar envios a MZA
     shipmentsMZA->push(new Shipment("MZA", 1250, 411, "20250215", 2.0));
     shipmentsMZA->push(new Shipment("MZA", 1251, 415, "20250215", 1.5));
     
-    // Agregar envíos a BUE
+    // Agregar envios a BUE
     shipmentsBUE->push(new Shipment("BUE", 2001, 501, "20250410", 4.2));
     shipmentsBUE->push(new Shipment("BUE", 2002, 502, "20250410", 3.8));
     shipmentsBUE->push(new Shipment("BUE", 2003, 503, "20250411", 2.9));
@@ -147,10 +147,10 @@ void testShipmentManagement() {
     shipmentsByCenter.insert("MZA", shipmentsMZA);
     shipmentsByCenter.insert("BUE", shipmentsBUE);
     
-    cout << "\n Envíos organizados por centro" << endl;
+    cout << "\n Envios organizados por centro" << endl;
     
-    // Consultar envíos de un centro específico
-    cout << "\n--- Envíos del Centro CBA ---" << endl;
+    // Consultar envios de un centro especifico
+    cout << "\n--- Envios del Centro CBA ---" << endl;
     if (shipmentsByCenter.contains("CBA")) {
         List* shipments = any_cast<List*>(shipmentsByCenter.search("CBA"));
         Node* current = shipments->getHead();
@@ -161,17 +161,17 @@ void testShipmentManagement() {
             current = current->getNext();
             count++;
         }
-        cout << "Total: " << count << " envíos" << endl;
+        cout << "Total: " << count << " envios" << endl;
     }
     
-    // Consultar envíos de BUE
-    cout << "\n--- Envíos del Centro BUE ---" << endl;
+    // Consultar envios de BUE
+    cout << "\n--- Envios del Centro BUE ---" << endl;
     if (shipmentsByCenter.contains("BUE")) {
         List* shipments = any_cast<List*>(shipmentsByCenter.search("BUE"));
-        cout << "Total: " << shipments->getSize() << " envíos" << endl;
+        cout << "Total: " << shipments->getSize() << " envios" << endl;
     }
     
-    cout << "\n Acceso O(1) a envíos por centro usando HashTable" << endl;
+    cout << "\n Acceso O(1) a envios por centro usando HashTable" << endl;
     
     // Limpiar memoria
     Node* current = shipmentsCBA->getHead();
@@ -200,7 +200,7 @@ void testConnectionNetwork() {
     cout << "\n=== Test 3: Red de Conexiones entre Centros ===" << endl;
     cout << "Simulando archivo conexiones.txt" << endl;
     
-    // HashTable: código_centro -> Lista de conexiones salientes
+    // HashTable: codigo_centro -> Lista de conexiones salientes
     HashTable connections(23);
     
     // Crear listas de conexiones para cada centro
@@ -260,7 +260,7 @@ void testConnectionNetwork() {
         centerNode = centerNode->getNext();
     }
     
-    cout << "\n Base para implementar algoritmo de camino mínimo (Dijkstra)" << endl;
+    cout << "\n Base para implementar algoritmo de camino minimo (Dijkstra)" << endl;
     cout << " HashTable permite acceso O(1) a vecinos de cada nodo" << endl;
     
     // Limpiar memoria
@@ -300,26 +300,26 @@ void testCenterOperations() {
     
     // Agregar centros
     cout << "\n--- Agregando Centros ---" << endl;
-    centers.insert("CBA", new DistributionCenter("CBA", "CentroCordoba", "Córdoba", 5000, 2000, 120));
+    centers.insert("CBA", new DistributionCenter("CBA", "CentroCordoba", "Cordoba", 5000, 2000, 120));
     centers.insert("MZA", new DistributionCenter("MZA", "CentroMendoza", "Mendoza", 3000, 1200, 80));
     centers.insert("BUE", new DistributionCenter("BUE", "CentroBuenosAires", "Buenos Aires", 8000, 5000, 200));
     cout << " Centros agregados: " << centers.getSize() << endl;
     
-    // Buscar centro específico
+    // Buscar centro especifico
     cout << "\n--- Buscar Centro MZA ---" << endl;
     if (centers.contains("MZA")) {
         DistributionCenter* mza = any_cast<DistributionCenter*>(centers.search("MZA"));
         cout << " Encontrado: " << mza->toString() << endl;
     }
     
-    // Actualizar información de un centro
+    // Actualizar informacion de un centro
     cout << "\n--- Actualizar Centro CBA ---" << endl;
     if (centers.contains("CBA")) {
         DistributionCenter* oldCBA = any_cast<DistributionCenter*>(centers.search("CBA"));
         delete oldCBA;
         
         // Actualizar con nuevos valores
-        DistributionCenter* newCBA = new DistributionCenter("CBA", "CentroCordoba", "Córdoba", 6000, 2500, 150);
+        DistributionCenter* newCBA = new DistributionCenter("CBA", "CentroCordoba", "Cordoba", 6000, 2500, 150);
         centers.insert("CBA", newCBA);
         cout << " Actualizado: " << newCBA->toString() << endl;
     }
@@ -356,12 +356,12 @@ void testCenterOperations() {
 }
 
 void testHashFunctionPerformance() {
-    cout << "\n=== Test 5: Rendimiento de Función Hash ===" << endl;
-    cout << "Justificación: Division + Folding" << endl;
+    cout << "\n=== Test 5: Rendimiento de Funcion Hash ===" << endl;
+    cout << "Justificacion: Division + Folding" << endl;
     
-    HashTable centers(23);  // Número primo para mejor distribución
+    HashTable centers(23);  // Número primo para mejor distribucion
     
-    // Códigos de centros reales (3 letras)
+    // Codigos de centros reales (3 letras)
     string codes[] = {"CBA", "MZA", "BUE", "ROS", "TUC", "SLA", "JUJ", 
                       "COR", "MDP", "NEU", "CHU", "SFE", "FOR", "RES"};
     
@@ -374,15 +374,15 @@ void testHashFunctionPerformance() {
         centers.insert(codes[i], center);
     }
     
-    cout << "\n--- Estadísticas de Distribución ---" << endl;
+    cout << "\n--- Estadisticas de Distribucion ---" << endl;
     centers.displayStatistics();
     
-    cout << "\n--- Análisis de la Función Hash ---" << endl;
-    cout << " Division: Usa módulo con tamaño primo (23) para distribución uniforme" << endl;
+    cout << "\n--- Analisis de la Funcion Hash ---" << endl;
+    cout << " Division: Usa modulo con tamaño primo (23) para distribucion uniforme" << endl;
     cout << " Folding: Divide claves en segmentos de 4 chars y suma valores ASCII" << endl;
-    cout << " Ventaja: Códigos de 3 letras (CBA, MZA) se distribuyen bien" << endl;
+    cout << " Ventaja: Codigos de 3 letras (CBA, MZA) se distribuyen bien" << endl;
     cout << " Linear Probing: Resuelve colisiones eficientemente" << endl;
-    cout << " Factor de carga: " << (centers.getLoadFactor() * 100) << "% (óptimo < 70%)" << endl;
+    cout << " Factor de carga: " << (centers.getLoadFactor() * 100) << "% (optimo < 70%)" << endl;
     
     // Limpiar memoria
     List allCodes = centers.getKeys();
@@ -396,16 +396,16 @@ void testHashFunctionPerformance() {
 }
 
 void testMultipleCentersWithStatistics() {
-    cout << "\n=== Test 6: Estadísticas de Múltiples Centros ===" << endl;
+    cout << "\n=== Test 6: Estadisticas de Múltiples Centros ===" << endl;
     
     HashTable centers(23);
     
     // Agregar múltiples centros
-    centers.insert("CBA", new DistributionCenter("CBA", "CentroCordoba", "Córdoba", 5000, 2000, 120));
+    centers.insert("CBA", new DistributionCenter("CBA", "CentroCordoba", "Cordoba", 5000, 2000, 120));
     centers.insert("ROS", new DistributionCenter("ROS", "CentroRosario", "Rosario", 4000, 1800, 100));
     centers.insert("MZA", new DistributionCenter("MZA", "CentroMendoza", "Mendoza", 3000, 1200, 80));
     centers.insert("BUE", new DistributionCenter("BUE", "CentroBuenosAires", "Buenos Aires", 8000, 5000, 200));
-    centers.insert("TUC", new DistributionCenter("TUC", "CentroTucuman", "Tucumán", 2500, 900, 60));
+    centers.insert("TUC", new DistributionCenter("TUC", "CentroTucuman", "Tucuman", 2500, 900, 60));
     centers.insert("SLA", new DistributionCenter("SLA", "CentroSalta", "Salta", 2000, 800, 50));
     
     cout << "\n--- Todos los Centros ---" << endl;
@@ -428,7 +428,7 @@ void testMultipleCentersWithStatistics() {
         current = current->getNext();
     }
     
-    cout << "\n--- Estadísticas Generales ---" << endl;
+    cout << "\n--- Estadisticas Generales ---" << endl;
     cout << "Total de centros: " << centers.getSize() << endl;
     cout << "Capacidad total: " << totalCapacity << " paquetes" << endl;
     cout << "Paquetes diarios totales: " << totalPackages << endl;
@@ -464,12 +464,12 @@ int main() {
     cout << "\n========================================" << endl;
     cout << "   RESUMEN DE VENTAJAS" << endl;
     cout << "========================================" << endl;
-    cout << " HashTable: Búsqueda O(1) de centros por código" << endl;
-    cout << " List: Almacenamiento de envíos y conexiones" << endl;
-    cout << " Division+Folding: Distribución uniforme de códigos" << endl;
-    cout << " Linear Probing: Resolución eficiente de colisiones" << endl;
-    cout << " Integración: Base para algoritmo de camino mínimo" << endl;
-    cout << " Escalabilidad: Redimensionamiento automático" << endl;
+    cout << " HashTable: Búsqueda O(1) de centros por codigo" << endl;
+    cout << " List: Almacenamiento de envios y conexiones" << endl;
+    cout << " Division+Folding: Distribucion uniforme de codigos" << endl;
+    cout << " Linear Probing: Resolucion eficiente de colisiones" << endl;
+    cout << " Integracion: Base para algoritmo de camino minimo" << endl;
+    cout << " Escalabilidad: Redimensionamiento automatico" << endl;
     cout << "========================================" << endl;
     
     return 0;

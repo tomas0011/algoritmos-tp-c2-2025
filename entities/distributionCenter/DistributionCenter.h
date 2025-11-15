@@ -9,7 +9,7 @@
 
 class DistributionCenter {
 private:
-    std::string code;           // Código del centro (ej: CBA, MZA, BUE)
+    std::string code;           // Codigo del centro (ej: CBA, MZA, BUE)
     std::string name;           // Nombre del centro
     std::string city;           // Ciudad
     int capacity;               // Capacidad total de paquetes
@@ -17,7 +17,7 @@ private:
     int numEmployees;           // Número de empleados
     std::vector<Employee> employees;      // Lista detallada de empleados (opcional)
     std::vector<Connection> connections;  // Conexiones con otros centros
-    std::vector<Package> warehouse;       // Paquetes en almacén
+    std::vector<Package> warehouse;       // Paquetes en almacen
 
 public:
     // Constructor principal (según formato del archivo centros.txt)
@@ -57,7 +57,7 @@ public:
     const std::vector<Connection>& getConnections() const;
     const std::vector<Package>& getWarehouse() const;
 
-    // Setters para actualización
+    // Setters para actualizacion
     void setCapacity(int cap);
     void setDailyPackages(int daily);
     void setNumEmployees(int num);

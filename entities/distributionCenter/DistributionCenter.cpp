@@ -31,8 +31,8 @@ DistributionCenter::DistributionCenter(
       employees(employees), connections(connections), warehouse(warehouse) {}
 
 void DistributionCenter::display() const {
-    std::cout << "=== Centro de Distribución ===" << std::endl;
-    std::cout << "Código: " << code << std::endl;
+    std::cout << "=== Centro de Distribucion ===" << std::endl;
+    std::cout << "Codigo: " << code << std::endl;
     std::cout << "Nombre: " << name << std::endl;
     std::cout << "Ciudad: " << city << std::endl;
     std::cout << "Capacidad: " << capacity << " paquetes" << std::endl;
@@ -54,7 +54,7 @@ void DistributionCenter::display() const {
     }
     
     if (!warehouse.empty()) {
-        std::cout << "\nPaquetes en almacén (" << warehouse.size() << "):" << std::endl;
+        std::cout << "\nPaquetes en almacen (" << warehouse.size() << "):" << std::endl;
         for (const auto& pkg : warehouse) {
             pkg.display();
         }
