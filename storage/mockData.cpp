@@ -25,8 +25,8 @@ Connection conn2(2, 2, 3, 75.0);
 Employee emp1(1, "Alice", 1);
 Employee emp2(2, "Bob", 2);
 
-DistributionCenter dc1(1, "Center A", "City A", std::vector<Employee>{emp1}, std::vector<Connection>{conn1}, std::vector<Package>{pkg1});
-DistributionCenter dc2(2, "Center B", "City B", std::vector<Employee>{emp2}, std::vector<Connection>{conn2}, std::vector<Package>{pkg2, pkg3});
+DistributionCenter dc1("DC1", "Center A", "City A", 100, 50, 10, std::vector<Employee>{emp1}, std::vector<Connection>{conn1}, std::vector<Package>{pkg1});
+DistributionCenter dc2("DC2", "Center B", "City B", 200, 75, 15, std::vector<Employee>{emp2}, std::vector<Connection>{conn2}, std::vector<Package>{pkg2, pkg3});
 
 DistributionCenterManager manager1;
 DistributionCenterManager manager2;

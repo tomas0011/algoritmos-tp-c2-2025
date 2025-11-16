@@ -7,6 +7,7 @@ ClientService* clientService = nullptr;
 EmployeeService* employeeService = nullptr;
 ConnectionService* connectionService = nullptr;
 ShipmentManagerService* shipmentManagerService = nullptr;
+DistributionCenterService* distributionCenterService = nullptr;
 
 void initializeServices() {
     // Initialize services
@@ -14,6 +15,13 @@ void initializeServices() {
     shipmentService = new ShipmentService(shipments);
     clientService = new ClientService(clients);
     employeeService = new EmployeeService(employees);
-    connectionService = new ConnectionService();
+    connectionService = new ConnectionService(connections);
     shipmentManagerService = new ShipmentManagerService(shipmentManagers);
+    distributionCenterService = new DistributionCenterService();
+    
+    // Cargar centros de distribucion de ejemplo
+    distributionCenterService->loadMockCenters();
+    
+    // Cargar conexiones entre centros
+    distributionCenterService->loadMockConnections();
 }

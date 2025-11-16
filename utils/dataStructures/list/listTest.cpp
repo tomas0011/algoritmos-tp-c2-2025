@@ -26,7 +26,7 @@ int main() {
 
     // Objetos
     Persona p1{"Laura", 30};
-    Persona p2{"Tomás", 25};
+    Persona p2{"Tomas", 25};
     lista.push(p1);
     lista.push(p2);
 
@@ -34,7 +34,7 @@ int main() {
     lista.display();
 
     cout << "\n¿Contiene a Laura? "
-          << (lista.contains(p1) ? "Sí ✅" : "No ❌") << endl;
+          << (lista.contains(p1) ? "Si ✅" : "No ❌") << endl;
 
     return 0;
 }

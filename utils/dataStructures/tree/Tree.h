@@ -47,7 +47,7 @@ public:
     string toString(int depth = 0) const {
         ostringstream oss;
 
-        // sangría según el nivel de profundidad
+        // sangria según el nivel de profundidad
         for (int i = 0; i < depth; ++i)
             oss << "  ";
 

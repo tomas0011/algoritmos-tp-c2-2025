@@ -9,31 +9,61 @@
 
 class DistributionCenter {
 private:
-    int id;
-    std::string name;
-    std::string city;
-    std::vector<Employee> employees;
-    std::vector<Connection> connections;
-    std::vector<Package> warehouse;
+    std::string code;           // Codigo del centro (ej: CBA, MZA, BUE)
+    std::string name;           // Nombre del centro
+    std::string city;           // Ciudad
+    int capacity;               // Capacidad total de paquetes
+    int dailyPackages;          // Paquetes procesados diariamente
+    int numEmployees;           // Número de empleados
+    std::vector<Employee> employees;      // Lista detallada de empleados (opcional)
+    std::vector<Connection> connections;  // Conexiones con otros centros
+    std::vector<Package> warehouse;       // Paquetes en almacen
 
 public:
+    // Constructor principal (según formato del archivo centros.txt)
     DistributionCenter(
-        int id,
+        const std::string& code,
         const std::string& name,
         const std::string& city,
-        const std::vector<Employee>& employees = {},
+        int capacity,
+        int dailyPackages,
+        int numEmployees
+    );
+
+    // Constructor completo (con vectores opcionales)
+    DistributionCenter(
+        const std::string& code,
+        const std::string& name,
+        const std::string& city,
+        int capacity,
+        int dailyPackages,
+        int numEmployees,
+        const std::vector<Employee>& employees,
         const std::vector<Connection>& connections = {},
         const std::vector<Package>& warehouse = {}
     );
+
     void display() const;
+    std::string toString() const;
 
     // Getters
-    int getId() const;
+    const std::string& getCode() const;
     const std::string& getName() const;
     const std::string& getCity() const;
+    int getCapacity() const;
+    int getDailyPackages() const;
+    int getNumEmployees() const;
     const std::vector<Employee>& getEmployees() const;
     const std::vector<Connection>& getConnections() const;
     const std::vector<Package>& getWarehouse() const;
+
+    // Setters para actualizacion
+    void setCapacity(int cap);
+    void setDailyPackages(int daily);
+    void setNumEmployees(int num);
+    void addEmployee(const Employee& emp);
+    void addConnection(const Connection& conn);
+    void addPackage(const Package& pkg);
 };
 
 #endif // DISTRIBUTION_CENTER_H
