@@ -1,4 +1,11 @@
 #include "bash.h"
+#include "package.bash.h"
+#include "shipment.bash.h"
+#include "shipmentManager.bash.h"
+#include "transport.bash.h"
+#include "client.bash.h"
+#include "connection.bash.h"
+#include "employee.bash.h"
 #include "services/initializeServices.h"
 #include "storage/mockData.h"
 #include <iostream>
@@ -9,14 +16,14 @@ void showMenu() {
     int choice;
     do {
         std::cout << "\n=== Menu de Entidades ===\n";
-        std::cout << "1. Listar Paquetes\n";
-        std::cout << "2. Listar Envios\n";
-        std::cout << "3. Listar Gestores de Envios\n";
-        std::cout << "4. Listar Transportes\n";
-        std::cout << "5. Listar Clientes\n";
-        std::cout << "6. Listar Conexiones\n";
-        std::cout << "7. Listar Centros de Distribucion\n";
-        std::cout << "8. Listar Empleados\n";
+        std::cout << "1. Gestionar Paquetes\n";
+        std::cout << "2. Gestionar Envios\n";
+        std::cout << "3. Gestionar Gestores de Envios\n";
+        std::cout << "4. Gestionar Transportes\n";
+        std::cout << "5. Gestionar Clientes\n";
+        std::cout << "6. Gestionar Conexiones\n";
+        std::cout << "7. Gestionar Centros de Distribucion\n";
+        std::cout << "8. Gestionar Empleados\n";
         std::cout << "9. Listar Gestores de Centros de Distribucion\n";
         std::cout << "10. ITEM A - Gestion de Centros (HashTable)\n";
         std::cout << "0. Salir\n";
@@ -25,28 +32,28 @@ void showMenu() {
 
         switch (choice) {
             case 1:
-                packageService->displayAllPackages();
+                showPackageMenu();
                 break;
             case 2:
-                shipmentService->displayAllShipments();
+                showShipmentMenu();
                 break;
             case 3:
-                displayMockShipmentManagers();
+                showShipmentManagerMenu();
                 break;
             case 4:
-                displayMockTransports();
+                showTransportMenu();
                 break;
             case 5:
-                displayMockClients();
+                showClientMenu();
                 break;
             case 6:
-                displayMockConnections();
+                showConnectionMenu();
                 break;
             case 7:
-                displayMockDistributionCenters();
+                showDistributionCenterMenu();
                 break;
             case 8:
-                displayMockEmployees();
+                showEmployeeMenu();
                 break;
             case 9:
                 displayMockDistributionCenterManagers();
