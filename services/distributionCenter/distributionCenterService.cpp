@@ -1,4 +1,5 @@
 #include "distributionCenterService.h"
+#include "../../utils/algorithms/dijkstra/dijkstra.h"
 #include <algorithm>
 #include <iomanip>
 
@@ -370,22 +371,15 @@ void DistributionCenterService::loadMockConnections() {
 // === Algoritmo de Dijkstra ===
 
 void DistributionCenterService::calculateShortestPath(const std::string& origin,
-                                                      const std::string& destination) {
-    std::cout << "\n=== Calculando Camino Minimo (usando GraphHashTable) ===" << std::endl;
-    std::cout << "Origen: " << origin << std::endl;
-    std::cout << "Destino: " << destination << std::endl;
-    std::cout << std::string(50, '-') << std::endl;
-    
-    // TODO: Implementar Dijkstra para GraphHashTable
-    std::cout << "Funcionalidad de Dijkstra pendiente de implementacion." << std::endl;
+                                                       const std::string& destination) {
+    DijkstraGraphResult* result = dijkstra(*redDistribucion, origin, destination);
+    displayPathGraph(result, origin, destination);
+    delete result;
 }
 
 void DistributionCenterService::calculateAllDistancesFrom(const std::string& origin) {
-    std::cout << "\n=== Calculando Todas las Distancias (usando GraphHashTable) ===" << std::endl;
-    std::cout << "Desde: " << origin << std::endl;
-    std::cout << std::string(50, '-') << std::endl;
-    
-    // TODO: Implementar Dijkstra para GraphHashTable
-    std::cout << "Funcionalidad de Dijkstra pendiente de implementacion." << std::endl;
+    DijkstraGraphResult* result = dijkstra(*redDistribucion, origin, ""); // destination vacío = calcular a todos
+    displayDijkstraGraphResult(result, origin);
+    delete result;
 }
 

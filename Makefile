@@ -10,6 +10,7 @@ SRCS = main.cpp \
         bash/client.bash.cpp \
         bash/connection.bash.cpp \
         bash/employee.bash.cpp \
+        utils/algorithms/dijkstra/dijkstra.cpp \
        storage/mockData.cpp \
        storage/storage.cpp \
        services/initializeServices.cpp \

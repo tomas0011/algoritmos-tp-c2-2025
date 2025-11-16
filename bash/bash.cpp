@@ -25,7 +25,6 @@ void showMenu() {
         std::cout << "7. Gestionar Centros de Distribucion\n";
         std::cout << "8. Gestionar Empleados\n";
         std::cout << "9. Listar Gestores de Centros de Distribucion\n";
-        std::cout << "10. ITEM A - Gestion de Centros (HashTable)\n";
         std::cout << "0. Salir\n";
         std::cout << "Seleccione una opcion: ";
         std::cin >> choice;
@@ -58,9 +57,6 @@ void showMenu() {
             case 9:
                 displayMockDistributionCenterManagers();
                 break;
-            case 10:
-                showDistributionCenterMenu();
-                break;
             case 0:
                 std::cout << "Saliendo...\n";
                 break;
@@ -85,7 +81,7 @@ void showDistributionCenterMenu() {
         std::cout << "7. Mostrar centros ordenados por paquetes procesados\n";
         std::cout << "8. Mostrar centros ordenados por cantidad de empleados\n";
         std::cout << "9. Mostrar estadisticas generales\n";
-        std::cout << "10. Calcular camino minimo entre centros (proximamente)\n";
+        std::cout << "10. Calcular camino minimo entre centros\n";
         std::cout << "0. Volver al menú principal\n";
         std::cout << "Seleccione una opcion: ";
         std::cin >> choice;
