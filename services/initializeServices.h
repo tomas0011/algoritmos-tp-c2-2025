@@ -6,8 +6,8 @@
 #include "../storage/storage.h"
 #include "client/clientService.h"
 #include "employee/employeeService.h"
-#include "connection/connectionService.h"
-#include "shipmentManager/shipmentManagerService.h"
+#include "Connection/ConnectionService.h"
+#include "ShipmentManager/ShipmentManagerService.h"
 #include "distributionCenter/distributionCenterService.h"
 
 

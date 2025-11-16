@@ -9,6 +9,10 @@ SRCS = main.cpp \
        services/package/packageService.cpp \
        services/shipment/shipmentService.cpp \
        services/distributionCenter/distributionCenterService.cpp \
+       services/client/clientService.cpp \
+       services/employee/employeeService.cpp \
+       services/Connection/ConnectionService.cpp \
+       services/ShipmentManager/ShipmentManagerService.cpp \
        entities/employee/Employee.cpp \
        entities/distributionCenter/DistributionCenter.cpp \
        entities/distributionCenterManager/DistributionCenterManager.cpp \
