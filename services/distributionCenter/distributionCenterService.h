@@ -6,14 +6,15 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <entities/distributionCenterManager/DistributionCenterManager.h>
 
 class DistributionCenterService {
 private:
-    List& distributionCenters;  // Reference to storage list
-    GraphHashTable& distributionNetwork;  // Reference to storage graph
+    List& distributionCenters;
+    List& distributionCenterManagers;
 
 public:
-    DistributionCenterService(List& centersList, GraphHashTable& network);
+    DistributionCenterService(List& centersList, List& centerManagersList);
     ~DistributionCenterService();
 
     // CRUD operations según Item A del enunciado
@@ -77,9 +78,6 @@ public:
     
     // Calcular y mostrar todas las distancias desde un centro origen
     void calculateAllDistancesFrom(const std::string& origin);
-    
-    // Obtener el grafo de la red (para acceso directo si es necesario)
-    GraphHashTable& getRedDistribucion() { return distributionNetwork; }
 };
 
 #endif // DISTRIBUTION_CENTER_SERVICE_H

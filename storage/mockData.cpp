@@ -65,12 +65,28 @@ void initializeMockData() {
     distributionCenters.push(dc1);
     distributionCenters.push(dc2);
 
-    // Push distribution center managers to storage
+    // Initialize distribution center managers BEFORE pushing
+    manager1.createDistributionCenter("A", "Center A", "City A", 100, 50, 10);
+    manager1.createDistributionCenter("B", "Center B", "City B", 200, 75, 15);
+    manager2.createDistributionCenter("C", "Center C", "City C", 150, 60, 12);
+
+    manager1.createDistributionCenter("CBA", "Cordoba Center", "Cordoba", 300, 10, 9);
+    manager1.createDistributionCenter("MZA", "Mendoza Center", "Mendoza", 250, 12, 13);
+    manager1.createDistributionCenter("BUE", "Buenos Aires Center", "Buenos Aires", 400, 11, 12);
+    manager1.createDistributionCenter("ROS", "Rosario Center", "Rosario", 200, 5, 8);
+    manager1.createDistributionCenter("TUC", "Tucuman Center", "Tucuman", 180, 4, 6);
+    manager1.createDistributionCenter("SLA", "Salta Center", "Salta", 160, 2, 5);
+
+    manager1.relateDistributionCenter("CBA", "MZA", 900);   // Cordoba - Mendoza
+    manager1.relateDistributionCenter("CBA", "BUE", 700);   // Cordoba - Buenos Aires
+    manager1.relateDistributionCenter("CBA", "ROS", 400);   // Cordoba - Rosario
+    manager1.relateDistributionCenter("MZA", "BUE", 1100);  // Mendoza - Buenos Aires
+    manager1.relateDistributionCenter("BUE", "ROS", 300);   // Buenos Aires - Rosario
+    manager1.relateDistributionCenter("TUC", "CBA", 550);   // Tucuman - Cordoba
+    manager1.relateDistributionCenter("TUC", "SLA", 300);   // Tucuman - Salta
+    manager1.relateDistributionCenter("SLA", "CBA", 800);   // Salta - Cordoba
+
+    // Push distribution center managers to storage AFTER initialization
     distributionCenterManagers.push(manager1);
     distributionCenterManagers.push(manager2);
-
-    // Initialize distribution center managers
-    manager1.createDistributionCenter(1, "Center A", "City A", 100, 50, 10);
-    manager1.createDistributionCenter(2, "Center B", "City B", 200, 75, 15);
-    manager2.createDistributionCenter(3, "Center C", "City C", 150, 60, 12);
 }

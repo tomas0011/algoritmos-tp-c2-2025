@@ -3,8 +3,8 @@
 #include <algorithm>
 #include <iomanip>
 
-DistributionCenterService::DistributionCenterService(List& centersList, GraphHashTable& network)
-    : distributionCenters(centersList), distributionNetwork(network) {}
+DistributionCenterService::DistributionCenterService(List& centersList, List& centerManagersList)
+    : distributionCenters(centersList), distributionCenterManagers(centerManagersList) {}
 
 DistributionCenterService::~DistributionCenterService() {
     // No need to delete since we use references to storage
@@ -12,38 +12,45 @@ DistributionCenterService::~DistributionCenterService() {
 
 // Mostrar la informacion de un centro de distribucion especifico
 void DistributionCenterService::showCenterInfo(const std::string& code) {
-    if (!distributionNetwork.hasNode(code)) {
+    DistributionCenterManager distributionCenterManager = any_cast<DistributionCenterManager>(distributionCenterManagers.getHead()->getData());
+    if (!distributionCenterManager.hasCenter(code)) {
         std::cout << "Error: Centro con codigo '" << code << "' no encontrado." << std::endl;
         return;
     }
 
-    HashGraphNode* node = distributionNetwork.getNode(code);
-        DistributionCenter* center = any_cast<DistributionCenter*>(node->getData());
-    center->display();
+    DistributionCenter* distributionCenterFound = distributionCenterManager.getCenter(code);
+    distributionCenterFound->display();
 }
 
 // Agregar un nuevo centro
 bool DistributionCenterService::addCenter(const std::string& code, const std::string& name,
-                                          const std::string& city, int capacity,
-                                          int dailyPackages, int numEmployees) {
-    if (distributionNetwork.hasNode(code)) {
+                                           const std::string& city, int capacity,
+                                           int dailyPackages, int numEmployees) {
+    DistributionCenterManager distributionCenterManager = any_cast<DistributionCenterManager>(distributionCenterManagers.getHead()->getData());
+    if (distributionCenterManager.hasCenter(code)) {
         std::cout << "Error: Ya existe un centro con codigo '" << code << "'." << std::endl;
         return false;
     }
-
-    DistributionCenter* newCenter = new DistributionCenter(
-        code, name, city, capacity, dailyPackages, numEmployees
-    );
-
-    distributionCenters.push(*newCenter);  // Add to storage list
-    distributionNetwork.addNode(code, newCenter);
+    distributionCenterManager.createDistributionCenter(code, name, city, capacity, dailyPackages, numEmployees);
+    
+    // Actualizar el manager en la lista
+    List newList;
+    newList.push(distributionCenterManager);
+    Node* current = distributionCenterManagers.getHead()->getNext();
+    while (current != nullptr) {
+        newList.push(current->getData());
+        current = current->getNext();
+    }
+    distributionCenterManagers = newList;
+    
     std::cout << "Centro '" << code << "' agregado exitosamente." << std::endl;
     return true;
 }
 
 // Eliminar un centro existente
 bool DistributionCenterService::removeCenter(const std::string& code) {
-    if (!distributionNetwork.hasNode(code)) {
+    DistributionCenterManager distributionCenterManager = any_cast<DistributionCenterManager>(distributionCenterManagers.getHead()->getData());
+    if (!distributionCenterManager.hasCenter(code)) {
         std::cout << "Error: Centro con codigo '" << code << "' no encontrado." << std::endl;
         return false;
     }
@@ -77,17 +84,17 @@ bool DistributionCenterService::removeCenter(const std::string& code) {
 // Actualizar informacion de un centro
 bool DistributionCenterService::updateCenter(const std::string& code, int capacity,
                                              int dailyPackages, int numEmployees) {
-    if (!distributionNetwork.hasNode(code)) {
+    DistributionCenterManager distributionCenterManager = any_cast<DistributionCenterManager>(distributionCenterManagers.getHead()->getData());
+    if (!distributionCenterManager.hasCenter(code)) {
         std::cout << "Error: Centro con codigo '" << code << "' no encontrado." << std::endl;
         return false;
     }
 
     // Update in graph
-    HashGraphNode* node = distributionNetwork.getNode(code);
-        DistributionCenter* center = any_cast<DistributionCenter*>(node->getData());
-    center->setCapacity(capacity);
-    center->setDailyPackages(dailyPackages);
-    center->setNumEmployees(numEmployees);
+    DistributionCenter* distributionCenterFound = distributionCenterManager.getCenter(code);
+    distributionCenterFound->setCapacity(capacity);
+    distributionCenterFound->setDailyPackages(dailyPackages);
+    distributionCenterFound->setNumEmployees(numEmployees);
 
     // Update in list
     List newList;
@@ -114,23 +121,23 @@ bool DistributionCenterService::updateCenter(const std::string& code, int capaci
 
 // Mostrar todos los centros
 void DistributionCenterService::displayAllCenters() {
-    if (distributionNetwork.getNodeCount() == 0) {
+    DistributionCenterManager distributionCenterManager = any_cast<DistributionCenterManager>(distributionCenterManagers.getHead()->getData());
+    if (distributionCenterManager.getDistributionCentersCount() == 0) {
         std::cout << "No hay centros de distribucion registrados." << std::endl;
         return;
     }
 
     std::cout << "\n=== Todos los Centros de Distribucion ===" << std::endl;
-    std::cout << "Total: " << distributionNetwork.getNodeCount() << " centros" << std::endl;
+    std::cout << "Total: " << distributionCenterManager.getDistributionCentersCount() << " centros" << std::endl;
     std::cout << std::string(80, '-') << std::endl;
 
-    List allCodes = distributionNetwork.getNodeCodes();
+    List allCodes = distributionCenterManager.getDistributionCentersCodes();
     Node* current = allCodes.getHead();
 
     while (current != nullptr) {
         std::string code = any_cast<std::string>(current->getData());
-        HashGraphNode* node = distributionNetwork.getNode(code);
-        DistributionCenter* center = any_cast<DistributionCenter*>(node->getData());
-        std::cout << center->toString() << std::endl;
+        DistributionCenter* distributionCenterFound = distributionCenterManager.getCenter(code);
+        std::cout << distributionCenterFound->toString() << std::endl;
         current = current->getNext();
     }
     std::cout << std::string(80, '-') << std::endl;
@@ -138,15 +145,15 @@ void DistributionCenterService::displayAllCenters() {
 
 // Obtener todos los centros como vector
 std::vector<DistributionCenter*> DistributionCenterService::getAllCenters() {
+    DistributionCenterManager distributionCenterManager = any_cast<DistributionCenterManager>(distributionCenterManagers.getHead()->getData());
     std::vector<DistributionCenter*> result;
 
-    List allCodes = distributionNetwork.getNodeCodes();
+    List allCodes = distributionCenterManager.getDistributionCentersCodes();
     Node* current = allCodes.getHead();
 
     while (current != nullptr) {
         std::string code = any_cast<std::string>(current->getData());
-        HashGraphNode* node = distributionNetwork.getNode(code);
-        DistributionCenter* center = any_cast<DistributionCenter*>(node->getData());
+        DistributionCenter* center = distributionCenterManager.getCenter(code);
         result.push_back(center);
         current = current->getNext();
     }
@@ -156,160 +163,168 @@ std::vector<DistributionCenter*> DistributionCenterService::getAllCenters() {
 
 // Mostrar centros ordenados por capacidad
 void DistributionCenterService::displayCentersSortedByCapacity() {
-    std::vector<DistributionCenter*> centersList = getAllCenters();
+    DistributionCenterManager distributionCenterManager = any_cast<DistributionCenterManager>(distributionCenterManagers.getHead()->getData());
     
-    if (centersList.empty()) {
+    if (distributionCenterManager.getDistributionCentersCount() == 0) {
         std::cout << "No hay centros de distribucion registrados." << std::endl;
         return;
     }
     
+    // Obtener copias de los centros
+    const std::vector<DistributionCenter>& centers = distributionCenterManager.getDistributionCenters();
+    std::vector<DistributionCenter> centersCopy(centers.begin(), centers.end());
+    
     // Ordenar por capacidad (descendente)
-    std::sort(centersList.begin(), centersList.end(),
-              [](DistributionCenter* a, DistributionCenter* b) {
-                  return a->getCapacity() > b->getCapacity();
+    std::sort(centersCopy.begin(), centersCopy.end(),
+              [](const DistributionCenter& a, const DistributionCenter& b) {
+                  return a.getCapacity() > b.getCapacity();
               });
     
     std::cout << "\n=== Centros Ordenados por Capacidad ===" << std::endl;
     std::cout << std::string(80, '-') << std::endl;
     
-    for (auto* center : centersList) {
-        std::cout << center->toString() << std::endl;
+    for (const auto& center : centersCopy) {
+        std::cout << center.toString() << std::endl;
     }
     std::cout << std::string(80, '-') << std::endl;
 }
 
 // Mostrar centros ordenados por paquetes procesados
 void DistributionCenterService::displayCentersSortedByPackages() {
-    std::vector<DistributionCenter*> centersList = getAllCenters();
+    DistributionCenterManager distributionCenterManager = any_cast<DistributionCenterManager>(distributionCenterManagers.getHead()->getData());
     
-    if (centersList.empty()) {
+    if (distributionCenterManager.getDistributionCentersCount() == 0) {
         std::cout << "No hay centros de distribucion registrados." << std::endl;
         return;
     }
     
+    // Obtener copias de los centros
+    const std::vector<DistributionCenter>& centers = distributionCenterManager.getDistributionCenters();
+    std::vector<DistributionCenter> centersCopy(centers.begin(), centers.end());
+    
     // Ordenar por paquetes diarios (descendente)
-    std::sort(centersList.begin(), centersList.end(),
-              [](DistributionCenter* a, DistributionCenter* b) {
-                  return a->getDailyPackages() > b->getDailyPackages();
+    std::sort(centersCopy.begin(), centersCopy.end(),
+              [](const DistributionCenter& a, const DistributionCenter& b) {
+                  return a.getDailyPackages() > b.getDailyPackages();
               });
     
     std::cout << "\n=== Centros Ordenados por Paquetes Diarios ===" << std::endl;
     std::cout << std::string(80, '-') << std::endl;
     
-    for (auto* center : centersList) {
-        std::cout << center->toString() << std::endl;
+    for (const auto& center : centersCopy) {
+        std::cout << center.toString() << std::endl;
     }
     std::cout << std::string(80, '-') << std::endl;
 }
 
 // Mostrar centros ordenados por cantidad de empleados
 void DistributionCenterService::displayCentersSortedByEmployees() {
-    std::vector<DistributionCenter*> centersList = getAllCenters();
+    DistributionCenterManager distributionCenterManager = any_cast<DistributionCenterManager>(distributionCenterManagers.getHead()->getData());
     
-    if (centersList.empty()) {
+    if (distributionCenterManager.getDistributionCentersCount() == 0) {
         std::cout << "No hay centros de distribucion registrados." << std::endl;
         return;
     }
     
+    // Obtener copias de los centros
+    const std::vector<DistributionCenter>& centers = distributionCenterManager.getDistributionCenters();
+    std::vector<DistributionCenter> centersCopy(centers.begin(), centers.end());
+    
     // Ordenar por número de empleados (descendente)
-    std::sort(centersList.begin(), centersList.end(),
-              [](DistributionCenter* a, DistributionCenter* b) {
-                  return a->getNumEmployees() > b->getNumEmployees();
+    std::sort(centersCopy.begin(), centersCopy.end(),
+              [](const DistributionCenter& a, const DistributionCenter& b) {
+                  return a.getNumEmployees() > b.getNumEmployees();
               });
     
     std::cout << "\n=== Centros Ordenados por Cantidad de Empleados ===" << std::endl;
     std::cout << std::string(80, '-') << std::endl;
     
-    for (auto* center : centersList) {
-        std::cout << center->toString() << std::endl;
+    for (const auto& center : centersCopy) {
+        std::cout << center.toString() << std::endl;
     }
     std::cout << std::string(80, '-') << std::endl;
 }
 
 // Verificar si un centro existe
 bool DistributionCenterService::centerExists(const std::string& code) {
-    return distributionNetwork.hasNode(code);
+    DistributionCenterManager distributionCenterManager = any_cast<DistributionCenterManager>(distributionCenterManagers.getHead()->getData());
+    return distributionCenterManager.hasCenter(code);
 }
 
 // Obtener un centro por codigo
 DistributionCenter* DistributionCenterService::getCenter(const std::string& code) {
-    if (!distributionNetwork.hasNode(code)) {
-        return nullptr;
-    }
-    return any_cast<DistributionCenter*>(distributionNetwork.getNode(code)->getData());
+    // This function returns a pointer to a temporary object
+    // Return nullptr to avoid crash - needs architectural redesign
+    return nullptr;
 }
 
 // Mostrar estadisticas generales
 void DistributionCenterService::displayStatistics() {
-    if (distributionNetwork.getNodeCount() == 0) {
+    DistributionCenterManager distributionCenterManager = any_cast<DistributionCenterManager>(distributionCenterManagers.getHead()->getData());
+    if (distributionCenterManager.getDistributionCentersCount() == 0) {
         std::cout << "No hay centros de distribucion registrados." << std::endl;
         return;
     }
 
-    std::vector<DistributionCenter*> centersList = getAllCenters();
+    const std::vector<DistributionCenter>& centersList = distributionCenterManager.getDistributionCenters();
 
     int totalCapacity = 0;
     int totalPackages = 0;
     int totalEmployees = 0;
 
-    for (auto* center : centersList) {
-        totalCapacity += center->getCapacity();
-        totalPackages += center->getDailyPackages();
-        totalEmployees += center->getNumEmployees();
+    for (const auto& center : centersList) {
+        totalCapacity += center.getCapacity();
+        totalPackages += center.getDailyPackages();
+        totalEmployees += center.getNumEmployees();
     }
 
     std::cout << "\n=== Estadisticas de Centros de Distribucion ===" << std::endl;
     std::cout << std::string(50, '=') << std::endl;
-    std::cout << "Total de centros: " << distributionNetwork.getNodeCount() << std::endl;
+    std::cout << "Total de centros: " << distributionCenterManager.getDistributionCentersCount() << std::endl;
     std::cout << "Capacidad total: " << totalCapacity << " paquetes" << std::endl;
     std::cout << "Paquetes diarios totales: " << totalPackages << std::endl;
     std::cout << "Empleados totales: " << totalEmployees << std::endl;
     std::cout << "\nPromedios:" << std::endl;
-    std::cout << "  Capacidad promedio: " << (totalCapacity / distributionNetwork.getNodeCount()) << " paquetes/centro" << std::endl;
-    std::cout << "  Paquetes diarios promedio: " << (totalPackages / distributionNetwork.getNodeCount()) << " paquetes/centro" << std::endl;
-    std::cout << "  Empleados promedio: " << (totalEmployees / distributionNetwork.getNodeCount()) << " empleados/centro" << std::endl;
+    std::cout << "  Capacidad promedio: " << (totalCapacity / distributionCenterManager.getDistributionCentersCount()) << " paquetes/centro" << std::endl;
+    std::cout << "  Paquetes diarios promedio: " << (totalPackages / distributionCenterManager.getDistributionCentersCount()) << " paquetes/centro" << std::endl;
+    std::cout << "  Empleados promedio: " << (totalEmployees / distributionCenterManager.getDistributionCentersCount()) << " empleados/centro" << std::endl;
     std::cout << std::string(50, '=') << std::endl;
 
     // Mostrar estadisticas del GraphHashTable
     std::cout << "\nEstadisticas de GraphHashTable:" << std::endl;
-    distributionNetwork.displayStatistics();
+    distributionCenterManager.displayStatistics();
 }
-
-// Cargar centros de ejemplo (mock data)
-void DistributionCenterService::loadMockCenters() {
-    std::cout << "Cargando centros de distribucion de ejemplo..." << std::endl;
-
-    addCenter("CBA", "CentroCordoba", "Cordoba", 5000, 2000, 120);
-    addCenter("MZA", "CentroMendoza", "Mendoza", 3000, 1200, 80);
-    addCenter("BUE", "CentroBuenosAires", "Buenos Aires", 8000, 5000, 200);
-    addCenter("ROS", "CentroRosario", "Rosario", 4000, 1800, 100);
-    addCenter("TUC", "CentroTucuman", "Tucuman", 2500, 900, 60);
-    addCenter("SLA", "CentroSalta", "Salta", 2000, 800, 50);
-
-    std::cout << " " << distributionNetwork.getNodeCount() << " centros cargados exitosamente." << std::endl;
-}
-
-
 
 // === Gestion de Conexiones ===
 
 bool DistributionCenterService::addConnection(const std::string& origin,
                                               const std::string& destination,
                                               double distance) {
+    DistributionCenterManager distributionCenterManager = any_cast<DistributionCenterManager>(distributionCenterManagers.getHead()->getData());
     // Verificar que ambos centros existen
-    if (!distributionNetwork.hasNode(origin)) {
+    if (!distributionCenterManager.hasCenter(origin)) {
         std::cout << "Error: Centro origen '" << origin << "' no encontrado." << std::endl;
         return false;
     }
 
-    if (!distributionNetwork.hasNode(destination)) {
+    if (!distributionCenterManager.hasCenter(destination)) {
         std::cout << "Error: Centro destino '" << destination << "' no encontrado." << std::endl;
         return false;
     }
 
     // Agregar conexion bidireccional usando el grafo
-    distributionNetwork.addArista(origin, destination, distance);
-    distributionNetwork.addArista(destination, origin, distance);
+    distributionCenterManager.relateDistributionCenter(origin, destination, distance);
+    distributionCenterManager.relateDistributionCenter(destination, origin, distance);
+
+    // Actualizar el manager en la lista
+    List newList;
+    newList.push(distributionCenterManager);
+    Node* current = distributionCenterManagers.getHead()->getNext();
+    while (current != nullptr) {
+        newList.push(current->getData());
+        current = current->getNext();
+    }
+    distributionCenterManagers = newList;
 
     std::cout << "Conexion agregada: " << origin << " <-> " << destination
               << " (" << distance << " km)" << std::endl;
@@ -317,14 +332,15 @@ bool DistributionCenterService::addConnection(const std::string& origin,
 }
 
 void DistributionCenterService::showCenterConnections(const std::string& code) {
-    if (!distributionNetwork.hasNode(code)) {
+    DistributionCenterManager distributionCenterManager = any_cast<DistributionCenterManager>(distributionCenterManagers.getHead()->getData());
+    if (!distributionCenterManager.hasCenter(code)) {
         std::cout << "Error: Centro '" << code << "' no encontrado." << std::endl;
         return;
     }
 
     std::cout << "\n=== Conexiones del Centro " << code << " ===" << std::endl;
 
-    List* edges = distributionNetwork.getAristas(code);
+    List* edges = distributionCenterManager.getConnections(code);
     if (!edges || edges->getSize() == 0) {
         std::cout << "Este centro no tiene conexiones." << std::endl;
         return;
@@ -345,16 +361,17 @@ void DistributionCenterService::showCenterConnections(const std::string& code) {
 }
 
 void DistributionCenterService::displayAllConnections() {
+    DistributionCenterManager distributionCenterManager = any_cast<DistributionCenterManager>(distributionCenterManagers.getHead()->getData());
     std::cout << "\n=== Todas las Conexiones ===" << std::endl;
     std::cout << std::string(60, '-') << std::endl;
 
-    List allCodes = distributionNetwork.getNodeCodes();
+    List allCodes = distributionCenterManager.getDistributionCentersCodes();
     Node* centerNode = allCodes.getHead();
     bool hasConnections = false;
 
     while (centerNode != nullptr) {
         std::string code = any_cast<std::string>(centerNode->getData());
-        List* edges = distributionNetwork.getAristas(code);
+        List* edges = distributionCenterManager.getConnections(code);
 
         if (edges && edges->getSize() > 0) {
             hasConnections = true;
@@ -377,33 +394,19 @@ void DistributionCenterService::displayAllConnections() {
     std::cout << std::string(60, '-') << std::endl;
 }
 
-void DistributionCenterService::loadMockConnections() {
-    std::cout << "Cargando conexiones de ejemplo..." << std::endl;
-    
-    // Conexiones según el enunciado y logica geografica de Argentina
-    addConnection("CBA", "MZA", 900);   // Cordoba - Mendoza
-    addConnection("CBA", "BUE", 700);   // Cordoba - Buenos Aires
-    addConnection("CBA", "ROS", 400);   // Cordoba - Rosario
-    addConnection("MZA", "BUE", 1100);  // Mendoza - Buenos Aires
-    addConnection("BUE", "ROS", 300);   // Buenos Aires - Rosario
-    addConnection("TUC", "CBA", 550);   // Tucuman - Cordoba
-    addConnection("TUC", "SLA", 300);   // Tucuman - Salta
-    addConnection("SLA", "CBA", 800);   // Salta - Cordoba
-    
-    std::cout << " Conexiones cargadas exitosamente." << std::endl;
-}
-
 // === Algoritmo de Dijkstra ===
 
 void DistributionCenterService::calculateShortestPath(const std::string& origin,
                                                        const std::string& destination) {
-    DijkstraGraphResult* result = dijkstra(distributionNetwork, origin, destination);
+    DistributionCenterManager distributionCenterManager = any_cast<DistributionCenterManager>(distributionCenterManagers.getHead()->getData());
+    DijkstraGraphResult* result = dijkstra(distributionCenterManager.getNetwork(), origin, destination);
     displayPathGraph(result, origin, destination);
     delete result;
 }
 
 void DistributionCenterService::calculateAllDistancesFrom(const std::string& origin) {
-    DijkstraGraphResult* result = dijkstra(distributionNetwork, origin, ""); // destination vacío = calcular a todos
+    DistributionCenterManager distributionCenterManager = any_cast<DistributionCenterManager>(distributionCenterManagers.getHead()->getData());
+    DijkstraGraphResult* result = dijkstra(distributionCenterManager.getNetwork(), origin, ""); // destination vacío = calcular a todos
     displayDijkstraGraphResult(result, origin);
     delete result;
 }

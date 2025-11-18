@@ -14,8 +14,9 @@ void showDistributionCenterMenu() {
         std::cout << "3. Eliminar centro de distribucion. (A.3)\n";
         std::cout << "4. Actualizar centro de distribucion.\n";
         std::cout << "5. Obtener centros de distribucion. (A.4)\n";
-        std::cout << "6. Mostrar estadisticas generales.\n";
-        std::cout << "7. Calcular camino minimo entre centros. (A.5)\n";
+        std::cout << "6. Conectar centros de distribucion.\n";
+        std::cout << "7. Mostrar estadisticas generales.\n";
+        std::cout << "8. Calcular camino minimo entre centros. (A.5)\n";
         std::cout << "0. Volver al menú principal\n";
         std::cout << "Seleccione una opcion: ";
         std::cin >> choice;
@@ -90,10 +91,22 @@ void showDistributionCenterMenu() {
             case 5:
                 showDisplayAllDistributionCenterMenu();
                 break;
-            case 6:
+            case 6: {
+                std::string origin, destination;
+                int distance;
+                std::cout << "Ingrese el codigo del centro origen: ";
+                std::cin >> origin;
+                std::cout << "Ingrese el codigo del centro destino: ";
+                std::cin >> destination;
+                std::cout << "Ingrese la distancia entre estos centros: ";
+                std::cin >> distance;
+                distributionCenterService->addConnection(origin, destination, distance);
+                break;
+            }
+            case 7:
                 distributionCenterService->displayStatistics();
                 break;
-            case 7: {
+            case 8: {
                 std::string origin, destination;
                 std::cout << "Ingrese el codigo del centro origen: ";
                 std::cin >> origin;

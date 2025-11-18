@@ -11,7 +11,6 @@
 #include "../entities/distributionCenter/DistributionCenter.h"
 #include "../entities/distributionCenterManager/DistributionCenterManager.h"
 #include "../entities/employee/Employee.h"
-#include "../utils/dataStructures/graph/GraphHashTable.h"
 
 // Global storage lists for all entities
 extern List packages;
@@ -23,6 +22,5 @@ extern List connections;
 extern List distributionCenters;
 extern List distributionCenterManagers;
 extern List employees;
-extern GraphHashTable distributionNetwork;
 
 #endif // STORAGE_H

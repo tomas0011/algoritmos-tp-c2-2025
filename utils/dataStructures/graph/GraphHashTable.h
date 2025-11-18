@@ -113,6 +113,80 @@ public:
         nodes = new HashTable(initialCapacity);
     }
 
+    // Copy constructor - deep copy
+    GraphHashTable(const GraphHashTable& other) : nodeCount(0) {
+        // Crear una nueva HashTable vacía con la misma capacidad
+        nodes = new HashTable(other.nodes->getCapacity());
+        
+        // Copiar todos los nodos
+        List allCodes = other.nodes->getKeys();
+        Node* current = allCodes.getHead();
+        
+        while (current != nullptr) {
+            string code = any_cast<string>(current->getData());
+            HashGraphNode* originalNode = any_cast<HashGraphNode*>(other.nodes->search(code));
+            
+            // Crear un nuevo nodo con los datos copiados
+            HashGraphNode* newNode = new HashGraphNode(originalNode->getCode(), originalNode->getData());
+            
+            // Copiar las aristas
+            const List& originalAristas = originalNode->getAristas();
+            Node* aristaNode = originalAristas.getHead();
+            while (aristaNode != nullptr) {
+                GraphArista* originalArista = any_cast<GraphArista*>(aristaNode->getData());
+                newNode->addArista(originalArista->getDestination(), originalArista->getWeight());
+                aristaNode = aristaNode->getNext();
+            }
+            
+            nodes->insert(code, newNode);
+            nodeCount++;
+            current = current->getNext();
+        }
+    }
+
+    // Assignment operator - deep copy
+    GraphHashTable& operator=(const GraphHashTable& other) {
+        if (this != &other) {
+            // Limpiar nodos existentes
+            List allCodes = nodes->getKeys();
+            Node* current = allCodes.getHead();
+            while (current != nullptr) {
+                string code = any_cast<string>(current->getData());
+                HashGraphNode* node = any_cast<HashGraphNode*>(nodes->search(code));
+                delete node;
+                current = current->getNext();
+            }
+            delete nodes;
+            
+            // Crear nueva HashTable y copiar
+            nodeCount = 0;
+            nodes = new HashTable(other.nodes->getCapacity());
+            
+            allCodes = other.nodes->getKeys();
+            current = allCodes.getHead();
+            
+            while (current != nullptr) {
+                string code = any_cast<string>(current->getData());
+                HashGraphNode* originalNode = any_cast<HashGraphNode*>(other.nodes->search(code));
+                
+                HashGraphNode* newNode = new HashGraphNode(originalNode->getCode(), originalNode->getData());
+                
+                const List& originalAristas = originalNode->getAristas();
+                Node* aristaNode = originalAristas.getHead();
+                while (aristaNode != nullptr) {
+                    GraphArista* originalArista = any_cast<GraphArista*>(aristaNode->getData());
+                    newNode->addArista(originalArista->getDestination(), originalArista->getWeight());
+                    aristaNode = aristaNode->getNext();
+                }
+                
+                nodes->insert(code, newNode);
+                nodeCount++;
+                current = current->getNext();
+            }
+        }
+        return *this;
+    }
+
     ~GraphHashTable() {
         // Limpiar todos los nodos
         List allCodes = nodes->getKeys();
