@@ -21,7 +21,7 @@ class DistributionCenterManager{
         void displayStatistics();
         List* getConnections(std::string code) const;
         void getCenters();
-        DistributionCenter* DistributionCenterManager::getById(std::string id);
+        DistributionCenter* getById(std::string id);
         GraphHashTable& getNetwork() const;
         const std::vector<DistributionCenter>& getDistributionCenters() const;
 };

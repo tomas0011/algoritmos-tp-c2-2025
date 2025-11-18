@@ -1,10 +1,8 @@
-#include "../../entities/Package.h"
-#include "../../../list/List.h"   // donde tengas tu List
-
-struct ResultadoMochila {
-    double precioMaximo;
-    std::vector<Package> paquetesSeleccionados;
-};
+#include <vector>
+#include <any>
+#include "knapsack.h"
+#include "entities/package/Package.h"
+#include "utils/dataStructures/list/List.h"   // donde tengas tu List
 
 // ---------------------------------------------------------
 
@@ -51,7 +49,7 @@ void backtrackingList(
         backtrackingList(
             nodo->getNext(),
             nuevoPeso,
-            precioActual + paquete.getValue(),
+            precioActual + paquete.getPrice(),
             pesoMaximo,
             solucionActual,
             mejor
