@@ -12,7 +12,7 @@ DistributionCenter DistributionCenterManager::createDistributionCenter(std::stri
 
     DistributionCenter center(code, name, city, capacity, dailyPackages, employees, empVector, connVector, pkgVector);
     distributionCenters.push_back(center);
-    distributionCenterNetwork.addNode(code, center);
+    distributionCenterNetwork.addNode(code, &distributionCenters.back());
 
     std::cout << "Distribution Center created: " << name << " in " << city << std::endl;
     return center;
@@ -27,14 +27,11 @@ bool DistributionCenterManager::hasCenter(std::string code) const {
 }
 
 DistributionCenter* DistributionCenterManager::getCenter(std::string code) const {
-    // Buscar en el vector de centros de distribución
-    for (const auto& center : distributionCenters) {
-        if (center.getCode() == code) {
-            // Retornar un puntero al centro en el vector
-            return const_cast<DistributionCenter*>(&center);
-        }
+    if (!distributionCenterNetwork.hasNode(code)) {
+        throw std::runtime_error("Distribution Center with code " + code + " not found.");
     }
-    throw std::runtime_error("Distribution Center with code " + code + " not found.");
+    HashGraphNode* node = any_cast<HashGraphNode*>(distributionCenterNetwork.getNode(code));
+    return any_cast<DistributionCenter*>(node->getData());
 }
 
 int DistributionCenterManager::getDistributionCentersCount() const {
