@@ -3,6 +3,8 @@
 
 #include <vector>
 #include "../connection/Connection.h"
+#include "../package/Package.h"
+#include "../transport/Transport.h"
 
 class ShipmentManager {
 private:
@@ -12,6 +14,7 @@ private:
     int distributionCenterId;
 
 public:
+    // Constructor
     ShipmentManager(int id, int transportId, const std::vector<Connection>& path, int distributionCenterId);
     void display() const;
 

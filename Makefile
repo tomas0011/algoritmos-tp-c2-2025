@@ -12,6 +12,7 @@ SRCS = main.cpp \
         bash/distributionCenter.bash.cpp \
         bash/employee.bash.cpp \
         utils/algorithms/dijkstra/dijkstra.cpp \
+        utils/algorithms/knapsackProblem/knapsack.cpp \
        storage/mockData.cpp \
        storage/storage.cpp \
        services/initializeServices.cpp \

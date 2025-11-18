@@ -17,7 +17,7 @@ void initializeServices() {
     clientService = new ClientService(clients);
     employeeService = new EmployeeService(employees);
     connectionService = new ConnectionService(connections);
-    shipmentManagerService = new ShipmentManagerService(shipmentManagers);
     transportService = new TransportService(transports);
     distributionCenterService = new DistributionCenterService(distributionCenters, distributionCenterManagers);
+    shipmentManagerService = new ShipmentManagerService(transportService, distributionCenterService, shipmentManagers);
 }

@@ -1,11 +1,13 @@
 #include "ShipmentManager.h"
 #include <iostream>
+#include "entities/distributionCenter/DistributionCenter.h"
 
 ShipmentManager::ShipmentManager(int id, int transportId, const std::vector<Connection>& path, int distributionCenterId)
     : id(id), transportId(transportId), path(path), distributionCenterId(distributionCenterId) {}
 
 void ShipmentManager::display() const {
-    std::cout << "ID: " << id << ", TransportId: " << transportId << ", DistributionCenterId: " << distributionCenterId << std::endl;
+    std::cout << "ID: " << id << ", TransportId: " << transportId
+              << ", DistributionCenterId: " << distributionCenterId << std::endl;
     for (const auto& conn : path) {
         conn.display();
     }

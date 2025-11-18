@@ -70,3 +70,12 @@ GraphHashTable& DistributionCenterManager::getNetwork() const {
 const std::vector<DistributionCenter>& DistributionCenterManager::getDistributionCenters() const {
     return distributionCenters;
 }
+
+DistributionCenter* DistributionCenterManager::getById(std::string id) {
+    for (auto& center : distributionCenters) {
+        if (center.getCode() == id) {
+            return &center;   // devolvés puntero al objeto real del vector
+        }
+    }
+    return nullptr; // si no lo encontró
+}

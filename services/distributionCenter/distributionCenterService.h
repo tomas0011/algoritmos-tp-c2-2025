@@ -68,9 +68,6 @@ public:
     // Mostrar todas las conexiones del sistema
     void displayAllConnections();
     
-    // Cargar conexiones de ejemplo
-    void loadMockConnections();
-    
     // === Algoritmo de Dijkstra ===
     
     // Calcular y mostrar el camino minimo entre dos centros
