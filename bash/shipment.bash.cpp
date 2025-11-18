@@ -14,6 +14,9 @@ void showShipmentMenu() {
         std::cout << "3. Actualizar un envio\n";
         std::cout << "4. Eliminar un envio\n";
         std::cout << "5. Mostrar todos los envios\n";
+        std::cout << "6. Calcular el total de envíos por centro por rango de fechas. (B.1)\n";
+        std::cout << "7. Detectar centros con sobrecarga. (B.2)\n";
+        std::cout << "8. Obtener envios de un cliente por paquete. (B.3)\n";
         std::cout << "0. Volver al menú principal\n";
         std::cout << "Seleccione una opcion: ";
         std::cin >> choice;

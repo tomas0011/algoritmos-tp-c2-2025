@@ -9,16 +9,13 @@ void showDistributionCenterMenu() {
     int choice;
     do {
         std::cout << "\n=== Gestion de Centros de Distribucion (Item A) ===\n";
-        std::cout << "1. Mostrar informacion de un centro especifico\n";
-        std::cout << "2. Agregar un nuevo centro\n";
-        std::cout << "3. Eliminar un centro existente\n";
-        std::cout << "4. Actualizar informacion de un centro\n";
-        std::cout << "5. Mostrar todos los centros\n";
-        std::cout << "6. Mostrar centros ordenados por capacidad\n";
-        std::cout << "7. Mostrar centros ordenados por paquetes procesados\n";
-        std::cout << "8. Mostrar centros ordenados por cantidad de empleados\n";
-        std::cout << "9. Mostrar estadisticas generales\n";
-        std::cout << "10. Calcular camino minimo entre centros\n";
+        std::cout << "1. Obtener centro de distribucion. (A.1)\n";
+        std::cout << "2. Agregar centro de distribucion. (A.2)\n";
+        std::cout << "3. Eliminar centro de distribucion. (A.3)\n";
+        std::cout << "4. Actualizar centro de distribucion.\n";
+        std::cout << "5. Obtener centros de distribucion. (A.4)\n";
+        std::cout << "6. Mostrar estadisticas generales.\n";
+        std::cout << "7. Calcular camino minimo entre centros. (A.5)\n";
         std::cout << "0. Volver al menú principal\n";
         std::cout << "Seleccione una opcion: ";
         std::cin >> choice;
@@ -91,21 +88,12 @@ void showDistributionCenterMenu() {
                 break;
             }
             case 5:
-                distributionCenterService->displayAllCenters();
+                showDisplayAllDistributionCenterMenu();
                 break;
             case 6:
-                distributionCenterService->displayCentersSortedByCapacity();
-                break;
-            case 7:
-                distributionCenterService->displayCentersSortedByPackages();
-                break;
-            case 8:
-                distributionCenterService->displayCentersSortedByEmployees();
-                break;
-            case 9:
                 distributionCenterService->displayStatistics();
                 break;
-            case 10: {
+            case 7: {
                 std::string origin, destination;
                 std::cout << "Ingrese el codigo del centro origen: ";
                 std::cin >> origin;
@@ -115,6 +103,41 @@ void showDistributionCenterMenu() {
                 distributionCenterService->calculateShortestPath(origin, destination);
                 break;
             }
+            case 0:
+                std::cout << "Volviendo al menú principal...\n";
+                break;
+            default:
+                std::cout << "Opcion invalida. Intente de nuevo.\n";
+                break;
+        }
+    } while (choice != 0);
+}
+
+void showDisplayAllDistributionCenterMenu() {
+    int choice;
+    do {
+        std::cout << "\n=== Obtener Centros de Distribucion (Item A.4) ===\n";
+        std::cout << "1. Obtener todos los centros de distribucion.\n";
+        std::cout << "2. Obtener centros ordenados por capacidad.\n";
+        std::cout << "3. Obtener centros ordenados por paquetes procesados.\n";
+        std::cout << "4. Obtener centros ordenados por cantidad de empleados.\n";
+        std::cout << "0. Volver al menú principal\n";
+        std::cout << "Seleccione una opcion: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case 1:
+                distributionCenterService->displayAllCenters();
+                break;
+            case 2:
+                distributionCenterService->displayCentersSortedByCapacity();
+                break;
+            case 3:
+                distributionCenterService->displayCentersSortedByPackages();
+                break;
+            case 4:
+                distributionCenterService->displayCentersSortedByEmployees();
+                break;
             case 0:
                 std::cout << "Volviendo al menú principal...\n";
                 break;
