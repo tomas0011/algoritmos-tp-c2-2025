@@ -2,7 +2,7 @@
 #include <iostream>
 
 Shipment::Shipment(int id, const std::string& state, double cost, int priority, double totalPrice, double totalWeight,
-                   int shimpmentManagerId, int distributionCenterId, const std::vector<Package>& packages,
+                   int shimpmentManagerId, std::string distributionCenterId, const std::vector<Package>& packages,
                    int originId, int destinationId, int clientId, time_t createDate, time_t leftWarehouseDate,
                    time_t estimatedDeliveryDate, time_t deliveryDate)
     : id(id), state(state), cost(cost), priority(priority), totalPrice(totalPrice), totalWeight(totalWeight),
@@ -29,7 +29,7 @@ int Shipment::getPriority() const { return priority; }
 double Shipment::getTotalPrice() const { return totalPrice; }
 double Shipment::getTotalWeight() const { return totalWeight; }
 int Shipment::getShimpmentManagerId() const { return shimpmentManagerId; }
-int Shipment::getDistributionCenterId() const { return distributionCenterId; }
+std::string Shipment::getDistributionCenterId() const { return distributionCenterId; }
 const std::vector<Package>& Shipment::getPackages() const { return packages; }
 int Shipment::getOriginId() const { return originId; }
 int Shipment::getDestinationId() const { return destinationId; }

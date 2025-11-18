@@ -7,8 +7,8 @@ Package pkg1(1, 10.5, 1, 2.0);
 Package pkg2(2, 15.0, 2, 3.5);
 Package pkg3(3, 8.0, 1, 1.5);
 
-Shipment ship1(1, "In Transit", 50.0, 1, 100.0, 10.0, 1, 1, {pkg1, pkg2}, 1, 2, 1, time(nullptr), time(nullptr), time(nullptr), time(nullptr));
-Shipment ship2(2, "Delivered", 75.0, 2, 150.0, 15.0, 2, 2, {pkg3}, 2, 3, 2, time(nullptr), time(nullptr), time(nullptr), time(nullptr));
+Shipment ship1(1, "In Transit", 50.0, 1, 100.0, 10.0, 1, "DC1", {pkg1, pkg2}, 1, 2, 1, time(nullptr), time(nullptr), time(nullptr), time(nullptr));
+Shipment ship2(2, "Delivered", 75.0, 2, 150.0, 15.0, 2, "DC2", {pkg3}, 2, 3, 2, time(nullptr), time(nullptr), time(nullptr), time(nullptr));
 
 ShipmentManager sm1(1, 1, {}, 1);
 ShipmentManager sm2(2, 2, {}, 2);

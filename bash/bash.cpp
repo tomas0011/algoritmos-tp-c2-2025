@@ -104,7 +104,7 @@ void showTPMenu() {
                 showDistributionCenterMenu();
                 break;
             case 2:
-                std::cout << "No implementado...\n";
+                showShipmentMenu();
                 break;
             case 3:
                 std::cout << "No implementado...\n";

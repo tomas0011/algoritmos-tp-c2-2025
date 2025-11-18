@@ -9,10 +9,11 @@
 
 class DistributionCenterService {
 private:
-    GraphHashTable* redDistribucion;  // Grafo que encapsula centros y conexiones
+    List& distributionCenters;  // Reference to storage list
+    GraphHashTable& distributionNetwork;  // Reference to storage graph
 
 public:
-    DistributionCenterService();
+    DistributionCenterService(List& centersList, GraphHashTable& network);
     ~DistributionCenterService();
 
     // CRUD operations según Item A del enunciado
@@ -78,7 +79,7 @@ public:
     void calculateAllDistancesFrom(const std::string& origin);
     
     // Obtener el grafo de la red (para acceso directo si es necesario)
-    GraphHashTable* getRedDistribucion() { return redDistribucion; }
+    GraphHashTable& getRedDistribucion() { return distributionNetwork; }
 };
 
 #endif // DISTRIBUTION_CENTER_SERVICE_H

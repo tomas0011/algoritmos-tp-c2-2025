@@ -19,7 +19,7 @@ void initializeServices() {
     connectionService = new ConnectionService(connections);
     shipmentManagerService = new ShipmentManagerService(shipmentManagers);
     transportService = new TransportService(transports);
-    distributionCenterService = new DistributionCenterService();
+    distributionCenterService = new DistributionCenterService(distributionCenters, distributionNetwork);
     
     // Cargar centros de distribucion de ejemplo
     distributionCenterService->loadMockCenters();
