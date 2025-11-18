@@ -9,6 +9,7 @@ SRCS = main.cpp \
         bash/transport.bash.cpp \
         bash/client.bash.cpp \
         bash/connection.bash.cpp \
+        bash/distributionCenter.bash.cpp \
         bash/employee.bash.cpp \
         utils/algorithms/dijkstra/dijkstra.cpp \
        storage/mockData.cpp \
