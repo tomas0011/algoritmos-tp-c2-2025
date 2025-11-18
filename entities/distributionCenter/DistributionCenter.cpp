@@ -64,10 +64,12 @@ void DistributionCenter::display() const {
 
 std::string DistributionCenter::toString() const {
     std::ostringstream oss;
-    oss << code << " | " << name << " | " << city 
-        << " | Cap:" << capacity 
-        << " | Paq:" << dailyPackages 
-        << " | Emp:" << numEmployees;
+    oss << "Id: " << code
+        << " | Name: " << name
+        << " | City: " << city
+        << " | Capacity: " << capacity
+        << " | Daly Packages: " << dailyPackages
+        << " | Employees: " << numEmployees;
     return oss.str();
 }
 
