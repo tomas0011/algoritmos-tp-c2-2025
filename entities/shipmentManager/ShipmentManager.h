@@ -3,6 +3,8 @@
 
 #include <vector>
 #include "../connection/Connection.h"
+#include "../package/Package.h"
+#include "../transport/Transport.h"
 
 class ShipmentManager {
 private:
@@ -12,6 +14,7 @@ private:
     int distributionCenterId;
 
 public:
+    // Constructor
     ShipmentManager(int id, int transportId, const std::vector<Connection>& path, int distributionCenterId);
     void display() const;
 
@@ -20,6 +23,8 @@ public:
     int getTransportId() const;
     const std::vector<Connection>& getPath() const;
     int getDistributionCenterId() const;
-};
+
+    std::vector<Package> generarCargaOptima() const;
+}
 
 #endif // SHIPMENT_MANAGER_H
