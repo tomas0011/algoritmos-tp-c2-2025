@@ -12,4 +12,3 @@ List connections;
 List distributionCenters;
 List distributionCenterManagers;
 List employees;
-GraphHashTable distributionNetwork;
