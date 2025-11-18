@@ -1,6 +1,6 @@
 #include "ShipmentManager.h"
 #include <iostream>
-#include "../utils/algorithms/Knapsack.h"
+#include "../../utils/algorithms/knapsackProblem/Knapsack.cpp"
 #include "../services/TransportService.h"
 #include "../entities/distributionCenterManager/DistributionCenterManager.h"
 #include "../entities/distributionCenter/DistributionCenter.h"

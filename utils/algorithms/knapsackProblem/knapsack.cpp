@@ -1,4 +1,4 @@
-#include "../../entities/Package.h"
+#include "../../../entities/Package.h"
 #include "../../../list/List.h"   // donde tengas tu List
 
 struct ResultadoMochila {

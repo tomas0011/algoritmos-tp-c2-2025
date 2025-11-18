@@ -12,6 +12,7 @@ class DistributionCenterManager{
         void createDistributionCenter(int id, std::string name, std::string city, int capacity, int dailyPackages, int employees);
         void getCenters();
         const std::vector<DistributionCenter>& getDistributionCenters() const;
+        DistributionCenter* getById(int id);
 };
 
 #endif // DISTRIBUTIONCENTER_MANAGER_H

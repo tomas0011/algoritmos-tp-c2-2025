@@ -7,6 +7,8 @@ ClientService* clientService = nullptr;
 EmployeeService* employeeService = nullptr;
 ConnectionService* connectionService = nullptr;
 ShipmentManagerService* shipmentManagerService = nullptr;
+// Crear la lista del módulo
+static List connectionsList;
 
 void initializeServices() {
     // Initialize services
@@ -14,6 +16,6 @@ void initializeServices() {
     shipmentService = new ShipmentService(shipments);
     clientService = new ClientService(clients);
     employeeService = new EmployeeService(employees);
-    connectionService = new ConnectionService();
+    connectionService = new ConnectionService(connectionsList);
     shipmentManagerService = new ShipmentManagerService(shipmentManagers);
 }

@@ -42,13 +42,13 @@ public:
 // =======================================================
 // Clase Node (Nodo)
 // =======================================================
-class Node {
+class GraphNode {
 private:
     any data;                 // dato genérico
     List edges;       // lista de aristas
 
 public:
-    Node(any newData)
+    GraphNode(any newData)
         : data(newData) {}
 
     any getData() const { return data; }
@@ -80,8 +80,6 @@ public:
         }
     }
 
-
-
     string toString() const {
         ostringstream oss;
         oss << dataToString() << " -> ";
@@ -108,14 +106,14 @@ public:
     ~Graph() {
         Node* current = nodes.getHead();
         while (current != nullptr) {
-            delete any_cast<Node*>(current->getData());
+            delete any_cast<GraphNode*>(current->getData());
             current = current->getNext();
         }
     }
 
     // agrega un nodo y devuelve su índice
     int addNode(any data) {
-        nodes.push(new Node(data));
+        nodes.push(new GraphNode(data));
         return nodes.getSize() - 1;
     }
 
@@ -123,16 +121,16 @@ public:
 void addEdge(int origen, int destino, double peso = 1.0) {
     if (origen >= 0 && origen < nodes.getSize() &&
         destino >= 0 && destino < nodes.getSize()) {
-        Node* nodeOrigen = any_cast<Node*>(nodes.getNodeAt(origen)->getData());
+        GraphNode* nodeOrigen = any_cast<GraphNode*>(nodes.getNodeAt(origen)->getData());
         nodeOrigen->addEdge(origen, destino, peso);
     } else {
         cerr << "Error: índice de nodo inválido." << endl;
     }
 }
 
-    Node* getNode(int index) const {
+    GraphNode* getNode(int index) const {
         if (index >= 0 && index < nodes.getSize()) {
-            return any_cast<Node*>(nodes.getNodeAt(index)->getData());
+            return any_cast<GraphNode*>(nodes.getNodeAt(index)->getData());
         }
         return nullptr;
     }
@@ -140,9 +138,9 @@ void addEdge(int origen, int destino, double peso = 1.0) {
     string toString() const {
         ostringstream oss;
         Node* current = nodes.getHead();
-        int i = 0;
+        int i = 0;  
         while (current != nullptr) {
-            Node* n = any_cast<Node*>(current->getData());
+            GraphNode* n = any_cast<GraphNode*>(current->getData());
             oss << "Nodo " << i << ": " << n->toString() << "\n";
             current = current->getNext();
             i++;
