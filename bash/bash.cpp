@@ -1,6 +1,12 @@
 #include "bash.h"
-#include "services/initializeServices.h"
-#include "storage/mockData.h"
+#include "package.bash.h"
+#include "shipment.bash.h"
+#include "shipmentManager.bash.h"
+#include "transport.bash.h"
+#include "client.bash.h"
+#include "connection.bash.h"
+#include "distributionCenter.bash.h"
+#include "employee.bash.h"
 #include <iostream>
 #include <string>
 
@@ -8,46 +14,100 @@ void showMenu() {
     int choice;
     do {
         std::cout << "\n=== Menu de Entidades ===\n";
-        std::cout << "1. Listar Paquetes\n";
-        std::cout << "2. Listar Envios\n";
-        std::cout << "3. Listar Gestores de Envios\n";
-        std::cout << "4. Listar Transportes\n";
-        std::cout << "5. Listar Clientes\n";
-        std::cout << "6. Listar Conexiones\n";
-        std::cout << "7. Listar Centros de Distribucion\n";
-        std::cout << "8. Listar Empleados\n";
-        std::cout << "9. Listar Gestores de Centros de Distribucion\n";
+        std::cout << "1. Sistema de gestion\n";
+        std::cout << "2. Ejercicios del TP\n";
         std::cout << "0. Salir\n";
         std::cout << "Seleccione una opcion: ";
         std::cin >> choice;
 
         switch (choice) {
             case 1:
-                packageService->displayAllPackages();
+                showManagementMenu();
                 break;
             case 2:
-                shipmentService->displayAllShipments();
+                showTPMenu();
+                break;
+            case 0:
+                std::cout << "Saliendo...\n";
+                break;
+            default:
+                std::cout << "Opcion invalida. Intente de nuevo.\n";
+                break;
+        }
+    } while (choice != 0);
+}
+
+void showManagementMenu() {
+    int choice;
+    do {
+        std::cout << "\n=== Menu de Entidades ===\n";
+        std::cout << "1. Gestionar Paquetes\n";
+        std::cout << "2. Gestionar Envios\n";
+        std::cout << "3. Gestionar Gestores de Envios\n";
+        std::cout << "4. Gestionar Transportes\n";
+        std::cout << "5. Gestionar Clientes\n";
+        std::cout << "6. Gestionar Conexiones\n";
+        std::cout << "7. Gestionar Centros de Distribucion\n";
+        std::cout << "8. Gestionar Empleados\n";
+        std::cout << "0. Salir\n";
+        std::cout << "Seleccione una opcion: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case 1:
+                showPackageMenu();
+                break;
+            case 2:
+                showShipmentMenu();
                 break;
             case 3:
-                displayMockShipmentManagers();
+                showShipmentManagerMenu();
                 break;
             case 4:
-                displayMockTransports();
+                showTransportMenu();
                 break;
             case 5:
-                displayMockClients();
+                showClientMenu();
                 break;
             case 6:
-                displayMockConnections();
+                showConnectionMenu();
                 break;
             case 7:
-                displayMockDistributionCenters();
+                showDistributionCenterMenu();
                 break;
             case 8:
-                displayMockEmployees();
+                showEmployeeMenu();
                 break;
-            case 9:
-                displayMockDistributionCenterManagers();
+            case 0:
+                std::cout << "Saliendo...\n";
+                break;
+            default:
+                std::cout << "Opcion invalida. Intente de nuevo.\n";
+                break;
+        }
+    } while (choice != 0);
+}
+
+void showTPMenu() {
+    int choice;
+    do {
+        std::cout << "\n=== Menu de Entidades ===\n";
+        std::cout << "1. Gestion de Centros (Ejercicio A)\n";
+        std::cout << "2. Analisis de Envios (Ejercicio B)\n";
+        std::cout << "3. Optimizacion con Backtracking (Ejercicio C)\n";
+        std::cout << "0. Salir\n";
+        std::cout << "Seleccione una opcion: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case 1:
+                showDistributionCenterMenu();
+                break;
+            case 2:
+                showShipmentMenu();
+                break;
+            case 3:
+                std::cout << "No implementado...\n";
                 break;
             case 0:
                 std::cout << "Saliendo...\n";

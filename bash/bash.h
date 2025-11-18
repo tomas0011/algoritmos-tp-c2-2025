@@ -2,5 +2,7 @@
 #define BASH_H
 
 void showMenu();
+void showManagementMenu();
+void showTPMenu();
 
 #endif // BASH_H

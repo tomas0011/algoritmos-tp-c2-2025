@@ -18,7 +18,7 @@ int main() {
 
     arbol.getRaiz()->setRight(new Node(8));
     arbol.getRaiz()->getRight()->setLeft(new Node(7));
-    cout << "Contenido del árbol:" << endl;
+    cout << "Contenido del arbol:" << endl;
 
     arbol.display();
 

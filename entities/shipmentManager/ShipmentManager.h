@@ -23,8 +23,6 @@ public:
     int getTransportId() const;
     const std::vector<Connection>& getPath() const;
     int getDistributionCenterId() const;
-
-    std::vector<Package> generarCargaOptima() const;
 };
 
 #endif // SHIPMENT_MANAGER_H

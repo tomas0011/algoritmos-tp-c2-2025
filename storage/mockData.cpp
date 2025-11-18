@@ -7,8 +7,8 @@ Package pkg1(1, 10.5, 1, 2.0);
 Package pkg2(2, 15.0, 2, 3.5);
 Package pkg3(3, 8.0, 1, 1.5);
 
-Shipment ship1(1, "In Transit", 50.0, 1, 100.0, 10.0, 1, 1, {pkg1, pkg2}, 1, 2, 1, time(nullptr), time(nullptr), time(nullptr), time(nullptr));
-Shipment ship2(2, "Delivered", 75.0, 2, 150.0, 15.0, 2, 2, {pkg3}, 2, 3, 2, time(nullptr), time(nullptr), time(nullptr), time(nullptr));
+Shipment ship1(1, "In Transit", 50.0, 1, 100.0, 10.0, 1, "DC1", {pkg1, pkg2}, 1, 2, 1, time(nullptr), time(nullptr), time(nullptr), time(nullptr));
+Shipment ship2(2, "Delivered", 75.0, 2, 150.0, 15.0, 2, "DC2", {pkg3}, 2, 3, 2, time(nullptr), time(nullptr), time(nullptr), time(nullptr));
 
 ShipmentManager sm1(1, 1, {}, 1);
 ShipmentManager sm2(2, 2, {}, 2);
@@ -25,8 +25,8 @@ Connection conn2(2, 2, 3, 75.0);
 Employee emp1(1, "Alice", 1);
 Employee emp2(2, "Bob", 2);
 
-DistributionCenter dc1(1, "Center A", "City A", std::vector<Employee>{emp1}, std::vector<Connection>{conn1}, std::vector<Package>{pkg1});
-DistributionCenter dc2(2, "Center B", "City B", std::vector<Employee>{emp2}, std::vector<Connection>{conn2}, std::vector<Package>{pkg2, pkg3});
+DistributionCenter dc1("DC1", "Center A", "City A", 100, 50, 10, std::vector<Employee>{emp1}, std::vector<Connection>{conn1}, std::vector<Package>{pkg1});
+DistributionCenter dc2("DC2", "Center B", "City B", 200, 75, 15, std::vector<Employee>{emp2}, std::vector<Connection>{conn2}, std::vector<Package>{pkg2, pkg3});
 
 DistributionCenterManager manager1;
 DistributionCenterManager manager2;
@@ -65,130 +65,28 @@ void initializeMockData() {
     distributionCenters.push(dc1);
     distributionCenters.push(dc2);
 
-    // Push distribution center managers to storage
+    // Initialize distribution center managers BEFORE pushing
+    manager1.createDistributionCenter("A", "Center A", "City A", 100, 50, 10);
+    manager1.createDistributionCenter("B", "Center B", "City B", 200, 75, 15);
+    manager2.createDistributionCenter("C", "Center C", "City C", 150, 60, 12);
+
+    manager1.createDistributionCenter("CBA", "Cordoba Center", "Cordoba", 300, 10, 9);
+    manager1.createDistributionCenter("MZA", "Mendoza Center", "Mendoza", 250, 12, 13);
+    manager1.createDistributionCenter("BUE", "Buenos Aires Center", "Buenos Aires", 400, 11, 12);
+    manager1.createDistributionCenter("ROS", "Rosario Center", "Rosario", 200, 5, 8);
+    manager1.createDistributionCenter("TUC", "Tucuman Center", "Tucuman", 180, 4, 6);
+    manager1.createDistributionCenter("SLA", "Salta Center", "Salta", 160, 2, 5);
+
+    manager1.relateDistributionCenter("CBA", "MZA", 900);   // Cordoba - Mendoza
+    manager1.relateDistributionCenter("CBA", "BUE", 700);   // Cordoba - Buenos Aires
+    manager1.relateDistributionCenter("CBA", "ROS", 400);   // Cordoba - Rosario
+    manager1.relateDistributionCenter("MZA", "BUE", 1100);  // Mendoza - Buenos Aires
+    manager1.relateDistributionCenter("BUE", "ROS", 300);   // Buenos Aires - Rosario
+    manager1.relateDistributionCenter("TUC", "CBA", 550);   // Tucuman - Cordoba
+    manager1.relateDistributionCenter("TUC", "SLA", 300);   // Tucuman - Salta
+    manager1.relateDistributionCenter("SLA", "CBA", 800);   // Salta - Cordoba
+
+    // Push distribution center managers to storage AFTER initialization
     distributionCenterManagers.push(manager1);
     distributionCenterManagers.push(manager2);
-
-    // Initialize distribution center managers
-    manager1.createDistributionCenter(1, "Center A", "City A", 100, 50, 10);
-    manager1.createDistributionCenter(2, "Center B", "City B", 200, 75, 15);
-    manager2.createDistributionCenter(3, "Center C", "City C", 150, 60, 12);
-}
-
-// Display functions - now using storage lists
-void displayMockPackages() {
-    std::cout << "Mock Packages:" << std::endl;
-    Node* current = packages.getHead();
-    while (current != nullptr) {
-        try {
-            Package pkg = std::any_cast<Package>(current->getData());
-            pkg.display();
-        } catch (const std::bad_any_cast& e) {
-            std::cout << "Error casting package" << std::endl;
-        }
-        current = current->getNext();
-    }
-}
-
-void displayMockShipments() {
-    std::cout << "Mock Shipments:" << std::endl;
-    Node* current = shipments.getHead();
-    while (current != nullptr) {
-        try {
-            Shipment ship = std::any_cast<Shipment>(current->getData());
-            ship.display();
-        } catch (const std::bad_any_cast& e) {
-            std::cout << "Error casting shipment" << std::endl;
-        }
-        current = current->getNext();
-    }
-}
-
-void displayMockShipmentManagers() {
-    std::cout << "Mock Shipment Managers:" << std::endl;
-    Node* current = shipmentManagers.getHead();
-    while (current != nullptr) {
-        try {
-            ShipmentManager sm = std::any_cast<ShipmentManager>(current->getData());
-            sm.display();
-        } catch (const std::bad_any_cast& e) {
-            std::cout << "Error casting shipment manager" << std::endl;
-        }
-        current = current->getNext();
-    }
-}
-
-void displayMockTransports() {
-    std::cout << "Mock Transports:" << std::endl;
-    Node* current = transports.getHead();
-    while (current != nullptr) {
-        try {
-            Transport trans = std::any_cast<Transport>(current->getData());
-            trans.display();
-        } catch (const std::bad_any_cast& e) {
-            std::cout << "Error casting transport" << std::endl;
-        }
-        current = current->getNext();
-    }
-}
-
-void displayMockClients() {
-    std::cout << "Mock Clients:" << std::endl;
-    Node* current = clients.getHead();
-    while (current != nullptr) {
-        try {
-            Client client = std::any_cast<Client>(current->getData());
-            client.display();
-        } catch (const std::bad_any_cast& e) {
-            std::cout << "Error casting client" << std::endl;
-        }
-        current = current->getNext();
-    }
-}
-
-void displayMockConnections() {
-    std::cout << "Mock Connections:" << std::endl;
-    Node* current = connections.getHead();
-    while (current != nullptr) {
-        try {
-            Connection conn = std::any_cast<Connection>(current->getData());
-            conn.display();
-        } catch (const std::bad_any_cast& e) {
-            std::cout << "Error casting connection" << std::endl;
-        }
-        current = current->getNext();
-    }
-}
-
-void displayMockDistributionCenters() {
-    std::cout << "Mock Distribution Centers:" << std::endl;
-    Node* current = distributionCenters.getHead();
-    while (current != nullptr) {
-        try {
-            DistributionCenter dc = std::any_cast<DistributionCenter>(current->getData());
-            dc.display();
-        } catch (const std::bad_any_cast& e) {
-            std::cout << "Error casting distribution center" << std::endl;
-        }
-        current = current->getNext();
-    }
-}
-
-void displayMockDistributionCenterManagers() {
-    std::cout << "Mock Distribution Center Managers:" << std::endl;
-    std::cout << "Total managers: " << distributionCenterManagers.getSize() << std::endl;
-}
-
-void displayMockEmployees() {
-    std::cout << "Mock Employees:" << std::endl;
-    Node* current = employees.getHead();
-    while (current != nullptr) {
-        try {
-            Employee emp = std::any_cast<Employee>(current->getData());
-            emp.display();
-        } catch (const std::bad_any_cast& e) {
-            std::cout << "Error casting employee" << std::endl;
-        }
-        current = current->getNext();
-    }
 }

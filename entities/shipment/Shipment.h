@@ -15,7 +15,7 @@ private:
     double totalPrice;
     double totalWeight;
     int shimpmentManagerId;
-    int distributionCenterId;
+    std::string distributionCenterId;
     std::vector<Package> packages;
     int originId;
     int destinationId;
@@ -27,7 +27,7 @@ private:
 
 public:
     Shipment(int id, const std::string& state, double cost, int priority, double totalPrice, double totalWeight,
-             int shimpmentManagerId, int distributionCenterId, const std::vector<Package>& packages,
+             int shimpmentManagerId, std::string distributionCenterId, const std::vector<Package>& packages,
              int originId, int destinationId, int clientId, time_t createDate, time_t leftWarehouseDate,
              time_t estimatedDeliveryDate, time_t deliveryDate);
     void display() const;
@@ -40,7 +40,7 @@ public:
     double getTotalPrice() const;
     double getTotalWeight() const;
     int getShimpmentManagerId() const;
-    int getDistributionCenterId() const;
+    std::string getDistributionCenterId() const;
     const std::vector<Package>& getPackages() const;
     int getOriginId() const;
     int getDestinationId() const;

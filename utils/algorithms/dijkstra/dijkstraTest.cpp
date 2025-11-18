@@ -1,4 +1,4 @@
-#include "../../dataStructures/graph/Graph.h"
+#include "../../dataStructures/Graph/Graph.h"
 #include "dijkstra.cpp"
 
 int main() {

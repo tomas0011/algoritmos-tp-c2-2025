@@ -13,9 +13,9 @@ public:
     ClientService(List& clientsList);
     
     // CRUD operations
-    void createClient(int id, std::string name);
+    void createClient(int id, const std::string& name);
     Client* getClientById(int id);
-    void updateClient(int id, std::string newName);
+    void updateClient(int id, const std::string& newName);
     void deleteClient(int id);
 
     // Utility functions

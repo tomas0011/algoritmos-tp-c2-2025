@@ -2,12 +2,27 @@ CXX = g++
 CXXFLAGS = -std=c++17 -Wall -I.
 TARGET = tp_c2_2025
 SRCS = main.cpp \
-       bash/bash.cpp \
+        bash/bash.cpp \
+        bash/package.bash.cpp \
+        bash/shipment.bash.cpp \
+        bash/shipmentManager.bash.cpp \
+        bash/transport.bash.cpp \
+        bash/client.bash.cpp \
+        bash/connection.bash.cpp \
+        bash/distributionCenter.bash.cpp \
+        bash/employee.bash.cpp \
+        utils/algorithms/dijkstra/dijkstra.cpp \
        storage/mockData.cpp \
        storage/storage.cpp \
        services/initializeServices.cpp \
        services/package/packageService.cpp \
        services/shipment/shipmentService.cpp \
+       services/distributionCenter/distributionCenterService.cpp \
+       services/client/clientService.cpp \
+       services/employee/employeeService.cpp \
+       services/Connection/ConnectionService.cpp \
+       services/ShipmentManager/ShipmentManagerService.cpp \
+       services/transport/transportService.cpp \
        entities/employee/Employee.cpp \
        entities/distributionCenter/DistributionCenter.cpp \
        entities/distributionCenterManager/DistributionCenterManager.cpp \
@@ -21,7 +36,24 @@ SRCS = main.cpp \
 $(TARGET): $(SRCS)
 	$(CXX) $(CXXFLAGS) -o $(TARGET) $(SRCS)
 
-clean:
-	rm -f $(TARGET)
+# Test targets
+test-hashtable:
+	$(CXX) $(CXXFLAGS) -o test_hashtable utils/dataStructures/hashtable/hashTableTest.cpp
+	./test_hashtable
 
-.PHONY: clean
+test-graphhashtable:
+	$(CXX) $(CXXFLAGS) -o test_graphhashtable utils/dataStructures/graph/graphHashTableTest.cpp
+	./test_graphhashtable
+
+test-list:
+	$(CXX) $(CXXFLAGS) -o test_list utils/dataStructures/list/listTest.cpp
+	./test_list
+
+test-tree:
+	$(CXX) $(CXXFLAGS) -o test_tree utils/dataStructures/tree/treeTest.cpp
+	./test_tree
+
+clean:
+	rm -f $(TARGET) test_hashtable test_graphhashtable test_list test_tree
+
+.PHONY: clean test-hashtable test-graphhashtable test-list test-tree

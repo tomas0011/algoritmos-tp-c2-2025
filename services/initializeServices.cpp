@@ -7,6 +7,8 @@ ClientService* clientService = nullptr;
 EmployeeService* employeeService = nullptr;
 ConnectionService* connectionService = nullptr;
 ShipmentManagerService* shipmentManagerService = nullptr;
+TransportService* transportService = nullptr;
+DistributionCenterService* distributionCenterService = nullptr;
 
 void initializeServices() {
     // Initialize services
@@ -14,6 +16,8 @@ void initializeServices() {
     shipmentService = new ShipmentService(shipments);
     clientService = new ClientService(clients);
     employeeService = new EmployeeService(employees);
-    connectionService = new ConnectionService();
-    shipmentManagerService = new ShipmentManagerService(shipmentManagers);
+    connectionService = new ConnectionService(connections);
+    transportService = new TransportService(transports);
+    distributionCenterService = new DistributionCenterService(distributionCenters, distributionCenterManagers);
+    shipmentManagerService = new ShipmentManagerService(transportService, distributionCenterService, shipmentManagers);
 }

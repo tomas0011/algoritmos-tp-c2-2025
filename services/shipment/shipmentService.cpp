@@ -5,7 +5,7 @@
 ShipmentService::ShipmentService(List& shipmentsList) : shipments(shipmentsList) {}
 
 void ShipmentService::createShipment(int id, const std::string& state, double cost, int priority, double totalPrice,
-                                    double totalWeight, int shimpmentManagerId, int distributionCenterId,
+                                    double totalWeight, int shimpmentManagerId, std::string distributionCenterId,
                                     const std::vector<Package>& packages, int originId, int destinationId,
                                     int clientId, time_t createDate, time_t leftWarehouseDate,
                                     time_t estimatedDeliveryDate, time_t deliveryDate) {
@@ -33,7 +33,7 @@ Shipment* ShipmentService::getShipmentById(int id) {
 }
 
 void ShipmentService::updateShipment(int id, const std::string& state, double cost, int priority, double totalPrice,
-                                    double totalWeight, int shimpmentManagerId, int distributionCenterId,
+                                    double totalWeight, int shimpmentManagerId, std::string distributionCenterId,
                                     const std::vector<Package>& packages, int originId, int destinationId,
                                     int clientId, time_t createDate, time_t leftWarehouseDate,
                                     time_t estimatedDeliveryDate, time_t deliveryDate) {
@@ -116,7 +116,7 @@ int ShipmentService::getShipmentCount() {
 
 //Punto B
 
-int ShipmentService::totalShipmentsByCenterAndDate(int centerId, time_t start, time_t end) {
+int ShipmentService::totalShipmentsByCenterAndDate(std::string centerId, time_t start, time_t end) {
     int count = 0;
     Node* current = shipments.getHead();
 
@@ -135,9 +135,9 @@ int ShipmentService::totalShipmentsByCenterAndDate(int centerId, time_t start, t
     return count;
 }
 
-std::vector<int> ShipmentService::overloadedCenters(int weeklyLimit) {
-    std::unordered_map<int, int> shipmentCount;
-    std::vector<int> overloaded;
+std::vector<std::string> ShipmentService::overloadedCenters(int weeklyLimit) {
+    std::unordered_map<std::string, int> shipmentCount;
+    std::vector<std::string> overloaded;
     Node* current = shipments.getHead();
 
     while (current != nullptr) {
