@@ -1,40 +1,23 @@
-#include <vector>
 #include "../../entities/Package.h"
+#include "../../../list/List.h"   // donde tengas tu List
 
 struct ResultadoMochila {
     double precioMaximo;
     std::vector<Package> paquetesSeleccionados;
 };
 
-void backtracking(
-    const std::vector<Package>& paquetes,
-    int indice,
-    double pesoActual,
-    double precioActual,
-    double pesoMaximo,
-    std::vector<Package>& solucionActual,
-    ResultadoMochila& mejor
-);
-
-ResultadoMochila resolverMochila(
-    const std::vector<Package>& paquetes,
-    double pesoMaximo
-);
-
-// ---------------------------------------------------------
-// IMPLEMENTACIONES
 // ---------------------------------------------------------
 
-void backtracking(
-    const std::vector<Package>& paquetes,
-    int indice,
+void backtrackingList(
+    Node* nodo,                         // nodo actual de la lista
     double pesoActual,
     double precioActual,
     double pesoMaximo,
     std::vector<Package>& solucionActual,
     ResultadoMochila& mejor
 ) {
-    if (indice == paquetes.size()) {
+    if (nodo == nullptr) {
+        // Fin de lista = caso base
         if (precioActual > mejor.precioMaximo) {
             mejor.precioMaximo = precioActual;
             mejor.paquetesSeleccionados = solucionActual;
@@ -42,30 +25,59 @@ void backtracking(
         return;
     }
 
-    // NO TOMAR
-    backtracking(paquetes, indice + 1, pesoActual, precioActual,
-                pesoMaximo, solucionActual, mejor);
+    // Obtener el paquete guardado como "any"
+    Package paquete = any_cast<Package>(nodo->getData());
 
-    // TOMAR
-    double nuevoPeso = pesoActual + paquetes[indice].getWeight();
-    double nuevoPrecio = precioActual + paquetes[indice].getValue();
+    // -------------------------------
+    //  NO TOMAR ESTE PAQUETE
+    // -------------------------------
+    backtrackingList(
+        nodo->getNext(),
+        pesoActual,
+        precioActual,
+        pesoMaximo,
+        solucionActual,
+        mejor
+    );
+
+    // -------------------------------
+    //  TOMAR ESTE PAQUETE (si entra)
+    // -------------------------------
+    double nuevoPeso = pesoActual + paquete.getWeight();
 
     if (nuevoPeso <= pesoMaximo) {
-        solucionActual.push_back(paquetes[indice]);
-        backtracking(paquetes, indice + 1, nuevoPeso, nuevoPrecio,
-                    pesoMaximo, solucionActual, mejor);
+        solucionActual.push_back(paquete);
+
+        backtrackingList(
+            nodo->getNext(),
+            nuevoPeso,
+            precioActual + paquete.getValue(),
+            pesoMaximo,
+            solucionActual,
+            mejor
+        );
+
         solucionActual.pop_back();
     }
 }
 
+// ---------------------------------------------------------
+
 ResultadoMochila resolverMochila(
-    const std::vector<Package>& paquetes,
+    const List& paquetes,
     double pesoMaximo
 ) {
     ResultadoMochila mejor = {0, {}};
     std::vector<Package> actual;
 
-    backtracking(paquetes, 0, 0, 0, pesoMaximo, actual, mejor);
+    backtrackingList(
+        paquetes.getHead(),   // empezamos desde el primer nodo
+        0,
+        0,
+        pesoMaximo,
+        actual,
+        mejor
+    );
 
     return mejor;
 }

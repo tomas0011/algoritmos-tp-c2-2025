@@ -34,6 +34,9 @@ public:
     const std::vector<Employee>& getEmployees() const;
     const std::vector<Connection>& getConnections() const;
     const std::vector<Package>& getWarehouse() const;
+
+    DistributionCenter* getById(int id);
+
 };
 
 #endif // DISTRIBUTION_CENTER_H

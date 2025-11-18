@@ -30,3 +30,12 @@ void DistributionCenterManager::getCenters() {
 const std::vector<DistributionCenter>& DistributionCenterManager::getDistributionCenters() const {
     return distributionCenters;
 }
+
+DistributionCenter* DistributionCenterManager::getById(int id) {
+    for (auto& center : distributionCenters) {
+        if (center.getId() == id) {
+            return &center;   // devolvés puntero al objeto real del vector
+        }
+    }
+    return nullptr; // si no lo encontró
+}

@@ -2,18 +2,15 @@
 #include <iostream>
 #include "../utils/algorithms/Knapsack.h"
 #include "../services/TransportService.h"
-#include <vector>
-#include "../connection/Connection.h"
-#include "../package/Package.h"
-#include "../transport/Transport.h"
-#include "../entities/distributionCenter/DistributionCenter.h"
 #include "../entities/distributionCenterManager/DistributionCenterManager.h"
+#include "../entities/distributionCenter/DistributionCenter.h"
 
 ShipmentManager::ShipmentManager(int id, int transportId, const std::vector<Connection>& path, int distributionCenterId)
     : id(id), transportId(transportId), path(path), distributionCenterId(distributionCenterId) {}
 
 void ShipmentManager::display() const {
-    std::cout << "ID: " << id << ", TransportId: " << transportId << ", DistributionCenterId: " << distributionCenterId << std::endl;
+    std::cout << "ID: " << id << ", TransportId: " << transportId
+              << ", DistributionCenterId: " << distributionCenterId << std::endl;
     for (const auto& conn : path) {
         conn.display();
     }
@@ -27,36 +24,36 @@ int ShipmentManager::getDistributionCenterId() const { return distributionCenter
 // -----------------------------------------------------
 //        NUEVO MÉTODO: GENERAR CARGA ÓPTIMA
 // -----------------------------------------------------
-    std::vector<Package> ShipmentManager::generarCargaOptima() const {
+std::vector<Package> ShipmentManager::generarCargaOptima() const {
 
-        // 1. Obtener el transporte
-        TransportService transportService;
-        Transport transporte = transportService.getTransportById(transportId);
+    // 1. Obtener el transporte
+    TransportService transportService;
+    Transport transporte = transportService.getTransportById(transportId);
 
-        double capacidad = transporte.getMaxWeight();
-        if (capacidad <= 0) {
-            std::cout << "[Error] Transporte sin capacidad válida.\n";
-            return {};
-        }
-
-        // 2. Obtener el DistributionCenter asociado
-        DistributionCenterManager manager;
-        DistributionCenter* centro = manager.getById(distributionCenterId);
-
-        if (!centro) {
-            std::cout << "[Error] Centro de distribución inválido.\n";
-            return {};
-        }
-
-        // 3. Obtener los paquetes del warehouse
-        const std::vector<Package>& paquetesDisponibles = centro->getWarehouse();
-
-        // 4. Ejecutar la mochila 0-1
-        ResultadoMochila resultado = resolverMochila(
-            paquetesDisponibles,
-            capacidad
-        );
-
-        // 5. Devolver los seleccionados
-        return resultado.paquetesSeleccionados;
+    double capacidad = transporte.getMaxWeight();
+    if (capacidad <= 0) {
+        std::cout << "[Error] Transporte sin capacidad válida.\n";
+        return {};
     }
+
+    // 2. Obtener el DistributionCenter asociado
+    DistributionCenterManager manager;
+    DistributionCenter* centro = manager.getById(distributionCenterId);
+
+    if (!centro) {
+        std::cout << "[Error] Centro de distribución inválido.\n";
+        return {};
+    }
+
+    // 3. Obtener los paquetes del warehouse
+    List* paquetesDisponibles = centro->getWarehouse();
+
+    // 4. Ejecutar la mochila 0-1
+    ResultadoMochila resultado = resolverMochila(
+        *paquetesDisponibles,
+        capacidad
+    );
+
+    // 5. Devolver los seleccionados
+    return resultado.paquetesSeleccionados;
+}

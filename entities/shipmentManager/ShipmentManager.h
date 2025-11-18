@@ -25,6 +25,6 @@ public:
     int getDistributionCenterId() const;
 
     std::vector<Package> generarCargaOptima() const;
-}
+};
 
 #endif // SHIPMENT_MANAGER_H
