@@ -24,6 +24,7 @@ class DistributionCenterManager{
         DistributionCenter* getById(std::string id);
         GraphHashTable& getNetwork() const;
         const std::vector<DistributionCenter>& getDistributionCenters() const;
+        DistributionCenter* getById(int id);
 };
 
 #endif // DISTRIBUTIONCENTER_MANAGER_H

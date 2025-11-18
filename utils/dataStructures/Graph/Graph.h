@@ -129,7 +129,7 @@ void addArista(int origen, int destino, double peso = 1.0) {
 
     string toString() const {
         ostringstream oss;
-        ::Node* current = nodes.getHead();
+        Node* current = nodes.getHead();
         int i = 0;
         while (current != nullptr) {
             GraphNode* n = any_cast<GraphNode*>(current->getData());

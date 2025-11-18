@@ -56,12 +56,13 @@ public:
     const std::vector<Employee>& getEmployees() const;
     const std::vector<Connection>& getConnections() const;
     const std::vector<Package>& getWarehouse() const;
-    DistributionCenter* getById(int id);
 
-    // Setters para actualizacion
+    // Setters
     void setCapacity(int cap);
     void setDailyPackages(int daily);
     void setNumEmployees(int num);
+
+    // Add methods
     void addEmployee(const Employee& emp);
     void addConnection(const Connection& conn);
     void addPackage(const Package& pkg);
