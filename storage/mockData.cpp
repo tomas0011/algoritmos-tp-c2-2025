@@ -4,9 +4,9 @@
 #include <utils/algorithms/parseDate/parseDate.h>
 
 // Mock data definitions - now using storage lists
-Package pkg1(1, 10.5, 1, 2.0);
-Package pkg2(2, 15.0, 2, 3.5);
-Package pkg3(3, 8.0, 1, 1.5);
+Package pkg1(1, "medias", 10.5, 1, 2.0);
+Package pkg2(2, "celular", 15.0, 2, 3.5);
+Package pkg3(3, "campera", 8.0, 1, 1.5);
 
 Shipment ship1(1, "In Transit", 50.0, 1, 100.0, 10.0, 1, "BUE", {pkg1, pkg2}, "BUE", "MZA", 1, parseDate("18-11-2025"), time(nullptr), parseDate("19-11-2025"), time(nullptr));
 Shipment ship2(2, "Delivered", 75.0, 2, 150.0, 15.0, 2, "BUE", {pkg3}, "BUE", "MZA", 2, parseDate("17-11-2025"), parseDate("17-11-2025"), parseDate("18-11-2025"), parseDate("18-11-2025"));
