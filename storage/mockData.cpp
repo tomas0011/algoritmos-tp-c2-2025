@@ -69,9 +69,24 @@ void initializeMockData() {
     
     DistributionCenterManager* manager = new DistributionCenterManager();
     
-    manager->createDistributionCenter("BUE", "Buenos Aires", "Buenos Aires", 1000, 50, 20);
-    manager->createDistributionCenter("MZA", "Mendoza", "Mendoza", 800, 30, 15);
-    manager->createDistributionCenter("CBA", "Cordoba", "Cordoba", 600, 40, 18);
+   // Initialize distribution center managers BEFORE pushing
+    manager->createDistributionCenter("B", "Center B", "City B", 200, 75, 15);
+
+    manager->createDistributionCenter("CBA", "Cordoba Center", "Cordoba", 300, 10, 9);
+    manager->createDistributionCenter("MZA", "Mendoza Center", "Mendoza", 250, 12, 13);
+    manager->createDistributionCenter("BUE", "Buenos Aires Center", "Buenos Aires", 400, 0.01, 12);
+    manager->createDistributionCenter("ROS", "Rosario Center", "Rosario", 200, 5, 8);
+    manager->createDistributionCenter("TUC", "Tucuman Center", "Tucuman", 180, 4, 6);
+    manager->createDistributionCenter("SLA", "Salta Center", "Salta", 160, 2, 5);
+
+    manager->relateDistributionCenter("CBA", "MZA", 900);   // Cordoba - Mendoza
+    manager->relateDistributionCenter("CBA", "BUE", 700);   // Cordoba - Buenos Aires
+    manager->relateDistributionCenter("CBA", "ROS", 400);   // Cordoba - Rosario
+    manager->relateDistributionCenter("MZA", "BUE", 1100);  // Mendoza - Buenos Aires
+    manager->relateDistributionCenter("BUE", "ROS", 300);   // Buenos Aires - Rosario
+    manager->relateDistributionCenter("TUC", "CBA", 550);   // Tucuman - Cordoba
+    manager->relateDistributionCenter("TUC", "SLA", 300);   // Tucuman - Salta
+    manager->relateDistributionCenter("SLA", "CBA", 800);   // Salta - Cordoba
     
     distributionCenterManagers.push(std::any(manager));
     

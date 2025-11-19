@@ -110,16 +110,11 @@ int ShipmentService::totalShipmentsByCenterAndDate(std::string centerId, time_t 
 }
 
 List ShipmentService::overloadedCenters() {
-    // const int WEEKLY_LIMIT = 50; // Default limit (removed unused variable)
     List result;
-    // Implementation using manual iteration over List
-    // This is a simplified version - in reality you'd need to analyze by week
     Node* current = shipments.getHead();
     while (current != nullptr) {
         try {
             Shipment* shipment = std::any_cast<Shipment*>(current->getData());
-            // Count shipments for this center and check if over limit
-            // For now, just add center code if any shipment exists (simplified)
             result.push(shipment->getDistributionCenterId());
         } catch (const std::bad_any_cast&) {}
         current = current->getNext();

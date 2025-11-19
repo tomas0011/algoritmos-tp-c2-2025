@@ -30,26 +30,25 @@ std::string formatDate(time_t timestamp) {
 }
 
 void showShipmentMenu() {
-    std::cout << "\\n=== Menu Envios ===" << std::endl;
-    std::cout << "1. Crear envio" << std::endl;
-    std::cout << "2. Ver envio por ID" << std::endl;
-    std::cout << "3. Actualizar envio" << std::endl;
-    std::cout << "4. Eliminar envio" << std::endl;
-    std::cout << "5. Ver todos los envios" << std::endl;
-    std::cout << "6. Contar envios por centro y fecha" << std::endl;
-    std::cout << "7. Ver centros sobrecargados" << std::endl;
-    std::cout << "8. Buscar envios por cliente" << std::endl;
-    std::cout << "0. Volver al menu principal" << std::endl;
-    std::cout << "Ingrese su opcion: ";
-}
-
-void handleShipmentMenu() {
     ShipmentService* shipmentServicePtr = shipmentService;
-    
+
     int choice;
     do {
-        showShipmentMenu();
+        
+        std::cout << "\\n=== Menu Envios ===" << std::endl;
+        std::cout << "1. Crear envio" << std::endl;
+        std::cout << "2. Ver envio por ID" << std::endl;
+        std::cout << "3. Actualizar envio" << std::endl;
+        std::cout << "4. Eliminar envio" << std::endl;
+        std::cout << "5. Ver todos los envios" << std::endl;
+        std::cout << "6. Contar envios por centro y fecha" << std::endl;
+        std::cout << "7. Ver centros sobrecargados" << std::endl;
+        std::cout << "8. Buscar envios por cliente" << std::endl;
+        std::cout << "0. Volver al menu principal" << std::endl;
+        std::cout << "Ingrese su opcion: ";
+    
         std::cin >> choice;
+        
 
         switch (choice) {
             case 1: {
@@ -178,7 +177,7 @@ void handleShipmentMenu() {
                          << startDateStr << " y " << endDateStr << ": " << count << std::endl;
                 break;
             }
-            case 7: {
+           case 7: {
                 List overloaded = shipmentServicePtr->overloadedCenters();
                 std::cout << "Centros sobrecargados:" << std::endl;
                 Node* current = overloaded.getHead();
