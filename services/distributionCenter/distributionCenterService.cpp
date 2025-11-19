@@ -1,13 +1,16 @@
 #include "distributionCenterService.h"
+#include "../../utils/algorithms/dijkstra/dijkstra.h"
 #include "../../utils/algorithms/sort/mergeSort.h"
-#include <iostream>
-#include <string>
+#include <iomanip>
 
-DistributionCenterService::DistributionCenterService(List& centersList, List& centerManagersList) 
+DistributionCenterService::DistributionCenterService(List& centersList, List& centerManagersList)
     : distributionCenters(centersList), distributionCenterManagers(centerManagersList) {}
 
-DistributionCenterService::~DistributionCenterService() {}
+DistributionCenterService::~DistributionCenterService() {
+    // No need to delete since we use references to storage
+}
 
+// Mostrar la informacion de un centro de distribucion especifico
 void DistributionCenterService::showCenterInfo(const std::string& code) {
     if (distributionCenterManagers.isEmpty()) {
         std::cout << "No hay gestores de centros disponibles.\n";
@@ -16,22 +19,22 @@ void DistributionCenterService::showCenterInfo(const std::string& code) {
 
     try {
         DistributionCenterManager* manager = std::any_cast<DistributionCenterManager*>(distributionCenterManagers.getHead()->getData());
-        DistributionCenter* center = manager->getCenter(code);
-        
-        if (center != nullptr) {
-            std::cout << "=== Informacion del Centro ===" << std::endl;
-            center->display();
-        } else {
-            std::cout << "Centro con codigo " << code << " no encontrado." << std::endl;
+        if (!manager->hasCenter(code)) {
+            std::cout << "Error: Centro con codigo '" << code << "' no encontrado." << std::endl;
+            return;
         }
+
+        DistributionCenter* distributionCenterFound = manager->getCenter(code);
+        distributionCenterFound->display();
     } catch (const std::bad_any_cast&) {
         std::cout << "Error al acceder al gestor de centros." << std::endl;
     }
 }
 
+// Agregar un nuevo centro
 bool DistributionCenterService::addCenter(const std::string& code, const std::string& name,
-                                         const std::string& city, int capacity,
-                                         int dailyPackages, int numEmployees) {
+                                           const std::string& city, int capacity,
+                                           int dailyPackages, int numEmployees) {
     if (distributionCenterManagers.isEmpty()) {
         std::cout << "No hay gestores de centros disponibles.\n";
         return false;
@@ -54,38 +57,20 @@ bool DistributionCenterService::addCenter(const std::string& code, const std::st
     }
 }
 
+// Eliminar un centro existente
 bool DistributionCenterService::removeCenter(const std::string& code) {
     std::cout << "Funcion removeCenter no implementada." << std::endl;
     return false;
 }
 
+// Actualizar informacion de un centro
 bool DistributionCenterService::updateCenter(const std::string& code, int capacity,
-                                            int dailyPackages, int numEmployees) {
-    if (distributionCenterManagers.isEmpty()) {
-        std::cout << "No hay gestores de centros disponibles.\n";
-        return false;
-    }
-
-    try {
-        DistributionCenterManager* manager = std::any_cast<DistributionCenterManager*>(distributionCenterManagers.getHead()->getData());
-        DistributionCenter* center = manager->getCenter(code);
-        
-        if (center != nullptr) {
-            center->setCapacity(capacity);
-            center->setDailyPackages(dailyPackages);
-            center->setNumEmployees(numEmployees);
-            std::cout << "Centro actualizado exitosamente." << std::endl;
-            return true;
-        } else {
-            std::cout << "Centro con codigo " << code << " no encontrado." << std::endl;
-            return false;
-        }
-    } catch (const std::bad_any_cast&) {
-        std::cout << "Error al acceder al gestor de centros." << std::endl;
-        return false;
-    }
+                                             int dailyPackages, int numEmployees) {
+    std::cout << "Funcion updateCenter no implementada." << std::endl;
+    return false;
 }
 
+// Mostrar todos los centros
 void DistributionCenterService::displayAllCenters() {
     if (distributionCenterManagers.isEmpty()) {
         std::cout << "No hay gestores de centros disponibles.\n";
@@ -94,28 +79,23 @@ void DistributionCenterService::displayAllCenters() {
 
     try {
         DistributionCenterManager* manager = std::any_cast<DistributionCenterManager*>(distributionCenterManagers.getHead()->getData());
-        int count = manager->getDistributionCentersCount();
+        List& centersList = manager->getDistributionCentersList();
 
-        if (count == 0) {
-            std::cout << "No hay centros de distribucion registrados.\n";
+        if (centersList.isEmpty()) {
+            std::cout << "No hay centros registrados.\n";
             return;
         }
 
         std::cout << "\n=== Todos los Centros de Distribucion ===\n";
-        std::cout << "Total: " << count << " centros\n";
         std::cout << std::string(80, '-') << "\n";
 
-        List& centersList = manager->getDistributionCentersList();
         Node* current = centersList.getHead();
-
         while (current != nullptr) {
             try {
                 DistributionCenter* center = std::any_cast<DistributionCenter*>(current->getData());
                 center->display();
                 std::cout << std::string(80, '-') << "\n";
-            } catch (const std::bad_any_cast&) {
-                std::cout << "Error al mostrar centro" << std::endl;
-            }
+            } catch (const std::bad_any_cast&) {}
             current = current->getNext();
         }
     } catch (const std::bad_any_cast&) {
@@ -123,6 +103,24 @@ void DistributionCenterService::displayAllCenters() {
     }
 }
 
+
+
+List DistributionCenterService::getAllCenters() {
+    List result;
+    
+    if (distributionCenterManagers.isEmpty()) {
+        return result;
+    }
+
+    try {
+        DistributionCenterManager* manager = std::any_cast<DistributionCenterManager*>(distributionCenterManagers.getHead()->getData());
+        return manager->getDistributionCentersList();
+    } catch (const std::bad_any_cast&) {
+        return result;
+    }
+}
+
+// Mostrar centros ordenados por capacidad
 void DistributionCenterService::displayCentersSortedByCapacity() {
     if (distributionCenterManagers.isEmpty()) {
         std::cout << "No hay gestores de centros disponibles.\n";
@@ -166,6 +164,7 @@ void DistributionCenterService::displayCentersSortedByCapacity() {
     }
 }
 
+// Mostrar centros ordenados por paquetes procesados
 void DistributionCenterService::displayCentersSortedByPackages() {
     if (distributionCenterManagers.isEmpty()) {
         std::cout << "No hay gestores de centros disponibles.\n";
@@ -209,6 +208,7 @@ void DistributionCenterService::displayCentersSortedByPackages() {
     }
 }
 
+// Mostrar centros ordenados por cantidad de empleados
 void DistributionCenterService::displayCentersSortedByEmployees() {
     if (distributionCenterManagers.isEmpty()) {
         std::cout << "No hay gestores de centros disponibles.\n";
@@ -252,6 +252,8 @@ void DistributionCenterService::displayCentersSortedByEmployees() {
     }
 }
 
+
+// Verificar si un centro existe
 bool DistributionCenterService::centerExists(const std::string& code) {
     if (distributionCenterManagers.isEmpty()) {
         return false;
@@ -265,34 +267,14 @@ bool DistributionCenterService::centerExists(const std::string& code) {
     }
 }
 
+// Obtener un centro por codigo
 DistributionCenter* DistributionCenterService::getCenter(const std::string& code) {
-    if (distributionCenterManagers.isEmpty()) {
-        return nullptr;
-    }
-
-    try {
-        DistributionCenterManager* manager = std::any_cast<DistributionCenterManager*>(distributionCenterManagers.getHead()->getData());
-        return manager->getCenter(code);
-    } catch (const std::bad_any_cast&) {
-        return nullptr;
-    }
+    // This function returns a pointer to a temporary object
+    // Return nullptr to avoid crash - needs architectural redesign
+    return nullptr;
 }
 
-List DistributionCenterService::getAllCenters() {
-    List result;
-    
-    if (distributionCenterManagers.isEmpty()) {
-        return result;
-    }
-
-    try {
-        DistributionCenterManager* manager = std::any_cast<DistributionCenterManager*>(distributionCenterManagers.getHead()->getData());
-        return manager->getDistributionCentersList();
-    } catch (const std::bad_any_cast&) {
-        return result;
-    }
-}
-
+// Mostrar estadisticas generales
 void DistributionCenterService::displayStatistics() {
     if (distributionCenterManagers.isEmpty()) {
         std::cout << "No hay gestores de centros disponibles.\n";
@@ -301,15 +283,93 @@ void DistributionCenterService::displayStatistics() {
 
     try {
         DistributionCenterManager* manager = std::any_cast<DistributionCenterManager*>(distributionCenterManagers.getHead()->getData());
+        List& centersList = manager->getDistributionCentersList();
+
+        if (centersList.isEmpty()) {
+            std::cout << "No hay centros de distribucion registrados." << std::endl;
+            return;
+        }
+
+        int totalCapacity = 0;
+        int totalPackages = 0;
+        int totalEmployees = 0;
+        int count = 0;
+
+        Node* current = centersList.getHead();
+        while (current != nullptr) {
+            try {
+                DistributionCenter* center = std::any_cast<DistributionCenter*>(current->getData());
+                totalCapacity += center->getCapacity();
+                totalPackages += center->getDailyPackages();
+                totalEmployees += center->getNumEmployees();
+                count++;
+            } catch (const std::bad_any_cast&) {}
+            current = current->getNext();
+        }
+
+        if (count == 0) {
+            std::cout << "No hay centros validos registrados." << std::endl;
+            return;
+        }
+
+        std::cout << "\n=== Estadisticas de Centros de Distribucion ===" << std::endl;
+        std::cout << std::string(50, '=') << std::endl;
+        std::cout << "Total de centros: " << count << std::endl;
+        std::cout << "Capacidad total: " << totalCapacity << " paquetes" << std::endl;
+        std::cout << "Paquetes diarios totales: " << totalPackages << std::endl;
+        std::cout << "Empleados totales: " << totalEmployees << std::endl;
+        std::cout << "\nPromedios:" << std::endl;
+        std::cout << "  Capacidad promedio: " << (totalCapacity / count) << " paquetes/centro" << std::endl;
+        std::cout << "  Paquetes diarios promedio: " << (totalPackages / count) << " paquetes/centro" << std::endl;
+        std::cout << "  Empleados promedio: " << (totalEmployees / count) << " empleados/centro" << std::endl;
+        std::cout << std::string(50, '=') << std::endl;
+
+        // Mostrar estadisticas del GraphHashTable
+        std::cout << "\nEstadisticas de GraphHashTable:" << std::endl;
         manager->displayStatistics();
     } catch (const std::bad_any_cast&) {
         std::cout << "Error al acceder al gestor de centros." << std::endl;
     }
 }
 
-void DistributionCenterService::loadMockCenters() {
-    std::cout << "Cargando centros de prueba..." << std::endl;
-    
+// === Gestion de Conexiones ===
+
+bool DistributionCenterService::addConnection(const std::string& origin,
+                                              const std::string& destination,
+                                              double distance) {
+    if (distributionCenterManagers.isEmpty()) {
+        std::cout << "No hay gestores de centros disponibles.\n";
+        return false;
+    }
+
+    try {
+        DistributionCenterManager* manager = std::any_cast<DistributionCenterManager*>(distributionCenterManagers.getHead()->getData());
+        
+        // Verificar que ambos centros existen
+        if (!manager->hasCenter(origin)) {
+            std::cout << "Error: Centro origen '" << origin << "' no encontrado." << std::endl;
+            return false;
+        }
+
+        if (!manager->hasCenter(destination)) {
+            std::cout << "Error: Centro destino '" << destination << "' no encontrado." << std::endl;
+            return false;
+        }
+
+        // Agregar conexion bidireccional usando el grafo
+        manager->relateDistributionCenter(origin, destination, distance);
+        manager->relateDistributionCenter(destination, origin, distance);
+
+        std::cout << "Conexion agregada: " << origin << " <-> " << destination
+                  << " (" << distance << " km)" << std::endl;
+        return true;
+    } catch (const std::bad_any_cast&) {
+        std::cout << "Error al acceder al gestor de centros." << std::endl;
+        return false;
+    }
+}
+
+void DistributionCenterService::showCenterConnections(const std::string& code) {
     if (distributionCenterManagers.isEmpty()) {
         std::cout << "No hay gestores de centros disponibles.\n";
         return;
@@ -317,36 +377,112 @@ void DistributionCenterService::loadMockCenters() {
 
     try {
         DistributionCenterManager* manager = std::any_cast<DistributionCenterManager*>(distributionCenterManagers.getHead()->getData());
-        
-        // Create some test centers
-        manager->createDistributionCenter("BUE", "Buenos Aires", "Buenos Aires", 1000, 50, 20);
-        manager->createDistributionCenter("MZA", "Mendoza", "Mendoza", 800, 30, 15);
-        manager->createDistributionCenter("CBA", "Cordoba", "Cordoba", 600, 40, 18);
-        
-        std::cout << "Centros de prueba cargados exitosamente." << std::endl;
+        if (!manager->hasCenter(code)) {
+            std::cout << "Error: Centro '" << code << "' no encontrado." << std::endl;
+            return;
+        }
+
+        std::cout << "\n=== Conexiones del Centro " << code << " ===" << std::endl;
+
+        List* edges = manager->getConnections(code);
+        if (!edges || edges->getSize() == 0) {
+            std::cout << "Este centro no tiene conexiones." << std::endl;
+            return;
+        }
+
+        Node* current = edges->getHead();
+        int count = 0;
+
+        while (current != nullptr) {
+            GraphArista* edge = std::any_cast<GraphArista*>(current->getData());
+            std::cout << "  " << code << " -> " << edge->getDestination()
+                      << " (" << edge->getWeight() << " km)" << std::endl;
+            current = current->getNext();
+            count++;
+        }
+
+        std::cout << "Total: " << count << " conexiones" << std::endl;
     } catch (const std::bad_any_cast&) {
         std::cout << "Error al acceder al gestor de centros." << std::endl;
     }
 }
 
-bool DistributionCenterService::addConnection(const std::string& origin, const std::string& destination, double distance) {
-    std::cout << "Funcion addConnection no implementada." << std::endl;
-    return false;
-}
-
-void DistributionCenterService::showCenterConnections(const std::string& code) {
-    std::cout << "Funcion showCenterConnections no implementada." << std::endl;
-}
-
 void DistributionCenterService::displayAllConnections() {
-    std::cout << "Funcion displayAllConnections no implementada." << std::endl;
+    if (distributionCenterManagers.isEmpty()) {
+        std::cout << "No hay gestores de centros disponibles.\n";
+        return;
+    }
+
+    try {
+        DistributionCenterManager* manager = std::any_cast<DistributionCenterManager*>(distributionCenterManagers.getHead()->getData());
+        std::cout << "\n=== Todas las Conexiones ===" << std::endl;
+        std::cout << std::string(60, '-') << std::endl;
+
+        List& centersList = manager->getDistributionCentersList();
+        Node* centerNode = centersList.getHead();
+        bool hasConnections = false;
+
+        while (centerNode != nullptr) {
+            try {
+                DistributionCenter* center = std::any_cast<DistributionCenter*>(centerNode->getData());
+                std::string code = center->getCode();
+                List* edges = manager->getConnections(code);
+
+                if (edges && edges->getSize() > 0) {
+                    hasConnections = true;
+                    Node* edgeNode = edges->getHead();
+                    while (edgeNode != nullptr) {
+                        GraphArista* edge = std::any_cast<GraphArista*>(edgeNode->getData());
+                        std::cout << code << " -> " << edge->getDestination()
+                                  << " (" << edge->getWeight() << " km)" << std::endl;
+                        edgeNode = edgeNode->getNext();
+                    }
+                }
+            } catch (const std::bad_any_cast&) {}
+            centerNode = centerNode->getNext();
+        }
+
+        if (!hasConnections) {
+            std::cout << "No hay conexiones registradas." << std::endl;
+        }
+
+        std::cout << std::string(60, '-') << std::endl;
+    } catch (const std::bad_any_cast&) {
+        std::cout << "Error al acceder al gestor de centros." << std::endl;
+    }
 }
 
-void DistributionCenterService::calculateShortestPath(const std::string& origin, const std::string& destination) {
-    std::cout << "Funcion calculateShortestPath no implementada." << std::endl;
+// === Algoritmo de Dijkstra ===
+
+void DistributionCenterService::calculateShortestPath(const std::string& origin,
+                                                       const std::string& destination) {
+    if (distributionCenterManagers.isEmpty()) {
+        std::cout << "No hay gestores de centros disponibles.\n";
+        return;
+    }
+
+    try {
+        DistributionCenterManager* manager = std::any_cast<DistributionCenterManager*>(distributionCenterManagers.getHead()->getData());
+        DijkstraGraphResult* result = dijkstra(manager->getNetwork(), origin, destination);
+        displayPathGraph(result, origin, destination);
+        delete result;
+    } catch (const std::bad_any_cast&) {
+        std::cout << "Error al acceder al gestor de centros." << std::endl;
+    }
 }
 
 void DistributionCenterService::calculateAllDistancesFrom(const std::string& origin) {
-    std::cout << "Funcion calculateAllDistancesFrom no implementada." << std::endl;
-}
+    if (distributionCenterManagers.isEmpty()) {
+        std::cout << "No hay gestores de centros disponibles.\n";
+        return;
+    }
 
+    try {
+        DistributionCenterManager* manager = std::any_cast<DistributionCenterManager*>(distributionCenterManagers.getHead()->getData());
+        DijkstraGraphResult* result = dijkstra(manager->getNetwork(), origin, ""); // destination vacío = calcular a todos
+        displayDijkstraGraphResult(result, origin);
+        delete result;
+    } catch (const std::bad_any_cast&) {
+        std::cout << "Error al acceder al gestor de centros." << std::endl;
+    }
+}
