@@ -6,8 +6,13 @@
 
 ShipmentService::ShipmentService(
     TransportService* transportService,
+    PackageService* packageService,
     DistributionCenterService* distributionCenterService,
-    List& shipmentsList) : transportService(transportService), distributionCenterService(distributionCenterService), shipments(shipmentsList) {}
+    List& shipmentsList)
+    : transportService(transportService),
+    packageService(packageService),
+    distributionCenterService(distributionCenterService),
+    shipments(shipmentsList) {}
 
 void ShipmentService::createShipment(int id, const std::string& state, double cost, int priority, double totalPrice,
                                     double totalWeight, int shimpmentManagerId, std::string distributionCenterId,
@@ -169,35 +174,20 @@ List ShipmentService::generateOptimalCargoForTransport(int transportId, std::str
         return {};
     }
 
-    // 2. Obtener el DistributionCenter asociado
-    DistributionCenter* centro = distributionCenterService->getCenter(distributionCenterId);
-    if (!centro) {
-        std::cout << "[Error] Centro de distribucion invalido.\n";
-        delete transporte;
-        return {};
-    }
+    // 2. Obtener los paquetes del warehouse
+    std::cout << "[DEBUG] 1\n";
+    List& availablePackagesList = packageService->getPackagesOfCenter(distributionCenterId);
 
-    // 3. Obtener los paquetes del warehouse
-    List paquetesDisponibles = centro->getWarehouse();
-    List* availablePackagesList = new List();
-    Node* current = paquetesDisponibles.getHead();
-    while (current != nullptr) {
-        try {
-            Package* package = std::any_cast<Package*>(current->getData());
-            availablePackagesList->push(package);
-        } catch (const std::bad_any_cast&) {}
-        current = current->getNext();
-    }
-
-    // 4. Ejecutar la mochila 0-1
+    std::cout << "[DEBUG] 2\n";
+    // 3. Ejecutar la mochila 0-1
     ResultadoMochila resultado = resolverMochila(
-        *availablePackagesList,
+        availablePackagesList,
         capacidad
     );
+    std::cout << "[DEBUG] 3\n";
 
-    // 5. Devolver los seleccionados
+    // 4. Devolver los seleccionados
     delete transporte;
-    delete centro;
     List selected = resultado.paquetesSeleccionados;
     return selected;
 }

@@ -98,3 +98,7 @@ void PackageService::displayAllPackages() {
 int PackageService::getPackageCount() {
     return packages.getSize();
 }
+
+List& PackageService::getPackagesOfCenter(const std::string& code) {
+    return packages;
+}

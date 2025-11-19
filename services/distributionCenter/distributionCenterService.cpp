@@ -5,10 +5,12 @@
 
 DistributionCenterService::DistributionCenterService(
     ConnectionService* connectionService,
+    PackageService* packageService,
     DistributionCenterManager* manager,
     List& centersList,
     List& centerManagersList)
     : connectionService(connectionService),
+    packageService(packageService),
     manager(manager),
     distributionCenters(centersList),
     distributionCenterManagers(centerManagersList) {}
@@ -20,7 +22,6 @@ DistributionCenterService::~DistributionCenterService() {
 // Mostrar la informacion de un centro de distribucion especifico
 void DistributionCenterService::showCenterInfo(const std::string& code) {
     try {
-        // TODO: Revisar
         if (!manager->hasCenter(code)) {
             std::cout << "Error: Centro con codigo '" << code << "' no encontrado." << std::endl;
             return;
@@ -38,7 +39,6 @@ bool DistributionCenterService::addCenter(const std::string& code, const std::st
                                            const std::string& city, int capacity,
                                            int dailyPackages, int numEmployees) {
     try {
-        // TODO: Revisar
         
         if (manager->hasCenter(code)) {
             std::cout << "Ya existe un centro con el codigo " << code << std::endl;
@@ -55,9 +55,8 @@ bool DistributionCenterService::addCenter(const std::string& code, const std::st
 }
 
 // Agregar un paquete al almacén de un centro
-void DistributionCenterService::addPackageToCenter(const std::string& centerCode, const Package& pkg) {
+void DistributionCenterService::addPackageToCenter(const std::string& centerCode, int id, const std::string& name, double price, int priority, double weight) {
     try {
-        // TODO: Revisar
         if (!manager->hasCenter(centerCode)) {
             std::cout << "Error: Centro con codigo '" << centerCode << "' no encontrado." << std::endl;
             return;
@@ -69,18 +68,8 @@ void DistributionCenterService::addPackageToCenter(const std::string& centerCode
             return;
         }
 
-        // Validación simple: revisar capacidad (opcional)
-        // Si querés que el centro no acepte más paquetes cuando supera capacity,
-        // descomentá las siguientes líneas:
-        /*
-        if (center->getWarehouse().getSize() >= center->getCapacity()) {
-            std::cout << "Imposible agregar paquete: centro alcanzó su capacidad máxima.\n";
-            return;
-        }
-        */
-
-        center->addPackage(pkg);
-        std::cout << "Paquete (ID: " << pkg.getId() << ") agregado al centro " << centerCode << " correctamente.\n";
+        packageService->createPackage(id, name, price, priority, weight);
+        std::cout << "Paquete (ID: " << id << ") agregado al centro " << centerCode << " correctamente.\n";
     } catch (const std::bad_any_cast&) {
         std::cout << "Error al acceder al gestor de centros." << std::endl;
     }
@@ -89,28 +78,8 @@ void DistributionCenterService::addPackageToCenter(const std::string& centerCode
 // Obtener el warehouse (lista de paquetes) de un centro por código
 List DistributionCenterService::getWarehouseOfCenter(const std::string& centerCode) {
     List empty;
-
-    if (distributionCenterManagers.isEmpty()) {
-        std::cout << "[WARN] No hay DistributionCenterManagers cargados.\n";
-        return empty;
-    }
-
     try {
-        DistributionCenterManager* manager =
-            std::any_cast<DistributionCenterManager*>(distributionCenterManagers.getHead()->getData());
-
-        if (!manager->hasCenter(centerCode)) {
-            std::cout << "[WARN] El manager NO tiene un centro con codigo: " << centerCode << "\n";
-            return empty;
-        }
-
-        DistributionCenter* center = manager->getCenter(centerCode);
-        if (center == nullptr) {
-            std::cout << "[WARN] getCenter devolvio nullptr para: " << centerCode << "\n";
-            return empty;
-        }
-
-        List warehouse = center->getWarehouse();
+        List& warehouse = packageService->getPackagesOfCenter(centerCode);
 
         if (warehouse.isEmpty()) {
             std::cout << "[INFO] El centro " << centerCode << " tiene el warehouse vacio.\n";
@@ -118,9 +87,7 @@ List DistributionCenterService::getWarehouseOfCenter(const std::string& centerCo
             std::cout << "[INFO] Warehouse del centro " << centerCode 
                       << " contiene " << warehouse.getSize() << " paquetes.\n";
         }
-
         return warehouse;
-
     } catch (const std::bad_any_cast&) {
         std::cout << "[ERROR] Fallo el any_cast a DistributionCenterManager*.\n";
         return empty;
@@ -143,7 +110,6 @@ bool DistributionCenterService::updateCenter(const std::string& code, int capaci
 // Mostrar todos los centros
 void DistributionCenterService::displayAllCenters() {
     try {
-        // TODO: Revisar
         List& centersList = manager->getDistributionCentersList();
 
         if (centersList.isEmpty()) {
@@ -178,7 +144,6 @@ List DistributionCenterService::getAllCenters() {
     }
 
     try {
-        // TODO: Revisar
         return manager->getDistributionCentersList();
     } catch (const std::bad_any_cast&) {
         return result;
@@ -188,7 +153,6 @@ List DistributionCenterService::getAllCenters() {
 // Mostrar centros ordenados por capacidad
 void DistributionCenterService::displayCentersSortedByCapacity() {
     try {
-        // TODO: Revisar
         List& centersList = manager->getDistributionCentersList();
 
         if (centersList.isEmpty()) {
@@ -227,7 +191,6 @@ void DistributionCenterService::displayCentersSortedByCapacity() {
 // Mostrar centros ordenados por paquetes procesados
 void DistributionCenterService::displayCentersSortedByPackages() {
     try {
-        // TODO: Revisar
         List& centersList = manager->getDistributionCentersList();
 
         if (centersList.isEmpty()) {
@@ -266,7 +229,6 @@ void DistributionCenterService::displayCentersSortedByPackages() {
 // Mostrar centros ordenados por cantidad de empleados
 void DistributionCenterService::displayCentersSortedByEmployees() {
     try {
-        // TODO: Revisar
         List& centersList = manager->getDistributionCentersList();
 
         if (centersList.isEmpty()) {
@@ -310,7 +272,6 @@ bool DistributionCenterService::centerExists(const std::string& code) {
     }
 
     try {
-        // TODO: Revisar
         return manager->hasCenter(code);
     } catch (const std::bad_any_cast&) {
         return false;
@@ -323,7 +284,6 @@ DistributionCenter* DistributionCenterService::getCenter(const std::string& code
         return nullptr;
     }
     try {
-        // TODO: Revisar
         return manager->getCenter(code);
     } catch (const std::bad_any_cast&) {
         return nullptr;
@@ -333,7 +293,6 @@ DistributionCenter* DistributionCenterService::getCenter(const std::string& code
 // Mostrar estadisticas generales
 void DistributionCenterService::displayStatistics() {
     try {
-        // TODO: Revisar
         List& centersList = manager->getDistributionCentersList();
 
         if (centersList.isEmpty()) {
@@ -389,7 +348,6 @@ bool DistributionCenterService::addConnection(const std::string& origin,
                                               const std::string& destination,
                                               double distance) {
     try {
-        // TODO: Revisar
         
         // Verificar que ambos centros existen
         if (!manager->hasCenter(origin)) {
@@ -418,7 +376,6 @@ bool DistributionCenterService::addBidirectionalConnection(const std::string& or
                                                           const std::string& destination,
                                                           double distance) {
     try {
-        // TODO: Revisar
         
         // Verificar que ambos centros existen
         if (!manager->hasCenter(origin)) {
@@ -445,7 +402,6 @@ bool DistributionCenterService::addBidirectionalConnection(const std::string& or
 
 void DistributionCenterService::showCenterConnections(const std::string& code) {
     try {
-        // TODO: Revisar
         if (!manager->hasCenter(code)) {
             std::cout << "Error: Centro '" << code << "' no encontrado." << std::endl;
             return;
@@ -482,7 +438,6 @@ void DistributionCenterService::showCenterConnections(const std::string& code) {
 
 void DistributionCenterService::displayAllConnections() {
     try {
-        // TODO: Revisar
         std::cout << "\n=== Todas las Conexiones ===" << std::endl;
         std::cout << std::string(60, '-') << std::endl;
 
@@ -529,7 +484,6 @@ void DistributionCenterService::displayAllConnections() {
 void DistributionCenterService::calculateShortestPath(const std::string& origin,
                                                        const std::string& destination) {
     try {
-        // TODO: Revisar
         DijkstraGraphResult* result = dijkstra(manager->getNetwork(), origin, destination);
         displayPathGraph(result, origin, destination);
         delete result;
@@ -540,7 +494,6 @@ void DistributionCenterService::calculateShortestPath(const std::string& origin,
 
 void DistributionCenterService::calculateAllDistancesFrom(const std::string& origin) {
     try {
-        // TODO: Revisar
         DijkstraGraphResult* result = dijkstra(manager->getNetwork(), origin, ""); // destination vacío = calcular a todos
         displayDijkstraGraphResult(result, origin);
         delete result;

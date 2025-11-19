@@ -30,6 +30,34 @@ Client client2(2, "Jane Smith");
 
 void initializeMockData() {
     std::cout << "Initializing mock data..." << std::endl;
+
+    distributionCenterService->addCenter("CBA", "Cordoba Center", "Cordoba", 300, 10, 9);
+    distributionCenterService->addCenter("MZA", "Mendoza Center", "Mendoza", 250, 12, 13);
+    distributionCenterService->addCenter("BUE", "Buenos Aires Center", "Buenos Aires", 400, 1, 12);
+    distributionCenterService->addCenter("ROS", "Rosario Center", "Rosario", 200, 5, 8);
+    distributionCenterService->addCenter("TUC", "Tucuman Center", "Tucuman", 180, 4, 6);
+    distributionCenterService->addCenter("SAL", "Salta Center", "Salta", 160, 2, 5);
+
+    distributionCenterService->addBidirectionalConnection("CBA", "MZA", 900);   // Cordoba - Mendoza
+    distributionCenterService->addBidirectionalConnection("CBA", "BUE", 700);   // Cordoba - Buenos Aires
+    distributionCenterService->addBidirectionalConnection("CBA", "ROS", 400);   // Cordoba - Rosario
+    distributionCenterService->addBidirectionalConnection("MZA", "BUE", 1100);  // Mendoza - Buenos Aires
+    distributionCenterService->addBidirectionalConnection("BUE", "ROS", 300);   // Buenos Aires - Rosario
+    distributionCenterService->addBidirectionalConnection("TUC", "CBA", 550);   // Tucuman - Cordoba
+    distributionCenterService->addBidirectionalConnection("TUC", "SAL", 300);   // Tucuman - Salta
+    distributionCenterService->addBidirectionalConnection("SAL", "CBA", 800);   // Salta - Cordoba
+
+    distributionCenterService->addPackageToCenter("BUE", 1, "TV", 500, 2, 20);
+    distributionCenterService->addPackageToCenter("BUE", 1, "TV", 500, 2, 20);
+    distributionCenterService->addPackageToCenter("BUE", 1, "TV", 500, 2, 20);
+    distributionCenterService->addPackageToCenter("BUE", 1, "TV", 500, 2, 20);
+    distributionCenterService->addPackageToCenter("BUE", 1, "TV", 500, 2, 20);
+    distributionCenterService->addPackageToCenter("BUE", 1, "TV", 500, 2, 20);
+    distributionCenterService->addPackageToCenter("BUE", 1, "TV", 500, 2, 20);
+
+    DistributionCenterManager* manager = new DistributionCenterManager(distributionCenterNetwork);
+    allocated_managers++;  // Trackear allocación
+    distributionCenterManagers.push(std::any(manager));
     
     // Create package lists
     List pkgList1;
@@ -51,52 +79,22 @@ void initializeMockData() {
     pkgListShip3.push(std::any(pkg1));
     pkgListShip3.push(std::any(pkg3));
 
-    // Create shipments with unique IDs and varied data
-    Shipment ship1(1, "Pending", 50.0, 1, 100.0, 10.0, 1, "BUE", pkgListShip1, "BUE", "MZA", 1, strToDate("10-11-2025"), -1, -1, -1);
-    Shipment ship2(2, "In Transit", 75.0, 2, 150.0, 15.0, 2, "BUE", pkgListShip2, "BUE", "CBA", 2, strToDate("09-11-2025"), -1, -1, -1);
-    Shipment ship3(3, "Delivered", 60.0, 1, 120.0, 12.0, 1, "CBA", pkgListShip3, "CBA", "MZA", 1, strToDate("08-11-2025"), strToDate("09-11-2025"), strToDate("10-11-2025"), strToDate("11-11-2025"));
-    Shipment ship4(4, "Pending", 80.0, 3, 160.0, 18.0, 2, "BUE", pkgListShip1, "BUE", "BUE", 2, strToDate("11-11-2025"), -1, -1, -1);
-    Shipment ship5(5, "In Transit", 45.0, 2, 90.0, 8.0, 1, "BUE", pkgListShip2, "BUE", "ROS", 1, strToDate("10-11-2025"), -1, -1, -1);
-    Shipment ship6(6, "Pending", 55.0, 1, 110.0, 11.0, 2, "BUE", pkgListShip3, "BUE", "BUE", 2, strToDate("11-11-2025"), -1, -1, -1);
-    Shipment ship7(7, "Delivered", 70.0, 2, 140.0, 14.0, 1, "BUE", pkgListShip1, "BUE", "CBA", 1, strToDate("07-11-2025"), strToDate("08-11-2025"), strToDate("09-11-2025"), strToDate("10-11-2025"));
-    Shipment ship8(8, "In Transit", 65.0, 3, 130.0, 13.0, 2, "BUE", pkgListShip2, "BUE", "TUC", 2, strToDate("09-11-2025"), -1, -1, -1);
-    Shipment ship9(9, "Pending", 40.0, 1, 80.0, 7.0, 1, "BUE", pkgListShip3, "BUE", "SAL", 1, strToDate("11-11-2025"), -1, -1, -1);
-    Shipment ship10(10, "Pending", 90.0, 2, 180.0, 20.0, 2, "SAL", pkgListShip1, "SAL", "CBA", 2, strToDate("10-11-2025"), -1, -1, -1);
-
-    distributionCenterService->addCenter("CBA", "Cordoba Center", "Cordoba", 300, 10, 9);
-    distributionCenterService->addCenter("MZA", "Mendoza Center", "Mendoza", 250, 12, 13);
-    distributionCenterService->addCenter("BUE", "Buenos Aires Center", "Buenos Aires", 400, 1, 12);
-    distributionCenterService->addCenter("ROS", "Rosario Center", "Rosario", 200, 5, 8);
-    distributionCenterService->addCenter("TUC", "Tucuman Center", "Tucuman", 180, 4, 6);
-    distributionCenterService->addCenter("SAL", "Salta Center", "Salta", 160, 2, 5);
-
-    distributionCenterService->addBidirectionalConnection("CBA", "MZA", 900);   // Cordoba - Mendoza
-    distributionCenterService->addBidirectionalConnection("CBA", "BUE", 700);   // Cordoba - Buenos Aires
-    distributionCenterService->addBidirectionalConnection("CBA", "ROS", 400);   // Cordoba - Rosario
-    distributionCenterService->addBidirectionalConnection("MZA", "BUE", 1100);  // Mendoza - Buenos Aires
-    distributionCenterService->addBidirectionalConnection("BUE", "ROS", 300);   // Buenos Aires - Rosario
-    distributionCenterService->addBidirectionalConnection("TUC", "CBA", 550);   // Tucuman - Cordoba
-    distributionCenterService->addBidirectionalConnection("TUC", "SAL", 300);   // Tucuman - Salta
-    distributionCenterService->addBidirectionalConnection("SAL", "CBA", 800);   // Salta - Cordoba
-
-    DistributionCenterManager* manager = new DistributionCenterManager(distributionCenterNetwork);
-    allocated_managers++;  // Trackear allocación
-    distributionCenterManagers.push(std::any(manager));
-    
     packages.push(std::any(pkg1));
     packages.push(std::any(pkg2));
     packages.push(std::any(pkg3));
+
+    // Create shipments
+    shipmentService->createShipment(1, "Pending", 50.0, 1, 100.0, 10.0, 1, "BUE", pkgListShip1, "BUE", "MZA", 1, strToDate("10-11-2025"), -1, -1, -1);
+    shipmentService->createShipment(2, "In Transit", 75.0, 2, 150.0, 15.0, 2, "BUE", pkgListShip2, "BUE", "CBA", 2, strToDate("09-11-2025"), -1, -1, -1);
+    shipmentService->createShipment(3, "Delivered", 60.0, 1, 120.0, 12.0, 1, "CBA", pkgListShip3, "CBA", "MZA", 1, strToDate("08-11-2025"), strToDate("09-11-2025"), strToDate("10-11-2025"), strToDate("11-11-2025"));
+    shipmentService->createShipment(4, "Pending", 80.0, 3, 160.0, 18.0, 2, "BUE", pkgListShip1, "BUE", "BUE", 2, strToDate("11-11-2025"), -1, -1, -1);
+    shipmentService->createShipment(5, "In Transit", 45.0, 2, 90.0, 8.0, 1, "BUE", pkgListShip2, "BUE", "ROS", 1, strToDate("10-11-2025"), -1, -1, -1);
+    shipmentService->createShipment(6, "Pending", 55.0, 1, 110.0, 11.0, 2, "BUE", pkgListShip3, "BUE", "BUE", 2, strToDate("11-11-2025"), -1, -1, -1);
+    shipmentService->createShipment(7, "Delivered", 70.0, 2, 140.0, 14.0, 1, "BUE", pkgListShip1, "BUE", "CBA", 1, strToDate("07-11-2025"), strToDate("08-11-2025"), strToDate("09-11-2025"), strToDate("10-11-2025"));
+    shipmentService->createShipment(8, "In Transit", 65.0, 3, 130.0, 13.0, 2, "BUE", pkgListShip2, "BUE", "TUC", 2, strToDate("09-11-2025"), -1, -1, -1);
+    shipmentService->createShipment(9, "Pending", 40.0, 1, 80.0, 7.0, 1, "BUE", pkgListShip3, "BUE", "SAL", 1, strToDate("11-11-2025"), -1, -1, -1);
+    shipmentService->createShipment(10, "Pending", 90.0, 2, 180.0, 20.0, 2, "SAL", pkgListShip1, "SAL", "CBA", 2, strToDate("10-11-2025"), -1, -1, -1);
     
-    shipments.push(std::any(new Shipment(ship1)));
-    shipments.push(std::any(new Shipment(ship2)));
-    shipments.push(std::any(new Shipment(ship3)));
-    shipments.push(std::any(new Shipment(ship4)));
-    shipments.push(std::any(new Shipment(ship5)));
-    shipments.push(std::any(new Shipment(ship6)));
-    shipments.push(std::any(new Shipment(ship7)));
-    shipments.push(std::any(new Shipment(ship8)));
-    shipments.push(std::any(new Shipment(ship9)));
-    shipments.push(std::any(new Shipment(ship10)));
     allocated_shipments += 10;  // Trackear las 10 allocaciones
     
     employees.push(std::any(emp1));
