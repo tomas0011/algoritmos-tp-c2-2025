@@ -1,21 +1,23 @@
 #ifndef CONNECTION_H
 #define CONNECTION_H
 
+#include <string>
+
 class Connection {
 private:
     int id;
-    int distributionCenterOrigin;
-    int distributionCenterDestination;
+    std::string distributionCenterOrigin;
+    std::string distributionCenterDestination;
     double distance;
 
 public:
-    Connection(int id, int distributionCenterOrigin, int distributionCenterDestination, double distance);
+    Connection(int id, const std::string& distributionCenterOrigin, const std::string& distributionCenterDestination, double distance);
     void display() const;
 
     // Getters
     int getId() const;
-    int getDistributionCenterOrigin() const;
-    int getDistributionCenterDestination() const;
+    const std::string& getDistributionCenterOrigin() const;
+    const std::string& getDistributionCenterDestination() const;
     double getDistance() const;
 };
 

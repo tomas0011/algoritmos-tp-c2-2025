@@ -12,7 +12,7 @@ void showEmployeeMenu() {
         std::cout << "3. Actualizar un empleado\n";
         std::cout << "4. Eliminar un empleado\n";
         std::cout << "5. Mostrar todos los empleados\n";
-        std::cout << "0. Volver al menú principal\n";
+        std::cout << "0. Volver al menu principal\n";
         std::cout << "Seleccione una opcion: ";
         std::cin >> choice;
 

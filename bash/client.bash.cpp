@@ -12,7 +12,7 @@ void showClientMenu() {
         std::cout << "3. Actualizar un cliente\n";
         std::cout << "4. Eliminar un cliente\n";
         std::cout << "5. Mostrar todos los clientes\n";
-        std::cout << "0. Volver al menú principal\n";
+        std::cout << "0. Volver al menu principal\n";
         std::cout << "Seleccione una opcion: ";
         std::cin >> choice;
 

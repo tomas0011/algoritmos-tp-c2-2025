@@ -440,9 +440,42 @@ bool DistributionCenterService::addConnection(const std::string& origin,
             return false;
         }
 
-        // Agregar conexion bidireccional usando el grafo
-        manager->relateDistributionCenter(origin, destination, distance);
-        manager->relateDistributionCenter(destination, origin, distance);
+        // Agregar conexión unidireccional
+        manager->createConnection(origin, destination, distance);
+
+        std::cout << "Conexion agregada: " << origin << " -> " << destination
+                  << " (" << distance << " km)" << std::endl;
+        return true;
+    } catch (const std::bad_any_cast&) {
+        std::cout << "Error al acceder al gestor de centros." << std::endl;
+        return false;
+    }
+}
+
+bool DistributionCenterService::addBidirectionalConnection(const std::string& origin,
+                                                          const std::string& destination,
+                                                          double distance) {
+    if (distributionCenterManagers.isEmpty()) {
+        std::cout << "No hay gestores de centros disponibles.\n";
+        return false;
+    }
+
+    try {
+        DistributionCenterManager* manager = std::any_cast<DistributionCenterManager*>(distributionCenterManagers.getHead()->getData());
+        
+        // Verificar que ambos centros existen
+        if (!manager->hasCenter(origin)) {
+            std::cout << "Error: Centro origen '" << origin << "' no encontrado." << std::endl;
+            return false;
+        }
+
+        if (!manager->hasCenter(destination)) {
+            std::cout << "Error: Centro destino '" << destination << "' no encontrado." << std::endl;
+            return false;
+        }
+
+        // Agregar conexión bidireccional
+        manager->createBidirectionalConnection(origin, destination, distance);
 
         std::cout << "Conexion agregada: " << origin << " <-> " << destination
                   << " (" << distance << " km)" << std::endl;
@@ -478,9 +511,13 @@ void DistributionCenterService::showCenterConnections(const std::string& code) {
         int count = 0;
 
         while (current != nullptr) {
-            GraphArista* edge = std::any_cast<GraphArista*>(current->getData());
-            std::cout << "  " << code << " -> " << edge->getDestination()
-                      << " (" << edge->getWeight() << " km)" << std::endl;
+            try {
+                Connection* conn = std::any_cast<Connection*>(current->getData());
+                std::cout << "  " << code << " -> " << conn->getDistributionCenterDestination()
+                          << " (" << conn->getDistance() << " km)" << std::endl;
+            } catch (const std::bad_any_cast&) {
+                std::cout << "  [conexion invalida]" << std::endl;
+            }
             current = current->getNext();
             count++;
         }
@@ -516,9 +553,13 @@ void DistributionCenterService::displayAllConnections() {
                     hasConnections = true;
                     Node* edgeNode = edges->getHead();
                     while (edgeNode != nullptr) {
-                        GraphArista* edge = std::any_cast<GraphArista*>(edgeNode->getData());
-                        std::cout << code << " -> " << edge->getDestination()
-                                  << " (" << edge->getWeight() << " km)" << std::endl;
+                        try {
+                            Connection* conn = std::any_cast<Connection*>(edgeNode->getData());
+                            std::cout << code << " -> " << conn->getDistributionCenterDestination()
+                                      << " (" << conn->getDistance() << " km)" << std::endl;
+                        } catch (const std::bad_any_cast&) {
+                            std::cout << code << " -> [conexion invalida]" << std::endl;
+                        }
                         edgeNode = edgeNode->getNext();
                     }
                 }
