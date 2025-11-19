@@ -1,5 +1,5 @@
 #include "distributionCenterService.h"
-#include "../../utils/algorithms/sort/mergeSort.cpp"
+#include "../../utils/algorithms/sort/mergeSort.h"
 #include <iostream>
 #include <string>
 
@@ -141,7 +141,7 @@ void DistributionCenterService::displayCentersSortedByCapacity() {
         std::cout << "\n=== Centros Ordenados por Capacidad ===\n";
 
         // Use custom mergeSort with lambda comparator
-        mergeSort(centersList, [](const std::any& a, const std::any& b) -> bool {
+        List sortedCenters = mergeSort(centersList, [](const std::any& a, const std::any& b) -> bool {
             try {
                 DistributionCenter* centerA = std::any_cast<DistributionCenter*>(a);
                 DistributionCenter* centerB = std::any_cast<DistributionCenter*>(b);
@@ -152,7 +152,7 @@ void DistributionCenterService::displayCentersSortedByCapacity() {
         });
 
         // Display sorted centers
-        Node* current = centersList.getHead();
+        Node* current = sortedCenters.getHead();
         while (current != nullptr) {
             try {
                 DistributionCenter* center = std::any_cast<DistributionCenter*>(current->getData());
@@ -184,7 +184,7 @@ void DistributionCenterService::displayCentersSortedByPackages() {
         std::cout << "\n=== Centros Ordenados por Paquetes Diarios ===\n";
 
         // Use custom mergeSort with lambda comparator
-        mergeSort(centersList, [](const std::any& a, const std::any& b) -> bool {
+        List sortedCenters = mergeSort(centersList, [](const std::any& a, const std::any& b) -> bool {
             try {
                 DistributionCenter* centerA = std::any_cast<DistributionCenter*>(a);
                 DistributionCenter* centerB = std::any_cast<DistributionCenter*>(b);
@@ -195,7 +195,7 @@ void DistributionCenterService::displayCentersSortedByPackages() {
         });
 
         // Display sorted centers
-        Node* current = centersList.getHead();
+        Node* current = sortedCenters.getHead();
         while (current != nullptr) {
             try {
                 DistributionCenter* center = std::any_cast<DistributionCenter*>(current->getData());
@@ -227,7 +227,7 @@ void DistributionCenterService::displayCentersSortedByEmployees() {
         std::cout << "\n=== Centros Ordenados por Empleados ===\n";
 
         // Use custom mergeSort with lambda comparator
-        mergeSort(centersList, [](const std::any& a, const std::any& b) -> bool {
+        List sortedCenters = mergeSort(centersList, [](const std::any& a, const std::any& b) -> bool {
             try {
                 DistributionCenter* centerA = std::any_cast<DistributionCenter*>(a);
                 DistributionCenter* centerB = std::any_cast<DistributionCenter*>(b);
@@ -238,7 +238,7 @@ void DistributionCenterService::displayCentersSortedByEmployees() {
         });
 
         // Display sorted centers
-        Node* current = centersList.getHead();
+        Node* current = sortedCenters.getHead();
         while (current != nullptr) {
             try {
                 DistributionCenter* center = std::any_cast<DistributionCenter*>(current->getData());

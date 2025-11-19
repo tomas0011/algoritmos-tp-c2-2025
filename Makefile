@@ -13,6 +13,7 @@ SRCS = main.cpp \
         bash/employee.bash.cpp \
         utils/algorithms/dijkstra/dijkstra.cpp \
         utils/algorithms/knapsackProblem/knapsack.cpp \
+        utils/algorithms/sort/mergeSort.cpp \
        storage/mockData.cpp \
        storage/storage.cpp \
        services/initializeServices.cpp \
