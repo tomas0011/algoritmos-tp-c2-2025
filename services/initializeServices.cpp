@@ -13,11 +13,11 @@ DistributionCenterService* distributionCenterService = nullptr;
 void initializeServices() {
     // Initialize services
     packageService = new PackageService(packages);
-    shipmentService = new ShipmentService(shipments);
     clientService = new ClientService(clients);
     employeeService = new EmployeeService(employees);
     connectionService = new ConnectionService(connections);
     transportService = new TransportService(transports);
     distributionCenterService = new DistributionCenterService(distributionCenters, distributionCenterManagers);
-    shipmentManagerService = new ShipmentManagerService(transportService, distributionCenterService, shipmentManagers);
+    shipmentService = new ShipmentService(transportService, distributionCenterService, shipments);
+    shipmentManagerService = new ShipmentManagerService(shipmentManagers);
 }

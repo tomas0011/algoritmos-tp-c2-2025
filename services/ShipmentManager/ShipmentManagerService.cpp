@@ -1,16 +1,8 @@
 #include "ShipmentManagerService.h"
 #include <iostream>
-#include "../../utils/algorithms/knapsackProblem/knapsack.h"
+#include <unordered_map>
 
-ShipmentManagerService::ShipmentManagerService(
-    TransportService* transportService,
-    DistributionCenterService* distributionCenterService,
-    List& shipmentManagersList)
-    : shipmentManagers(shipmentManagersList) {
-    // Store the service pointers for use in methods
-    this->transportService = transportService;
-    this->distributionCenterService = distributionCenterService;
-}
+ShipmentManagerService::ShipmentManagerService(List& shipmentManagersList) : shipmentManagers(shipmentManagersList) {}
 
 void ShipmentManagerService::createShipmentManager(int id, int transportId, const std::vector<Connection>& path, int distributionCenterId) {
     ShipmentManager newShipmentManager(id, transportId, path, distributionCenterId);
@@ -106,50 +98,4 @@ void ShipmentManagerService::displayAllShipmentManagers() {
 
 int ShipmentManagerService::getShipmentManagerCount() {
     return shipmentManagers.getSize();
-}
-
-// -----------------------------------------------------
-//        NUEVO MÉTODO: GENERAR CARGA ÓPTIMA
-// -----------------------------------------------------
-std::vector<Package> ShipmentManagerService::generarCargaOptima(int transportId, std::string distributionCenterId) const {
-    // 1. Obtener el transporte
-    Transport* transporte = transportService->getTransportById(transportId);
-    if (!transporte) {
-        std::cout << "[Error] Transporte no encontrado.\n";
-        return {};
-    }
-
-    double capacidad = transporte->getMaxWeight();
-    if (capacidad <= 0) {
-        std::cout << "[Error] Transporte sin capacidad válida.\n";
-        delete transporte;
-        return {};
-    }
-
-    // 2. Obtener el DistributionCenter asociado
-    DistributionCenter* centro = distributionCenterService->getCenter(distributionCenterId);
-
-    if (!centro) {
-        std::cout << "[Error] Centro de distribución inválido.\n";
-        delete transporte;
-        return {};
-    }
-
-    // 3. Obtener los paquetes del warehouse
-    std::vector<Package> paquetesDisponibles = centro->getWarehouse();
-    List* availablePackagesList = new List();
-    for (const Package& pkg : paquetesDisponibles) {
-        availablePackagesList->push(pkg);
-    }    
-
-    // 4. Ejecutar la mochila 0-1
-    ResultadoMochila resultado = resolverMochila(
-        *availablePackagesList,
-        capacidad
-    );
-
-    // 5. Devolver los seleccionados
-    delete transporte;
-    delete centro;
-    return resultado.paquetesSeleccionados;
 }

@@ -3,7 +3,7 @@
 
 Shipment::Shipment(int id, const std::string& state, double cost, int priority, double totalPrice, double totalWeight,
                    int shimpmentManagerId, std::string distributionCenterId, const std::vector<Package>& packages,
-                   int originId, int destinationId, int clientId, time_t createDate, time_t leftWarehouseDate,
+                   std::string originId, std::string destinationId, int clientId, time_t createDate, time_t leftWarehouseDate,
                    time_t estimatedDeliveryDate, time_t deliveryDate)
     : id(id), state(state), cost(cost), priority(priority), totalPrice(totalPrice), totalWeight(totalWeight),
       shimpmentManagerId(shimpmentManagerId), distributionCenterId(distributionCenterId), packages(packages),
@@ -31,8 +31,8 @@ double Shipment::getTotalWeight() const { return totalWeight; }
 int Shipment::getShimpmentManagerId() const { return shimpmentManagerId; }
 std::string Shipment::getDistributionCenterId() const { return distributionCenterId; }
 const std::vector<Package>& Shipment::getPackages() const { return packages; }
-int Shipment::getOriginId() const { return originId; }
-int Shipment::getDestinationId() const { return destinationId; }
+std::string Shipment::getOriginId() const { return originId; }
+std::string Shipment::getDestinationId() const { return destinationId; }
 int Shipment::getClientId() const { return clientId; }
 time_t Shipment::getCreateDate() const { return createDate; }
 time_t Shipment::getLeftWarehouseDate() const { return leftWarehouseDate; }

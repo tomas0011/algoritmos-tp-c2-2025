@@ -6,20 +6,16 @@
 #include "../../entities/distributionCenter/DistributionCenter.h"
 #include "../../entities/package/Package.h"
 #include "../../utils/dataStructures/list/List.h"
+#include "../../utils/algorithms/knapsackProblem/knapsack.h"
 #include "../../services/transport/transportService.h"
 #include "../../services/distributionCenter/distributionCenterService.h"
 
 class ShipmentManagerService {
 private:
-    TransportService* transportService;
-    DistributionCenterService* distributionCenterService;
     List& shipmentManagers;
 
 public:
-    ShipmentManagerService(
-        TransportService* transportService,
-        DistributionCenterService* distributionCenterService,
-        List& shipmentManagersList);
+    ShipmentManagerService(List& shipmentManagersList);
 
     // CRUD operations
     void createShipmentManager(int id, int transportId, const std::vector<Connection>& path, int distributionCenterId);
@@ -30,7 +26,6 @@ public:
     // Utility functions
     void displayAllShipmentManagers();
     int getShipmentManagerCount();
-    std::vector<Package> generarCargaOptima(int transportId, std::string distributionCenterId) const;
 };
 
 #endif // SHIPMENT_MANAGER_SERVICE_H

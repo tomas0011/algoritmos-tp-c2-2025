@@ -2,11 +2,14 @@
 #include <iostream>
 #include <unordered_map>
 
-ShipmentService::ShipmentService(List& shipmentsList) : shipments(shipmentsList) {}
+ShipmentService::ShipmentService(
+    TransportService* transportService,
+    DistributionCenterService* distributionCenterService,
+    List& shipmentsList) : shipments(shipmentsList) {}
 
 void ShipmentService::createShipment(int id, const std::string& state, double cost, int priority, double totalPrice,
                                     double totalWeight, int shimpmentManagerId, std::string distributionCenterId,
-                                    const std::vector<Package>& packages, int originId, int destinationId,
+                                    const std::vector<Package>& packages, std::string originId, std::string destinationId,
                                     int clientId, time_t createDate, time_t leftWarehouseDate,
                                     time_t estimatedDeliveryDate, time_t deliveryDate) {
     Shipment newShipment(id, state, cost, priority, totalPrice, totalWeight, shimpmentManagerId,
@@ -34,7 +37,7 @@ Shipment* ShipmentService::getShipmentById(int id) {
 
 void ShipmentService::updateShipment(int id, const std::string& state, double cost, int priority, double totalPrice,
                                     double totalWeight, int shimpmentManagerId, std::string distributionCenterId,
-                                    const std::vector<Package>& packages, int originId, int destinationId,
+                                    const std::vector<Package>& packages, std::string originId, std::string destinationId,
                                     int clientId, time_t createDate, time_t leftWarehouseDate,
                                     time_t estimatedDeliveryDate, time_t deliveryDate) {
     List newList;
@@ -112,8 +115,6 @@ int ShipmentService::getShipmentCount() {
     return shipments.getSize();
 }
 
-
-
 //Punto B
 
 int ShipmentService::totalShipmentsByCenterAndDate(std::string centerId, time_t start, time_t end) {
@@ -135,20 +136,23 @@ int ShipmentService::totalShipmentsByCenterAndDate(std::string centerId, time_t 
     return count;
 }
 
-std::vector<std::string> ShipmentService::overloadedCenters(int weeklyLimit) {
+std::vector<std::string> ShipmentService::overloadedCenters() {
     std::unordered_map<std::string, int> shipmentCount;
     std::vector<std::string> overloaded;
     Node* current = shipments.getHead();
 
     while (current != nullptr) {
         try {
-            Shipment ship = std::any_cast<Shipment>(current->getData());
-            shipmentCount[ship.getDistributionCenterId()]++;
+            Shipment shipment = std::any_cast<Shipment>(current->getData());
+            shipmentCount[shipment.getDistributionCenterId()]++;
         } catch (const std::bad_any_cast&) {}
         current = current->getNext();
     }
 
     for (const auto& [centerId, count] : shipmentCount) {
+        DistributionCenter* center = distributionCenterService->getCenter(centerId);
+        int weeklyLimit = center ? center->getDailyPackages() * 7 : 0;
+        std::cout << "Limite semanal de " << center->getCode() << " es: " << weeklyLimit << std::endl;
         if (count > weeklyLimit) {
             overloaded.push_back(centerId);
         }
@@ -174,4 +178,50 @@ std::vector<Shipment> ShipmentService::findShipmentsByClient(int clientId) {
 
     // Complejidad temporal: O(n)
     return result;
+}
+
+// -----------------------------------------------------
+//        NUEVO MÉTODO: GENERAR CARGA ÓPTIMA
+// -----------------------------------------------------
+std::vector<Package> ShipmentService::generarCargaOptima(int transportId, std::string distributionCenterId) const {
+    // 1. Obtener el transporte
+    Transport* transporte = transportService->getTransportById(transportId);
+    if (!transporte) {
+        std::cout << "[Error] Transporte no encontrado.\n";
+        return {};
+    }
+
+    double capacidad = transporte->getMaxWeight();
+    if (capacidad <= 0) {
+        std::cout << "[Error] Transporte sin capacidad válida.\n";
+        delete transporte;
+        return {};
+    }
+
+    // 2. Obtener el DistributionCenter asociado
+    DistributionCenter* centro = distributionCenterService->getCenter(distributionCenterId);
+
+    if (!centro) {
+        std::cout << "[Error] Centro de distribución inválido.\n";
+        delete transporte;
+        return {};
+    }
+
+    // 3. Obtener los paquetes del warehouse
+    std::vector<Package> paquetesDisponibles = centro->getWarehouse();
+    List* availablePackagesList = new List();
+    for (const Package& pkg : paquetesDisponibles) {
+        availablePackagesList->push(pkg);
+    }    
+
+    // 4. Ejecutar la mochila 0-1
+    ResultadoMochila resultado = resolverMochila(
+        *availablePackagesList,
+        capacidad
+    );
+
+    // 5. Devolver los seleccionados
+    delete transporte;
+    delete centro;
+    return resultado.paquetesSeleccionados;
 }

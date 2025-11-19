@@ -1,14 +1,15 @@
 #include "mockData.h"
 #include "storage.h"
 #include <iostream>
+#include <utils/algorithms/parseDate/parseDate.h>
 
 // Mock data definitions - now using storage lists
 Package pkg1(1, 10.5, 1, 2.0);
 Package pkg2(2, 15.0, 2, 3.5);
 Package pkg3(3, 8.0, 1, 1.5);
 
-Shipment ship1(1, "In Transit", 50.0, 1, 100.0, 10.0, 1, "DC1", {pkg1, pkg2}, 1, 2, 1, time(nullptr), time(nullptr), time(nullptr), time(nullptr));
-Shipment ship2(2, "Delivered", 75.0, 2, 150.0, 15.0, 2, "DC2", {pkg3}, 2, 3, 2, time(nullptr), time(nullptr), time(nullptr), time(nullptr));
+Shipment ship1(1, "In Transit", 50.0, 1, 100.0, 10.0, 1, "BUE", {pkg1, pkg2}, "BUE", "MZA", 1, parseDate("18-11-2025"), time(nullptr), parseDate("19-11-2025"), time(nullptr));
+Shipment ship2(2, "Delivered", 75.0, 2, 150.0, 15.0, 2, "BUE", {pkg3}, "BUE", "MZA", 2, parseDate("17-11-2025"), parseDate("17-11-2025"), parseDate("18-11-2025"), parseDate("18-11-2025"));
 
 ShipmentManager sm1(1, 1, {}, 1);
 ShipmentManager sm2(2, 2, {}, 2);
@@ -32,6 +33,31 @@ DistributionCenterManager manager1;
 DistributionCenterManager manager2;
 
 void initializeMockData() {
+    // Initialize distribution center managers BEFORE pushing
+    manager1.createDistributionCenter("A", "Center A", "City A", 100, 50, 10);
+    manager1.createDistributionCenter("B", "Center B", "City B", 200, 75, 15);
+    manager2.createDistributionCenter("C", "Center C", "City C", 150, 60, 12);
+
+    manager1.createDistributionCenter("CBA", "Cordoba Center", "Cordoba", 300, 10, 9);
+    manager1.createDistributionCenter("MZA", "Mendoza Center", "Mendoza", 250, 12, 13);
+    manager1.createDistributionCenter("BUE", "Buenos Aires Center", "Buenos Aires", 400, 11, 12);
+    manager1.createDistributionCenter("ROS", "Rosario Center", "Rosario", 200, 5, 8);
+    manager1.createDistributionCenter("TUC", "Tucuman Center", "Tucuman", 180, 4, 6);
+    manager1.createDistributionCenter("SLA", "Salta Center", "Salta", 160, 2, 5);
+
+    manager1.relateDistributionCenter("CBA", "MZA", 900);   // Cordoba - Mendoza
+    manager1.relateDistributionCenter("CBA", "BUE", 700);   // Cordoba - Buenos Aires
+    manager1.relateDistributionCenter("CBA", "ROS", 400);   // Cordoba - Rosario
+    manager1.relateDistributionCenter("MZA", "BUE", 1100);  // Mendoza - Buenos Aires
+    manager1.relateDistributionCenter("BUE", "ROS", 300);   // Buenos Aires - Rosario
+    manager1.relateDistributionCenter("TUC", "CBA", 550);   // Tucuman - Cordoba
+    manager1.relateDistributionCenter("TUC", "SLA", 300);   // Tucuman - Salta
+    manager1.relateDistributionCenter("SLA", "CBA", 800);   // Salta - Cordoba
+
+    // Push distribution center managers to storage AFTER initialization
+    distributionCenterManagers.push(manager1);
+    distributionCenterManagers.push(manager2);
+
     // Push packages to storage
     packages.push(pkg1);
     packages.push(pkg2);
@@ -64,29 +90,4 @@ void initializeMockData() {
     // Push distribution centers to storage
     distributionCenters.push(dc1);
     distributionCenters.push(dc2);
-
-    // Initialize distribution center managers BEFORE pushing
-    manager1.createDistributionCenter("A", "Center A", "City A", 100, 50, 10);
-    manager1.createDistributionCenter("B", "Center B", "City B", 200, 75, 15);
-    manager2.createDistributionCenter("C", "Center C", "City C", 150, 60, 12);
-
-    manager1.createDistributionCenter("CBA", "Cordoba Center", "Cordoba", 300, 10, 9);
-    manager1.createDistributionCenter("MZA", "Mendoza Center", "Mendoza", 250, 12, 13);
-    manager1.createDistributionCenter("BUE", "Buenos Aires Center", "Buenos Aires", 400, 11, 12);
-    manager1.createDistributionCenter("ROS", "Rosario Center", "Rosario", 200, 5, 8);
-    manager1.createDistributionCenter("TUC", "Tucuman Center", "Tucuman", 180, 4, 6);
-    manager1.createDistributionCenter("SLA", "Salta Center", "Salta", 160, 2, 5);
-
-    manager1.relateDistributionCenter("CBA", "MZA", 900);   // Cordoba - Mendoza
-    manager1.relateDistributionCenter("CBA", "BUE", 700);   // Cordoba - Buenos Aires
-    manager1.relateDistributionCenter("CBA", "ROS", 400);   // Cordoba - Rosario
-    manager1.relateDistributionCenter("MZA", "BUE", 1100);  // Mendoza - Buenos Aires
-    manager1.relateDistributionCenter("BUE", "ROS", 300);   // Buenos Aires - Rosario
-    manager1.relateDistributionCenter("TUC", "CBA", 550);   // Tucuman - Cordoba
-    manager1.relateDistributionCenter("TUC", "SLA", 300);   // Tucuman - Salta
-    manager1.relateDistributionCenter("SLA", "CBA", 800);   // Salta - Cordoba
-
-    // Push distribution center managers to storage AFTER initialization
-    distributionCenterManagers.push(manager1);
-    distributionCenterManagers.push(manager2);
 }

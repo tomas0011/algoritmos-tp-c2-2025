@@ -6,18 +6,7 @@
 #include <ctime>
 #include <sstream>
 #include <iomanip>
-
-// Helper function to parse date string in dd-mm-yyyy format to time_t
-time_t parseDate(const std::string& dateStr) {
-    std::tm tm = {};
-    std::istringstream ss(dateStr);
-
-    ss >> std::get_time(&tm, "%d-%m-%Y");
-    if (ss.fail()) {
-        return -1; // Invalid format
-    }
-    return std::mktime(&tm);
-}
+#include <utils/algorithms/parseDate/parseDate.h>
 
 void showShipmentMenu() {
     int choice;
@@ -37,9 +26,9 @@ void showShipmentMenu() {
 
         switch (choice) {
             case 1: {
-                int id, priority, shipmentManagerId, originId, destinationId, clientId;
+                int id, priority, shipmentManagerId, clientId;
                 double cost, totalPrice, totalWeight;
-                std::string state, distributionCenterId;
+                std::string state, distributionCenterId, originId, destinationId;
 
                 std::cout << "Ingrese el ID del envio: ";
                 std::cin >> id;
@@ -88,9 +77,9 @@ void showShipmentMenu() {
                 break;
             }
             case 3: {
-                int id, priority, shipmentManagerId, originId, destinationId, clientId;
+                int id, priority, shipmentManagerId, clientId;
                 double cost, totalPrice, totalWeight;
-                std::string state, distributionCenterId;
+                std::string state, distributionCenterId, originId, destinationId;
 
                 std::cout << "Ingrese el ID del envio a actualizar: ";
                 std::cin >> id;
@@ -176,16 +165,12 @@ void showShipmentMenu() {
                 int count = shipmentService->totalShipmentsByCenterAndDate(distributionCenterId, start, end);
                 std::cout << "Total de envios en el centro " << distributionCenterId
                           << " entre las fechas: " << startDateStr << " y " << endDateStr
-                          << "es: " << count << std::endl;
+                          << " es: " << count << std::endl;
                 break;
             }
             case 7: {
-                int weeklyLimit;
-                std::cout << "Ingrese el limite semanal: ";
-                std::cin >> weeklyLimit;
-
-                std::vector<std::string> overloadedCenters = shipmentService->overloadedCenters(weeklyLimit);
-                std::cout << "Centros con sobrecarga (mas de " << weeklyLimit << " envios):\n";
+                std::vector<std::string> overloadedCenters = shipmentService->overloadedCenters();
+                std::cout << "Centros con sobrecarga (mas de su limite de envios semanal):\n";
                 for (const auto& centerId : overloadedCenters) {
                     std::cout << "- " << centerId << std::endl;
                 }

@@ -410,4 +410,3 @@ void DistributionCenterService::calculateAllDistancesFrom(const std::string& ori
     displayDijkstraGraphResult(result, origin);
     delete result;
 }
-
