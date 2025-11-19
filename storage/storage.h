@@ -22,5 +22,6 @@ extern List connections;
 extern List distributionCenters;
 extern List distributionCenterManagers;
 extern List employees;
+extern GraphHashTable distributionCenterNetwork;
 
 #endif // STORAGE_H

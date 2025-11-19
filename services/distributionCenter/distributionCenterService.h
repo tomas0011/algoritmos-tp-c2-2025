@@ -9,11 +9,17 @@
 
 class DistributionCenterService {
 private:
+    ConnectionService* connectionService;
+    DistributionCenterManager* manager;
     List& distributionCenters;
-    List& distributionCenterManagers;
+    List& distributionCenterManagers; // TODO: Quitar
 
 public:
-    DistributionCenterService(List& centersList, List& centerManagersList);
+    DistributionCenterService(
+        ConnectionService* connectionService,
+        DistributionCenterManager* manager,
+        List& centersList,
+        List& centerManagersList);
     ~DistributionCenterService();
 
     // CRUD operations según Item A del enunciado
@@ -59,9 +65,6 @@ public:
     
     // Obtener estadisticas generales
     void displayStatistics();
-    
-    // Cargar centros desde datos mock o archivo
-    void loadMockCenters();
     
     // === Gestión de Conexiones ===
     

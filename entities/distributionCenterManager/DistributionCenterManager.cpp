@@ -2,8 +2,7 @@
 #include "../../storage/storage.h"
 #include <iostream>
 
-DistributionCenterManager::DistributionCenterManager(ConnectionService* connService) 
-    : distributionCenterNetwork(47), connectionService(connService) {}
+DistributionCenterManager::DistributionCenterManager(GraphHashTable& distributionCenterNetwork) : distributionCenterNetwork(distributionCenterNetwork) {}
 
 // Destructor para liberar memoria manualmente
 DistributionCenterManager::~DistributionCenterManager() {
@@ -56,9 +55,6 @@ void DistributionCenterManager::createConnection(std::string originCode, std::st
         return;
     }
     
-    // Crear connection usando el service, pero sin validación interna (ya validamos)
-    connectionService->createConnectionWithoutValidation(originCode, destinationCode, distance);
-    
     // Añadir arista al grafo para algoritmos
     distributionCenterNetwork.addConnection(originCode, destinationCode, distance);
     
@@ -74,9 +70,6 @@ void DistributionCenterManager::createBidirectionalConnection(std::string origin
         std::cout << "Destino: " << destinationCode << " - " << (hasCenter(destinationCode) ? "Existe" : "No existe") << std::endl;
         return;
     }
-    
-    // Crear conexiones bidireccionales usando el service
-    connectionService->createBidirectionalConnectionWithoutValidation(originCode, destinationCode, distance);
     
     // Añadir aristas bidireccionales al grafo
     distributionCenterNetwork.addConnection(originCode, destinationCode, distance);
@@ -102,13 +95,6 @@ void DistributionCenterManager::relateDistributionCenter(std::string code1, std:
 
 bool DistributionCenterManager::hasCenter(std::string code) const {
     return distributionCenterNetwork.hasNode(code);
-}
-
-void DistributionCenterManager::displayAllConnections() const {
-    std::cout << "\n=== Conexiones del Manager de Centros de Distribución ===" << std::endl;
-    
-    // Mostrar conexiones usando el ConnectionService
-    connectionService->displayAllConnections();
 }
 
 DistributionCenter* DistributionCenterManager::getCenter(std::string code) const {

@@ -1,4 +1,4 @@
-#include "ConnectionService.h"
+#include "connectionService.h"
 #include "../../storage/storage.h"
 #include "../../entities/distributionCenter/DistributionCenter.h"
 #include "../../entities/distributionCenterManager/DistributionCenterManager.h"
@@ -9,7 +9,11 @@
 // Inicializar el contador estático
 int ConnectionService::nextId = 1;
 
-ConnectionService::ConnectionService(List& connectionsList) : connections(connectionsList) {}
+ConnectionService::ConnectionService(
+    DistributionCenterManager* manager,
+    List& connectionsList)
+    : manager(manager),
+    connections(connectionsList) {}
 
 int ConnectionService::generateNextId() {
     // Buscar el ID más alto existente y generar el siguiente
@@ -32,15 +36,8 @@ int ConnectionService::generateNextId() {
     return nextId++;
 }
 
-bool ConnectionService::centerExists(const std::string& centerCode) {
-    // Verificar en el distributionCenterManager si existe un centro con este código
-    if (distributionCenterManagers.isEmpty()) {
-        return false;
-    }
-    
+bool ConnectionService::centerExists(const std::string& centerCode) {    
     try {
-        // Obtener el primer (y único) manager
-        DistributionCenterManager* manager = std::any_cast<DistributionCenterManager*>(distributionCenterManagers.getHead()->getData());
         if (manager) {
             return manager->hasCenter(centerCode);
         }
@@ -69,6 +66,7 @@ void ConnectionService::createConnection(const std::string& distributionCenterOr
     }
     
     int id = generateNextId();
+    manager->createConnection(distributionCenterOrigin, distributionCenterDestination, distance);
     Connection newConnection(id, distributionCenterOrigin, distributionCenterDestination, distance);
     connections.push(newConnection);
     std::cout << "Conexion creada exitosamente con ID: " << id << std::endl;

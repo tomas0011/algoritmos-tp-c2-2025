@@ -3,11 +3,13 @@
 
 #include "../../entities/connection/Connection.h"
 #include "../../utils/dataStructures/list/List.h"
+#include "../../utils/dataStructures/Graph/GraphHashTable.h"
 
 class DistributionCenterManager;
 
 class ConnectionService {
 private:
+    DistributionCenterManager* manager;
     List& connections;
     static int nextId; // Para generar IDs automaticamente
 
@@ -21,7 +23,9 @@ private:
     bool centerExists(const std::string& centerCode, const DistributionCenterManager* manager);
 
 public:
-    ConnectionService(List& connectionsList);
+    ConnectionService(
+        DistributionCenterManager* manager,
+        List& connectionsList);
 
     // CRUD operations
     void createConnection(int id, const std::string& distributionCenterOrigin, const std::string& distributionCenterDestination, double distance);
