@@ -5,7 +5,6 @@ SRCS = main.cpp \
         bash/bash.cpp \
         bash/package.bash.cpp \
         bash/shipment.bash.cpp \
-        bash/shipmentManager.bash.cpp \
         bash/transport.bash.cpp \
         bash/client.bash.cpp \
         bash/connection.bash.cpp \
@@ -24,7 +23,6 @@ SRCS = main.cpp \
        services/client/clientService.cpp \
        services/employee/employeeService.cpp \
        services/Connection/ConnectionService.cpp \
-       services/ShipmentManager/ShipmentManagerService.cpp \
        services/transport/transportService.cpp \
        entities/employee/Employee.cpp \
        entities/distributionCenter/DistributionCenter.cpp \

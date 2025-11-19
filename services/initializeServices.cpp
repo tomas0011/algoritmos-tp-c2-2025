@@ -6,7 +6,6 @@ ShipmentService* shipmentService = nullptr;
 ClientService* clientService = nullptr;
 EmployeeService* employeeService = nullptr;
 ConnectionService* connectionService = nullptr;
-ShipmentManagerService* shipmentManagerService = nullptr;
 TransportService* transportService = nullptr;
 DistributionCenterService* distributionCenterService = nullptr;
 
@@ -19,7 +18,6 @@ void initializeServices() {
     transportService = new TransportService(transports);
     distributionCenterService = new DistributionCenterService(distributionCenters, distributionCenterManagers);
     shipmentService = new ShipmentService(transportService, distributionCenterService, shipments);
-    shipmentManagerService = new ShipmentManagerService(shipmentManagers);
 }
 
 void cleanupServices() {
@@ -31,7 +29,6 @@ void cleanupServices() {
     delete connectionService;
     delete transportService;
     delete distributionCenterService;
-    delete shipmentManagerService;
     
     // Reset pointers to nullptr
     packageService = nullptr;
@@ -41,5 +38,4 @@ void cleanupServices() {
     connectionService = nullptr;
     transportService = nullptr;
     distributionCenterService = nullptr;
-    shipmentManagerService = nullptr;
 }

@@ -7,7 +7,6 @@
 #include "client/clientService.h"
 #include "employee/employeeService.h"
 #include "Connection/ConnectionService.h"
-#include "ShipmentManager/ShipmentManagerService.h"
 #include "transport/transportService.h"
 #include "distributionCenter/distributionCenterService.h"
 
@@ -18,7 +17,6 @@ extern ShipmentService* shipmentService;
 extern ClientService* clientService;
 extern EmployeeService* employeeService;
 extern ConnectionService* connectionService;
-extern ShipmentManagerService* shipmentManagerService;
 extern TransportService* transportService;
 extern DistributionCenterService* distributionCenterService;
 
