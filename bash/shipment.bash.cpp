@@ -205,18 +205,20 @@ void showShipmentMenu() {
                 std::cout << "Transporte " << transportId << " en centro " << distributionCenterId
                     << " preparado con " << packages.getSize() << " paquetes optimos" << ":\n";
 
-                Node* current = packages.getHead();
-                std::cout << "-----------------" << std::endl;
-                do {
-                    try {
-                        Package pkg = std::any_cast<Package>(current->getData());
-                        pkg.display();
-                    } catch (const std::bad_any_cast&) {
-                        std::cout << "Error al procesar paquete" << std::endl;
-                    }
+                if (!packages.isEmpty()) {
+                    Node* current = packages.getHead();
                     std::cout << "-----------------" << std::endl;
-                    current = current->getNext();
-                } while (current != nullptr);
+                    do {
+                        try {
+                            Package pkg = std::any_cast<Package>(current->getData());
+                            pkg.display();
+                        } catch (const std::bad_any_cast&) {
+                            std::cout << "Error al procesar paquete" << std::endl;
+                        }
+                        std::cout << "-----------------" << std::endl;
+                        current = current->getNext();
+                    } while (current != nullptr);
+                }
                 break;
             }
             case 0:

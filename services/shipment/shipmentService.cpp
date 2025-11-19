@@ -198,5 +198,6 @@ List ShipmentService::generateOptimalCargoForTransport(int transportId, std::str
     // 5. Devolver los seleccionados
     delete transporte;
     delete centro;
-    return List(); // TODO: Agregar respuesta de resultado
+    List selected = resultado.paquetesSeleccionados;
+    return selected;
 }
