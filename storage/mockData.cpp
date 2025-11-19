@@ -47,13 +47,10 @@ void initializeMockData() {
     distributionCenterService->addBidirectionalConnection("TUC", "SAL", 300);   // Tucuman - Salta
     distributionCenterService->addBidirectionalConnection("SAL", "CBA", 800);   // Salta - Cordoba
 
+
     distributionCenterService->addPackageToCenter("BUE", 1, "TV", 500, 2, 20);
-    distributionCenterService->addPackageToCenter("BUE", 1, "TV", 500, 2, 20);
-    distributionCenterService->addPackageToCenter("BUE", 1, "TV", 500, 2, 20);
-    distributionCenterService->addPackageToCenter("BUE", 1, "TV", 500, 2, 20);
-    distributionCenterService->addPackageToCenter("BUE", 1, "TV", 500, 2, 20);
-    distributionCenterService->addPackageToCenter("BUE", 1, "TV", 500, 2, 20);
-    distributionCenterService->addPackageToCenter("BUE", 1, "TV", 500, 2, 20);
+    distributionCenterService->addPackageToCenter("BUE", 2, "Heladera", 800, 1, 150);
+    distributionCenterService->addPackageToCenter("BUE", 3, "Lavaropas", 350, 1, 85);
 
     DistributionCenterManager* manager = new DistributionCenterManager(distributionCenterNetwork);
     allocated_managers++;  // Trackear allocación
@@ -78,10 +75,6 @@ void initializeMockData() {
     List pkgListShip3;
     pkgListShip3.push(std::any(pkg1));
     pkgListShip3.push(std::any(pkg3));
-
-    packages.push(std::any(pkg1));
-    packages.push(std::any(pkg2));
-    packages.push(std::any(pkg3));
 
     // Create shipments
     shipmentService->createShipment(1, "Pending", 50.0, 1, 100.0, 10.0, 1, "BUE", pkgListShip1, "BUE", "MZA", 1, strToDate("10-11-2025"), -1, -1, -1);
