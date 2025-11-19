@@ -1,6 +1,6 @@
-#include "DistributionCenterService.h"
-#include "../../utils/algorithms/dijkstra/Dijkstra.h"
-#include "../../utils/algorithms/sort/MergeSort.h"
+#include "distributionCenterService.h"
+#include "../../utils/algorithms/dijkstra/dijkstra.h"
+#include "../../utils/algorithms/sort/mergeSort.h"
 #include <iomanip>
 
 DistributionCenterService::DistributionCenterService(List& centersList, List& centerManagersList)

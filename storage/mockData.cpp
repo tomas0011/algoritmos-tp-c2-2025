@@ -1,6 +1,6 @@
 #include "mockData.h"
 #include "storage.h"
-#include "../services/Connection/ConnectionService.h"
+#include "../services/connection/ConnectionService.h"
 #include <iostream>
 #include <utils/algorithms/parseDate/parseDate.h>
 

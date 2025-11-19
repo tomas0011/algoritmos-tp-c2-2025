@@ -6,7 +6,7 @@
 #include "../connection/Connection.h"
 #include "../../utils/dataStructures/Graph/GraphHashTable.h"
 #include "../../utils/dataStructures/List/List.h"
-#include "../../services/Connection/ConnectionService.h"
+#include "../../services/connection/ConnectionService.h"
 
 class DistributionCenterManager{
     private:
