@@ -16,8 +16,8 @@ void Shipment::display() const {
               << ", TotalPrice: " << totalPrice << ", TotalWeight: " << totalWeight
               << ", ShipmentManagerId: " << shimpmentManagerId << ", DistributionCenterId: " << distributionCenterId
               << ", OriginId: " << originId << ", DestinationId: " << destinationId << ", ClientId: " << clientId
-              << ", CreateDate: " << createDate << ", LeftWarehouseDate: " << leftWarehouseDate
-              << ", EstimatedDeliveryDate: " << estimatedDeliveryDate << ", DeliveryDate: " << deliveryDate << std::endl;
+              << ", CreateDate: " << dateToStr(createDate) << ", LeftWarehouseDate: " << dateToStr(leftWarehouseDate)
+              << ", EstimatedDeliveryDate: " << dateToStr(estimatedDeliveryDate) << ", DeliveryDate: " << dateToStr(deliveryDate) << std::endl;
     
     // Iterar manualmente sobre packages en lugar de range-based loop
     Node* current = packages.getHead();

@@ -8,14 +8,6 @@
 #include <utils/algorithms/parseDate/parseDate.h>
 #include "../utils/dataStructures/list/List.h"
 
-// Helper function to format time_t to string
-std::string formatDate(time_t timestamp) {
-    std::tm* tm = std::localtime(&timestamp);
-    std::ostringstream ss;
-    ss << std::put_time(tm, "%d-%m-%Y");
-    return ss.str();
-}
-
 void showShipmentMenu() {
     ShipmentService* shipmentServicePtr = shipmentService;
 
