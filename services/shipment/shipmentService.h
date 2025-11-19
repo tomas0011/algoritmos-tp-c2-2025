@@ -11,7 +11,6 @@
 #include "../../utils/algorithms/knapsackProblem/knapsack.h"
 #include "../../services/transport/transportService.h"
 #include "../../services/distributionCenter/distributionCenterService.h"
-#include <vector>
 #include <ctime>
 #include <unordered_map>
 
@@ -30,13 +29,13 @@ public:
     // CRUD operations
     void createShipment(int id, const std::string& state, double cost, int priority, double totalPrice,
                        double totalWeight, int shimpmentManagerId, std::string distributionCenterId,
-                       const std::vector<Package>& packages, std::string originId, std::string destinationId,
+                       const List& packages, std::string originId, std::string destinationId,
                        int clientId, time_t createDate, time_t leftWarehouseDate,
                        time_t estimatedDeliveryDate, time_t deliveryDate);
     Shipment* getShipmentById(int id);
     void updateShipment(int id, const std::string& state, double cost, int priority, double totalPrice,
                        double totalWeight, int shimpmentManagerId, std::string distributionCenterId,
-                       const std::vector<Package>& packages, std::string originId, std::string destinationId,
+                       const List& packages, std::string originId, std::string destinationId,
                        int clientId, time_t createDate, time_t leftWarehouseDate,
                        time_t estimatedDeliveryDate, time_t deliveryDate);
     void deleteShipment(int id);
@@ -50,14 +49,15 @@ public:
     // B.1: cantidad total de envios por centro de distribucion entre dos fechas
     int totalShipmentsByCenterAndDate(std::string centerId, time_t start, time_t end);
     
-    // B.2: centros de distribucion que han sobrepasado un limite semanal de envios
-    std::vector<std::string> overloadedCenters();
+    // centros de distribucion que han sobrepasado un limite semanal de envios
+    List overloadedCenters();
 
-    // B.3 envios pertenecientes a un cliente
-    std::vector<Shipment> findShipmentsByClient(int clientId);
+    // envios pertenecientes a un cliente
+    List findShipmentsByClient(int clientId);
 
-    // C.1: generar carga optima para un transporte en un centro de distribucion
-    std::vector<Package> generateOptimalCargoForTransport(int transportId, std::string distributionCenterId) const;
+    // Punto C
+
+    List generateOptimalCargoForTransport(int transportId, std::string distributionCenterId) const;
 };
 
 #endif // SHIPMENT_SERVICE_H

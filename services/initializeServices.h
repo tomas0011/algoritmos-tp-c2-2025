@@ -26,4 +26,7 @@ extern DistributionCenterService* distributionCenterService;
 // Initialization function
 void initializeServices();
 
+// Cleanup function to free allocated services
+void cleanupServices();
+
 #endif // INITIALIZE_SERVICES_H

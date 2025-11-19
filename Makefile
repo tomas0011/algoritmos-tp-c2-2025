@@ -14,6 +14,7 @@ SRCS = main.cpp \
         utils/algorithms/dijkstra/dijkstra.cpp \
         utils/algorithms/knapsackProblem/knapsack.cpp \
         utils/algorithms/parseDate/parseDate.cpp \
+        utils/algorithms/sort/mergeSort.cpp \
        storage/mockData.cpp \
        storage/storage.cpp \
        services/initializeServices.cpp \

@@ -4,7 +4,6 @@
 #include "../../utils/dataStructures/graph/GraphHashTable.h"
 #include "../../entities/distributionCenter/DistributionCenter.h"
 #include <iostream>
-#include <vector>
 #include <string>
 #include <entities/distributionCenterManager/DistributionCenterManager.h>
 
@@ -48,8 +47,8 @@ public:
     // Obtener un centro por codigo
     DistributionCenter* getCenter(const std::string& code);
     
-    // Obtener todos los centros como vector (para ordenamiento)
-    std::vector<DistributionCenter*> getAllCenters();
+    // Obtener todos los centros como List 
+    List getAllCenters();
     
     // Obtener estadisticas generales
     void displayStatistics();

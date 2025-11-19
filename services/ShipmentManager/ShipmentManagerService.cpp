@@ -4,7 +4,7 @@
 
 ShipmentManagerService::ShipmentManagerService(List& shipmentManagersList) : shipmentManagers(shipmentManagersList) {}
 
-void ShipmentManagerService::createShipmentManager(int id, int transportId, const std::vector<Connection>& path, int distributionCenterId) {
+void ShipmentManagerService::createShipmentManager(int id, int transportId, const List& path, int distributionCenterId) {
     ShipmentManager newShipmentManager(id, transportId, path, distributionCenterId);
     shipmentManagers.push(newShipmentManager);
     std::cout << "Shipment Manager created successfully." << std::endl;
@@ -26,7 +26,7 @@ ShipmentManager* ShipmentManagerService::getShipmentManagerById(int id) {
     return nullptr;
 }
 
-void ShipmentManagerService::updateShipmentManager(int id, int transportId, const std::vector<Connection>& path, int distributionCenterId) {
+void ShipmentManagerService::updateShipmentManager(int id, int transportId, const List& path, int distributionCenterId) {
     List newList;
     Node* current = shipmentManagers.getHead();
     bool found = false;

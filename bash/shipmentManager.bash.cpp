@@ -1,7 +1,6 @@
 #include "shipmentManager.bash.h"
 #include "services/initializeServices.h"
 #include <iostream>
-#include <vector>
 
 void showShipmentManagerMenu() {
     int choice;
@@ -27,7 +26,7 @@ void showShipmentManagerMenu() {
                 std::cout << "Ingrese el ID del centro de distribucion: ";
                 std::cin >> distributionCenterId;
 
-                std::vector<Connection> path; // vacío por simplicidad
+                List path;// vacío por simplicidad
 
                 shipmentManagerService->createShipmentManager(id, transportId, path, distributionCenterId);
                 break;
@@ -64,7 +63,7 @@ void showShipmentManagerMenu() {
                 std::cout << "Ingrese el nuevo ID del centro de distribucion: ";
                 std::cin >> distributionCenterId;
 
-                std::vector<Connection> path;
+                List path;
 
                 shipmentManagerService->updateShipmentManager(id, transportId, path, distributionCenterId);
                 break;

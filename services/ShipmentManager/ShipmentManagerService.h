@@ -18,9 +18,9 @@ public:
     ShipmentManagerService(List& shipmentManagersList);
 
     // CRUD operations
-    void createShipmentManager(int id, int transportId, const std::vector<Connection>& path, int distributionCenterId);
+    void createShipmentManager(int id, int transportId, const List& path, int distributionCenterId);
     ShipmentManager* getShipmentManagerById(int id);
-    void updateShipmentManager(int id, int transportId, const std::vector<Connection>& path, int distributionCenterId);
+    void updateShipmentManager(int id, int transportId, const List& path, int distributionCenterId);
     void deleteShipmentManager(int id);
 
     // Utility functions

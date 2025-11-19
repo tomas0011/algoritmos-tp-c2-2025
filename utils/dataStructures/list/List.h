@@ -134,6 +134,10 @@ public:
     Node* getHead() const {
         return head;
     }
+    
+    void setHead(Node* newHead) {
+        head = newHead;
+    }
 
     Node* getNodeAt(int index) const {
         if (index < 0) return nullptr;
@@ -152,6 +156,10 @@ public:
             current = current->getNext();
         }
         return sublist;
+    }
+
+    bool isEmpty() const {
+        return head == nullptr;
     }
 };
 

@@ -3,7 +3,7 @@
 #include <utils/algorithms/parseDate/parseDate.h>
 
 Shipment::Shipment(int id, const std::string& state, double cost, int priority, double totalPrice, double totalWeight,
-                   int shimpmentManagerId, std::string distributionCenterId, const std::vector<Package>& packages,
+                   int shimpmentManagerId, std::string distributionCenterId, const List& packages,
                    std::string originId, std::string destinationId, int clientId, time_t createDate, time_t leftWarehouseDate,
                    time_t estimatedDeliveryDate, time_t deliveryDate)
     : id(id), state(state), cost(cost), priority(priority), totalPrice(totalPrice), totalWeight(totalWeight),
@@ -16,10 +16,17 @@ void Shipment::display() const {
               << ", TotalPrice: " << totalPrice << ", TotalWeight: " << totalWeight
               << ", ShipmentManagerId: " << shimpmentManagerId << ", DistributionCenterId: " << distributionCenterId
               << ", OriginId: " << originId << ", DestinationId: " << destinationId << ", ClientId: " << clientId
-              << ", CreateDate: " << dateToStr(createDate) << ", LeftWarehouseDate: " << dateToStr(leftWarehouseDate)
-              << ", EstimatedDeliveryDate: " << dateToStr(estimatedDeliveryDate) << ", DeliveryDate: " << dateToStr(deliveryDate) << std::endl;
-    for (const auto& pkg : packages) {
-        pkg.display();
+              << ", CreateDate: " << createDate << ", LeftWarehouseDate: " << leftWarehouseDate
+              << ", EstimatedDeliveryDate: " << estimatedDeliveryDate << ", DeliveryDate: " << deliveryDate << std::endl;
+    
+    // Iterar manualmente sobre packages en lugar de range-based loop
+    Node* current = packages.getHead();
+    while (current != nullptr) {
+        try {
+            Package pkg = std::any_cast<Package>(current->getData());
+            pkg.display();
+        } catch (const std::bad_any_cast&) {}
+        current = current->getNext();
     }
 }
 
@@ -31,7 +38,7 @@ double Shipment::getTotalPrice() const { return totalPrice; }
 double Shipment::getTotalWeight() const { return totalWeight; }
 int Shipment::getShimpmentManagerId() const { return shimpmentManagerId; }
 std::string Shipment::getDistributionCenterId() const { return distributionCenterId; }
-const std::vector<Package>& Shipment::getPackages() const { return packages; }
+const List& Shipment::getPackages() const { return packages; }
 std::string Shipment::getOriginId() const { return originId; }
 std::string Shipment::getDestinationId() const { return destinationId; }
 int Shipment::getClientId() const { return clientId; }
