@@ -79,7 +79,7 @@ void DistributionCenterService::addPackageToCenter(const std::string& centerCode
 List DistributionCenterService::getWarehouseOfCenter(const std::string& centerCode) {
     List empty;
     try {
-        List warehouse = packageService->getPackagesOfCenter(centerCode);
+        List& warehouse = packageService->getPackagesOfCenter(centerCode);
 
         if (warehouse.isEmpty()) {
             std::cout << "[INFO] El centro " << centerCode << " tiene el warehouse vacio.\n";
