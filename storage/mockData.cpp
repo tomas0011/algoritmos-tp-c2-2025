@@ -4,9 +4,9 @@
 #include <utils/algorithms/parseDate/parseDate.h>
 
 // Mock data definitions - now using storage lists
-Package pkg1(1, "medias", 10.5, 1, 2.0);
-Package pkg2(2, "celular", 15.0, 2, 3.5);
-Package pkg3(3, "campera", 8.0, 1, 1.5);
+Package pkg1(1, "TV", 500, 2, 20);
+Package pkg2(2, "Heladera", 800, 1, 150);
+Package pkg3(3, "Lavaropas", 350, 1, 85);
 
 // Mock shipments data
 Employee emp1(1, "Alice", 1);
@@ -18,8 +18,8 @@ Connection conn2(2, 2, 3, 75.0);
 ShipmentManager sm1(1, 1, List(), 1);
 ShipmentManager sm2(2, 2, List(), 2);
 
-Transport trans1(1, "Truck", 1000.0);
-Transport trans2(2, "Van", 500.0);
+Transport trans1(1, "Truck", 500);
+Transport trans2(2, "Van", 250);
 
 Client client1(1, "John Doe");
 Client client2(2, "Jane Smith");

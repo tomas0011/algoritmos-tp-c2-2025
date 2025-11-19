@@ -206,15 +206,17 @@ void showShipmentMenu() {
                     << " preparado con " << packages.getSize() << " paquetes optimos" << ":\n";
 
                 Node* current = packages.getHead();
-                while (current != nullptr) {
+                std::cout << "-----------------" << std::endl;
+                do {
                     try {
                         Package pkg = std::any_cast<Package>(current->getData());
                         pkg.display();
                     } catch (const std::bad_any_cast&) {
                         std::cout << "Error al procesar paquete" << std::endl;
                     }
+                    std::cout << "-----------------" << std::endl;
                     current = current->getNext();
-                }
+                } while (current != nullptr);
                 break;
             }
             case 0:

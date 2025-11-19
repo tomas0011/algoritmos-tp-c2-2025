@@ -156,81 +156,47 @@ List ShipmentService::findShipmentsByClient(int clientId) {
 }
 
 List ShipmentService::generateOptimalCargoForTransport(int transportId, std::string distributionCenterId) const {
-    List result;
-    
-    // Get packages from distribution center warehouse
-    Node* current = shipments.getHead();
-    List availablePackages;
-    
+    // 1. Obtener el transporte
+    Transport* transporte = transportService->getTransportById(transportId);
+    if (!transporte) {
+        std::cout << "[Error] Transporte no encontrado.\n";
+        return {};
+    }
+    double capacidad = transporte->getMaxWeight();
+    if (capacidad <= 0) {
+        std::cout << "[Error] Transporte sin capacidad válida.\n";
+        delete transporte;
+        return {};
+    }
+
+    // 2. Obtener el DistributionCenter asociado
+    DistributionCenter* centro = distributionCenterService->getCenter(distributionCenterId);
+    if (!centro) {
+        std::cout << "[Error] Centro de distribución inválido.\n";
+        delete transporte;
+        return {};
+    }
+
+    // 3. Obtener los paquetes del warehouse
+    List paquetesDisponibles = centro->getWarehouse();
+    List* availablePackagesList = new List();
+    Node* current = paquetesDisponibles.getHead();
     while (current != nullptr) {
         try {
-            Shipment* shipment = std::any_cast<Shipment*>(current->getData());
-            if (shipment->getDistributionCenterId() == distributionCenterId) {
-                // Add packages from this shipment to available packages
-                const List& packages = shipment->getPackages();
-                Node* packageNode = packages.getHead();
-                while (packageNode != nullptr) {
-                    availablePackages.push(packageNode->getData());
-                    packageNode = packageNode->getNext();
-                }
-            }
+            Package* package = std::any_cast<Package*>(current->getData());
+            availablePackagesList->push(package);
         } catch (const std::bad_any_cast&) {}
         current = current->getNext();
     }
-    
-    // Use knapsack algorithm to optimize load
-    // This would require converting List to array for knapsack algorithm
-    // For now, return first few packages (simplified)
-    Node* packageNode = availablePackages.getHead();
-    int count = 0;
-    while (packageNode != nullptr && count < 5) {
-        result.push(packageNode->getData());
-        packageNode = packageNode->getNext();
-        count++;
-    }
-    
-    return result;
+
+    // 4. Ejecutar la mochila 0-1
+    ResultadoMochila resultado = resolverMochila(
+        *availablePackagesList,
+        capacidad
+    );
+
+    // 5. Devolver los seleccionados
+    delete transporte;
+    delete centro;
+    return List(); // TODO: Agregar respuesta de resultado
 }
-
-// List ShipmentService::generateOptimalCargoForTransport(int transportId, std::string distributionCenterId) const {
-//     // 1. Obtener el transporte
-//     Transport* transporte = transportService->getTransportById(transportId);
-//     if (!transporte) {
-//         std::cout << "[Error] Transporte no encontrado.\n";
-//         return {};
-//     }
-
-//     double capacidad = transporte->getMaxWeight();
-//     if (capacidad <= 0) {
-//         std::cout << "[Error] Transporte sin capacidad válida.\n";
-//         delete transporte;
-//         return {};
-//     }
-
-//     // 2. Obtener el DistributionCenter asociado
-//     DistributionCenter* centro = distributionCenterService->getCenter(distributionCenterId);
-
-//     if (!centro) {
-//         std::cout << "[Error] Centro de distribución inválido.\n";
-//         delete transporte;
-//         return {};
-//     }
-
-//     // 3. Obtener los paquetes del warehouse
-//     std::vector<Package> paquetesDisponibles = centro->getWarehouse();
-//     List* availablePackagesList = new List();
-//     for (const Package& pkg : paquetesDisponibles) {
-//         availablePackagesList->push(pkg);
-//     }    
-
-//     // 4. Ejecutar la mochila 0-1
-//     ResultadoMochila resultado = resolverMochila(
-//         *availablePackagesList,
-//         capacidad
-//     );
-
-//     // 5. Devolver los seleccionados
-//     delete transporte;
-//     delete centro;
-//     return resultado.paquetesSeleccionados;
-// }

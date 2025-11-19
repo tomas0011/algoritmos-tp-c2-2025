@@ -102,7 +102,7 @@ void showTPMenu() {
                 showShipmentMenu();
                 break;
             case 3:
-                std::cout << "No implementado...\n";
+                showShipmentMenu();
                 break;
             case 0:
                 std::cout << "Saliendo...\n";
