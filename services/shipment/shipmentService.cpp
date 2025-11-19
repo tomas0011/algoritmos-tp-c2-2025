@@ -7,7 +7,7 @@
 ShipmentService::ShipmentService(
     TransportService* transportService,
     DistributionCenterService* distributionCenterService,
-    List& shipmentsList) : shipments(shipmentsList) {}
+    List& shipmentsList) : transportService(transportService), distributionCenterService(distributionCenterService), shipments(shipmentsList) {}
 
 void ShipmentService::createShipment(int id, const std::string& state, double cost, int priority, double totalPrice,
                                     double totalWeight, int shimpmentManagerId, std::string distributionCenterId,
@@ -113,32 +113,31 @@ int ShipmentService::totalShipmentsByCenterAndDate(std::string centerId, time_t 
 }
 
 List ShipmentService::overloadedCenters() {
-    List result;
+    std::unordered_map<std::string, int> shipmentCount;
+    List overloaded;
     Node* current = shipments.getHead();
     while (current != nullptr) {
         try {
             Shipment* shipment = std::any_cast<Shipment*>(current->getData());
-            result.push(shipment->getDistributionCenterId());
-            /*
-            Shipment shipment = std::any_cast<Shipment>(current->getData());
-            shipmentCount[shipment.getDistributionCenterId()]++;
-        } catch (const std::bad_any_cast&) {}
+            shipmentCount[shipment->getDistributionCenterId()]++;
+        } catch (const std::bad_any_cast&) {
+            std::cout << "UN ERROR" << std::endl;
+        }
         current = current->getNext();
     }
-
     for (const auto& [centerId, count] : shipmentCount) {
         DistributionCenter* center = distributionCenterService->getCenter(centerId);
         int weeklyLimit = center ? center->getDailyPackages() * 7 : 0;
-        std::cout << "Limite semanal de " << center->getCode() << " es: " << weeklyLimit << std::endl;
+        if (center) {
+            std::cout << "Limite semanal de " << center->getCode() << " es " << weeklyLimit << " y tiene " << count << std::endl;
+        } else {
+            std::cout << "Centro no encontrado para ID: " << centerId << ", limite semanal: " << weeklyLimit << std::endl;
+        }
         if (count > weeklyLimit) {
-            overloaded.push_back(centerId);
+            overloaded.push(centerId);
         }
     }
-            */
-        } catch (const std::bad_any_cast&) {}
-        current = current->getNext();
-    }
-    return result;
+    return overloaded;
 }
 
 List ShipmentService::findShipmentsByClient(int clientId) {

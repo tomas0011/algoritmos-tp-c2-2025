@@ -57,16 +57,25 @@ void initializeMockData() {
     List pkgListShip1;
     pkgListShip1.push(std::any(pkg1));
     pkgListShip1.push(std::any(pkg2));
-    
+
     List pkgListShip2;
     pkgListShip2.push(std::any(pkg3));
-    
+
     List pkgListShip3;
+    pkgListShip3.push(std::any(pkg1));
     pkgListShip3.push(std::any(pkg3));
-    
-    // Create shipments using correct constructor with string IDs
-    Shipment ship1(1, "In Transit", 50.0, 1, 100.0, 10.0, 1, "BUE", pkgListShip1, "BUE", "MZA", 1, time(nullptr), time(nullptr), time(nullptr), time(nullptr));
-    Shipment ship2(2, "Delivered", 75.0, 2, 150.0, 15.0, 2, "BUE", pkgListShip2, "BUE", "MZA", 2, time(nullptr), time(nullptr), time(nullptr), time(nullptr));
+
+    // Create shipments with unique IDs and varied data
+    Shipment ship1(1, "Pending", 50.0, 1, 100.0, 10.0, 1, "BUE", pkgListShip1, "BUE", "MZA", 1, strToDate("10-11-2025"), -1, -1, -1);
+    Shipment ship2(2, "In Transit", 75.0, 2, 150.0, 15.0, 2, "BUE", pkgListShip2, "BUE", "CBA", 2, strToDate("09-11-2025"), -1, -1, -1);
+    Shipment ship3(3, "Delivered", 60.0, 1, 120.0, 12.0, 1, "CBA", pkgListShip3, "CBA", "MZA", 1, strToDate("08-11-2025"), strToDate("09-11-2025"), strToDate("10-11-2025"), strToDate("11-11-2025"));
+    Shipment ship4(4, "Pending", 80.0, 3, 160.0, 18.0, 2, "BUE", pkgListShip1, "BUE", "BUE", 2, strToDate("11-11-2025"), -1, -1, -1);
+    Shipment ship5(5, "In Transit", 45.0, 2, 90.0, 8.0, 1, "BUE", pkgListShip2, "BUE", "ROS", 1, strToDate("10-11-2025"), -1, -1, -1);
+    Shipment ship6(6, "Pending", 55.0, 1, 110.0, 11.0, 2, "BUE", pkgListShip3, "BUE", "BUE", 2, strToDate("11-11-2025"), -1, -1, -1);
+    Shipment ship7(7, "Delivered", 70.0, 2, 140.0, 14.0, 1, "BUE", pkgListShip1, "BUE", "CBA", 1, strToDate("07-11-2025"), strToDate("08-11-2025"), strToDate("09-11-2025"), strToDate("10-11-2025"));
+    Shipment ship8(8, "In Transit", 65.0, 3, 130.0, 13.0, 2, "BUE", pkgListShip2, "BUE", "TUC", 2, strToDate("09-11-2025"), -1, -1, -1);
+    Shipment ship9(9, "Pending", 40.0, 1, 80.0, 7.0, 1, "BUE", pkgListShip3, "BUE", "SAL", 1, strToDate("11-11-2025"), -1, -1, -1);
+    Shipment ship10(10, "Pending", 90.0, 2, 180.0, 20.0, 2, "SAL", pkgListShip1, "SAL", "CBA", 2, strToDate("10-11-2025"), -1, -1, -1);
     
     DistributionCenterManager* manager = new DistributionCenterManager();
     
@@ -75,7 +84,7 @@ void initializeMockData() {
 
     manager->createDistributionCenter("CBA", "Cordoba Center", "Cordoba", 300, 10, 9);
     manager->createDistributionCenter("MZA", "Mendoza Center", "Mendoza", 250, 12, 13);
-    manager->createDistributionCenter("BUE", "Buenos Aires Center", "Buenos Aires", 400, 0.01, 12);
+    manager->createDistributionCenter("BUE", "Buenos Aires Center", "Buenos Aires", 400, 1, 12);
     manager->createDistributionCenter("ROS", "Rosario Center", "Rosario", 200, 5, 8);
     manager->createDistributionCenter("TUC", "Tucuman Center", "Tucuman", 180, 4, 6);
     manager->createDistributionCenter("SAL", "Salta Center", "Salta", 160, 2, 5);
@@ -97,6 +106,14 @@ void initializeMockData() {
     
     shipments.push(std::any(new Shipment(ship1)));
     shipments.push(std::any(new Shipment(ship2)));
+    shipments.push(std::any(new Shipment(ship3)));
+    shipments.push(std::any(new Shipment(ship4)));
+    shipments.push(std::any(new Shipment(ship5)));
+    shipments.push(std::any(new Shipment(ship6)));
+    shipments.push(std::any(new Shipment(ship7)));
+    shipments.push(std::any(new Shipment(ship8)));
+    shipments.push(std::any(new Shipment(ship9)));
+    shipments.push(std::any(new Shipment(ship10)));
     
     employees.push(std::any(emp1));
     employees.push(std::any(emp2));
@@ -112,13 +129,6 @@ void initializeMockData() {
     
     clients.push(std::any(client1));
     clients.push(std::any(client2));
-    
-    List emptyConnVector;
-    ShipmentManager sm1(1, 1, emptyConnVector, 1);
-    ShipmentManager sm2(2, 2, emptyConnVector, 2);
-    
-    Transport trans1(1, "Truck", 1000.0);
-    Transport trans2(2, "Van", 500.0);
     
     std::cout << "Mock data initialized successfully." << std::endl;
 }

@@ -269,9 +269,15 @@ bool DistributionCenterService::centerExists(const std::string& code) {
 
 // Obtener un centro por codigo
 DistributionCenter* DistributionCenterService::getCenter(const std::string& code) {
-    // This function returns a pointer to a temporary object
-    // Return nullptr to avoid crash - needs architectural redesign
-    return nullptr;
+    if (distributionCenterManagers.isEmpty()) {
+        return nullptr;
+    }
+    try {
+        DistributionCenterManager* manager = std::any_cast<DistributionCenterManager*>(distributionCenterManagers.getHead()->getData());
+        return manager->getCenter(code);
+    } catch (const std::bad_any_cast&) {
+        return nullptr;
+    }
 }
 
 // Mostrar estadisticas generales

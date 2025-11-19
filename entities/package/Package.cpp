@@ -5,7 +5,11 @@ Package::Package(int id, const std::string& name, double price, int priority, do
     : id(id), name(name), price(price), priority(priority), weight(weight) {}
 
 void Package::display() const {
-    std::cout << "ID: " << id << ", Name: " << name << ", Price: " << price << ", Priority: " << priority << ", Weight: " << weight << std::endl;
+    std::cout << "ID: " << id << std::endl;
+    std::cout << "Name: " << name << std::endl;
+    std::cout << "Price: " << price << std::endl;
+    std::cout << "Priority: " << priority << std::endl;
+    std::cout << "Weight: " << weight << std::endl;
 }
 
 int Package::getId() const { return id; }

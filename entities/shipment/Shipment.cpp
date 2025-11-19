@@ -12,22 +12,34 @@ Shipment::Shipment(int id, const std::string& state, double cost, int priority, 
       leftWarehouseDate(leftWarehouseDate), estimatedDeliveryDate(estimatedDeliveryDate), deliveryDate(deliveryDate) {}
 
 void Shipment::display() const {
-    std::cout << "ID: " << id << ", State: " << state << ", Cost: " << cost << ", Priority: " << priority
-              << ", TotalPrice: " << totalPrice << ", TotalWeight: " << totalWeight
-              << ", ShipmentManagerId: " << shimpmentManagerId << ", DistributionCenterId: " << distributionCenterId
-              << ", OriginId: " << originId << ", DestinationId: " << destinationId << ", ClientId: " << clientId
-              << ", CreateDate: " << dateToStr(createDate) << ", LeftWarehouseDate: " << dateToStr(leftWarehouseDate)
-              << ", EstimatedDeliveryDate: " << dateToStr(estimatedDeliveryDate) << ", DeliveryDate: " << dateToStr(deliveryDate) << std::endl;
+    std::cout << "=== Envio ===" << std::endl;
+    std::cout << "ID: " << id << std::endl;
+    std::cout << "State: " << state << std::endl;
+    std::cout << "Cost: " << cost << std::endl;
+    std::cout << "Priority: " << priority << std::endl;
+    std::cout << "TotalPrice: " << totalPrice << std::endl;
+    std::cout << "TotalWeight: " << totalWeight << std::endl;
+    std::cout << "ShipmentManagerId: " << shimpmentManagerId << std::endl;
+    std::cout << "DistributionCenterId: " << distributionCenterId << std::endl;
+    std::cout << "OriginId: " << originId << std::endl;
+    std::cout << "DestinationId: " << destinationId << std::endl;
+    std::cout << "ClientId: " << clientId << std::endl;
+    std::cout << "CreateDate: " << dateToStr(createDate) << std::endl;
+    std::cout << "LeftWarehouseDate: " << dateToStr(leftWarehouseDate) << std::endl;
+    std::cout << "EstimatedDeliveryDate: " << dateToStr(estimatedDeliveryDate) << std::endl;
+    std::cout << "DeliveryDate: " << dateToStr(deliveryDate) << std::endl;
     
     // Iterar manualmente sobre packages en lugar de range-based loop
+    std::cout << "============" << std::endl;
     Node* current = packages.getHead();
-    while (current != nullptr) {
+    do {
         try {
             Package pkg = std::any_cast<Package>(current->getData());
             pkg.display();
         } catch (const std::bad_any_cast&) {}
         current = current->getNext();
-    }
+    } while (current != nullptr);
+    std::cout << "============" << std::endl;
 }
 
 int Shipment::getId() const { return id; }
