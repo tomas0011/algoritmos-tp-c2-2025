@@ -103,8 +103,19 @@ void showDistributionCenterMenu() {
                 destination = getValidStringInput();
                 std::cout << "Ingrese la distancia entre estos centros: ";
                 distance = getValidIntInput(1, 10000);
-                distributionCenterService->addConnection(origin, destination, distance);
-                break;
+                
+                char bidirectional;
+                std::cout << "Conexion bidireccional? (s/n): ";
+                std::string bidirStr = getValidStringInput();
+                bidirectional = bidirStr.empty() ? 'n' : bidirStr[0];
+
+                  if (bidirectional == 's' || bidirectional == 'S') {
+                    connectionService->createBidirectionalConnection(origin, destination, distance);
+                } else if (bidirectional == 'n' || bidirectional == 'N') {
+                    connectionService->createConnection(origin, destination, distance);
+                } else {
+                    std::cout << "Opcion invalida. Operacion cancelada." << std::endl;
+                }
             }
             case 7:
                 distributionCenterService->displayStatistics();

@@ -388,10 +388,8 @@ bool DistributionCenterService::addBidirectionalConnection(const std::string& or
             return false;
         }
 
-        // Agregar conexión bidireccional
-        manager->createBidirectionalConnection(origin, destination, distance);
-
-        std::cout << "Conexion agregada: " << origin << " <-> " << destination
+        connectionService->createBidirectionalConnection(origin, destination, distance);
+        std::cout << "Conexion bidireccional agregada: " << origin << " <-> " << destination
                   << " (" << distance << " km)" << std::endl;
         return true;
     } catch (const std::bad_any_cast&) {
