@@ -127,7 +127,7 @@ private:
     int nodeCount;
 
 public:
-    GraphHashTable(int initialCapacity = 23) : nodeCount(0) {
+    GraphHashTable(int initialCapacity = 47) : nodeCount(0) {
         nodes = new HashTable(initialCapacity);
     }
 

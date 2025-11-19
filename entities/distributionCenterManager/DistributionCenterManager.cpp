@@ -3,7 +3,7 @@
 #include <iostream>
 
 DistributionCenterManager::DistributionCenterManager(ConnectionService* connService) 
-    : distributionCenterNetwork(23), connectionService(connService) {}
+    : distributionCenterNetwork(47), connectionService(connService) {}
 
 // Destructor para liberar memoria manualmente
 DistributionCenterManager::~DistributionCenterManager() {

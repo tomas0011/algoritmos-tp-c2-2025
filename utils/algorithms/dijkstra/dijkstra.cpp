@@ -51,9 +51,9 @@ DijkstraGraphResult* dijkstra(const GraphHashTable& graph,
     }
     
     // Inicializar estructuras
-    result->distances = new HashTable(23);
-    result->previous = new HashTable(23);
-    HashTable visited(23);
+    result->distances = new HashTable(47);
+    result->previous = new HashTable(47);
+    HashTable visited(47);
     
     // Inicializar distancias a infinito y visitados a false
     List allNodes = graph.getNodeCodes();
