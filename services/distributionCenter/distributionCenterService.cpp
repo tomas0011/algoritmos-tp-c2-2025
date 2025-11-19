@@ -97,24 +97,40 @@ void DistributionCenterService::addPackageToCenter(const std::string& centerCode
 // Obtener el warehouse (lista de paquetes) de un centro por código
 List DistributionCenterService::getWarehouseOfCenter(const std::string& centerCode) {
     List empty;
+
     if (distributionCenterManagers.isEmpty()) {
+        std::cout << "[WARN] No hay DistributionCenterManagers cargados.\n";
         return empty;
     }
 
     try {
-        DistributionCenterManager* manager = std::any_cast<DistributionCenterManager*>(distributionCenterManagers.getHead()->getData());
+        DistributionCenterManager* manager =
+            std::any_cast<DistributionCenterManager*>(distributionCenterManagers.getHead()->getData());
+
         if (!manager->hasCenter(centerCode)) {
+            std::cout << "[WARN] El manager NO tiene un centro con codigo: " << centerCode << "\n";
             return empty;
         }
 
         DistributionCenter* center = manager->getCenter(centerCode);
         if (center == nullptr) {
+            std::cout << "[WARN] getCenter devolvio nullptr para: " << centerCode << "\n";
             return empty;
         }
 
-        // Devuelve una copia del List interno (List debe soportar copy).
-        return center->getWarehouse();
+        List warehouse = center->getWarehouse();
+
+        if (warehouse.isEmpty()) {
+            std::cout << "[INFO] El centro " << centerCode << " tiene el warehouse vacio.\n";
+        } else {
+            std::cout << "[INFO] Warehouse del centro " << centerCode 
+                      << " contiene " << warehouse.getSize() << " paquetes.\n";
+        }
+
+        return warehouse;
+
     } catch (const std::bad_any_cast&) {
+        std::cout << "[ERROR] Fallo el any_cast a DistributionCenterManager*.\n";
         return empty;
     }
 }

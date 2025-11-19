@@ -172,7 +172,7 @@ List ShipmentService::generateOptimalCargoForTransport(int transportId, std::str
     // 2. Obtener el DistributionCenter asociado
     DistributionCenter* centro = distributionCenterService->getCenter(distributionCenterId);
     if (!centro) {
-        std::cout << "[Error] Centro de distribución inválido.\n";
+        std::cout << "[Error] Centro de distribucion invalido.\n";
         delete transporte;
         return {};
     }

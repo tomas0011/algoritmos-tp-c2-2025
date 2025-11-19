@@ -19,7 +19,7 @@ void showDistributionCenterMenu() {
         std::cout << "8. Calcular camino minimo entre centros. (A.5)\n";
         std::cout << "9. Agregar paquete a un centro.\n";
         std::cout << "10. Mostrar paquetes del warehouse de un centro.\n";
-        std::cout << "0. Volver al menú principal\n";
+        std::cout << "0. Volver al menu principal\n";
         std::cout << "Seleccione una opcion: ";
         std::cin >> choice;
 
@@ -119,9 +119,10 @@ void showDistributionCenterMenu() {
                 break;
             }
             case 9: {
-                std::string centerCode;
-                std::string pkgId, recipient, address;
+
+                std::string centerCode, pkgId, recipient, address;
                 float weight;
+
 
                 std::cout << "Ingrese el codigo del centro: ";
                 std::cin >> centerCode;
@@ -139,7 +140,13 @@ void showDistributionCenterMenu() {
                 std::cout << "Ingrese el peso (kg): ";
                 std::cin >> weight;
 
-                Package pkg(pkgId, recipient, address, weight);
+                int id = std::stoi(pkgId);          
+                double price = 0;                    
+                int priority = 1;                    
+                double weightDouble = static_cast<double>(weight);
+
+                Package pkg(id, recipient, price, priority, weightDouble);
+
 
                 distributionCenterService->addPackageToCenter(centerCode, pkg);
                 break;
@@ -150,11 +157,38 @@ void showDistributionCenterMenu() {
                 std::cout << "Ingrese el codigo del centro: ";
                 std::cin >> centerCode;
 
-                distributionCenterService->showWarehouse(centerCode);
+                // 1. Obtener la lista del warehouse
+                List warehouse = distributionCenterService->getWarehouseOfCenter(centerCode);
+
+                // 2. Validar si está vacío
+                if (warehouse.isEmpty()) {
+                    std::cout << "[INFO] No se encontraron paquetes en el centro: " 
+                            << centerCode << "\n";
+                    break;
+                }
+
+                // 3. Mostrar los paquetes
+                std::cout << "\n=== Paquetes en warehouse del centro " 
+                        << centerCode << " ===\n";
+
+                Node* current = warehouse.getHead();
+
+                while (current != nullptr) {
+                    try {
+                        Package pkg = std::any_cast<Package>(current->getData());
+                        pkg.display();
+
+                    } catch (const std::bad_any_cast&) {
+                        std::cout << "[ERROR] Un elemento del warehouse no es un Package válido.\n";
+                    }
+
+                    current = current->getNext();
+                }
+
                 break;
             }
             case 0:
-                std::cout << "Volviendo al menú principal...\n";
+                std::cout << "Volviendo al menu principal...\n";
                 break;
             default:
                 std::cout << "Opcion invalida. Intente de nuevo.\n";
@@ -171,7 +205,7 @@ void showDisplayAllDistributionCenterMenu() {
         std::cout << "2. Obtener centros ordenados por capacidad.\n";
         std::cout << "3. Obtener centros ordenados por paquetes procesados.\n";
         std::cout << "4. Obtener centros ordenados por cantidad de empleados.\n";
-        std::cout << "0. Volver al menú principal\n";
+        std::cout << "0. Volver al menu principal\n";
         std::cout << "Seleccione una opcion: ";
         std::cin >> choice;
 
@@ -189,7 +223,7 @@ void showDisplayAllDistributionCenterMenu() {
                 distributionCenterService->displayCentersSortedByEmployees();
                 break;
             case 0:
-                std::cout << "Volviendo al menú principal...\n";
+                std::cout << "Volviendo al menu principal...\n";
                 break;
             default:
                 std::cout << "Opcion invalida. Intente de nuevo.\n";
