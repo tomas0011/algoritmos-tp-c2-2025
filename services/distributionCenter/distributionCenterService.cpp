@@ -1,6 +1,6 @@
-#include "distributionCenterService.h"
-#include "../../utils/algorithms/dijkstra/dijkstra.h"
-#include "../../utils/algorithms/sort/mergeSort.h"
+#include "DistributionCenterService.h"
+#include "../../utils/algorithms/dijkstra/Dijkstra.h"
+#include "../../utils/algorithms/sort/MergeSort.h"
 #include <iomanip>
 
 DistributionCenterService::DistributionCenterService(List& centersList, List& centerManagersList)
@@ -362,9 +362,42 @@ bool DistributionCenterService::addConnection(const std::string& origin,
             return false;
         }
 
-        // Agregar conexion bidireccional usando el grafo
-        manager->relateDistributionCenter(origin, destination, distance);
-        manager->relateDistributionCenter(destination, origin, distance);
+        // Agregar conexión unidireccional
+        manager->createConnection(origin, destination, distance);
+
+        std::cout << "Conexion agregada: " << origin << " -> " << destination
+                  << " (" << distance << " km)" << std::endl;
+        return true;
+    } catch (const std::bad_any_cast&) {
+        std::cout << "Error al acceder al gestor de centros." << std::endl;
+        return false;
+    }
+}
+
+bool DistributionCenterService::addBidirectionalConnection(const std::string& origin,
+                                                          const std::string& destination,
+                                                          double distance) {
+    if (distributionCenterManagers.isEmpty()) {
+        std::cout << "No hay gestores de centros disponibles.\n";
+        return false;
+    }
+
+    try {
+        DistributionCenterManager* manager = std::any_cast<DistributionCenterManager*>(distributionCenterManagers.getHead()->getData());
+        
+        // Verificar que ambos centros existen
+        if (!manager->hasCenter(origin)) {
+            std::cout << "Error: Centro origen '" << origin << "' no encontrado." << std::endl;
+            return false;
+        }
+
+        if (!manager->hasCenter(destination)) {
+            std::cout << "Error: Centro destino '" << destination << "' no encontrado." << std::endl;
+            return false;
+        }
+
+        // Agregar conexión bidireccional
+        manager->createBidirectionalConnection(origin, destination, distance);
 
         std::cout << "Conexion agregada: " << origin << " <-> " << destination
                   << " (" << distance << " km)" << std::endl;

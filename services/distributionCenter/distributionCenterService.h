@@ -56,10 +56,13 @@ public:
     // Cargar centros desde datos mock o archivo
     void loadMockCenters();
     
-    // === Gestion de Conexiones ===
+    // === Gestión de Conexiones ===
     
-    // Agregar una conexion bidireccional entre dos centros
+    // Agregar una conexión unidireccional entre dos centros
     bool addConnection(const std::string& origin, const std::string& destination, double distance);
+    
+    // Agregar una conexión bidireccional entre dos centros
+    bool addBidirectionalConnection(const std::string& origin, const std::string& destination, double distance);
     
     // Mostrar todas las conexiones de un centro
     void showCenterConnections(const std::string& code);

@@ -5,17 +5,30 @@
 #include <any>
 #include <string>
 #include <sstream>
-#include "../hashtable/HashTable.h"
-#include "../list/List.h"
-#include "../../../entities/connection/Connection.h"
+#include "utils/dataStructures/hashtable/HashTable.h"
+#include "utils/dataStructures/list/List.h"
 
 using namespace std;
 
-// Función helper para generar IDs únicos para Connection
-inline int generateConnectionId() {
+// Función helper para generar IDs únicos para Arista
+inline int generateAristaId() {
     static int nextId = 1;
     return nextId++;
 }
+
+// Estructura interna para aristas del grafo
+struct Arista {
+    int id;
+    string origen;
+    string destino;
+    double peso;
+    
+    Arista(string org, string dest, double p) 
+        : id(generateAristaId()), origen(org), destino(dest), peso(p) {}
+        
+    Arista(int aristaId, string org, string dest, double p) 
+        : id(aristaId), origen(org), destino(dest), peso(p) {}
+};
 
 // =======================================================
 // Clase HashGraphNode (Nodo del Grafo con HashTable)
@@ -24,7 +37,7 @@ class HashGraphNode {
 private:
     string code;        // codigo único del nodo (ej: CBA, MZA)
     any data;           // dato generico (puede ser DistributionCenter*)
-    List connections;   // lista de conexiones salientes
+    List aristas;       // lista de aristas salientes
 
 public:
     HashGraphNode(string nodeCode, any nodeData)
@@ -32,30 +45,30 @@ public:
 
     string getCode() const { return code; }
     any getData() const { return data; }
-    const List& getConnections() const { return connections; }
+    const List& getConnections() const { return aristas; }
     
-    // Método para obtener conexiones (alias para compatibilidad)
-    const List& getAristas() const { return connections; }
+    // Método para obtener aristas (alias para compatibilidad)
+    const List& getAristas() const { return aristas; }
     
-    // Método para agregar conexiones usando objetos Connection
-    void addConnection(string destination, double weight = 1.0) {
-        Connection* connection = new Connection(generateConnectionId(), code, destination, weight);
-        connections.push(connection);
+    // Método para agregar aristas usando estructura interna
+    void addArista(string destination, double weight = 1.0) {
+        Arista* arista = new Arista(code, destination, weight);
+        aristas.push(arista);
     }
     
-    // Método para agregar conexión usando objeto Connection existente
-    void addConnection(Connection* connection) {
-        connections.push(connection);
+    // Método para agregar arista usando objeto Arista existente
+    void addArista(Arista* arista) {
+        aristas.push(arista);
     }
 
     // Obtener todas las conexiones como lista
     List* getConnectionsList() {
-        return &connections;
+        return &aristas;
     }
     
     // Versión const para métodos const
     const List* getConnectionsList() const {
-        return &connections;
+        return &aristas;
     }
 
     string dataToString() const {
@@ -79,12 +92,12 @@ public:
         ostringstream oss;
         oss << code << " (" << dataToString() << ") -> ";
         
-        Node* current = connections.getHead();
+        Node* current = aristas.getHead();
         while (current != nullptr) {
             try {
-                Connection* conn = std::any_cast<Connection*>(current->getData());
-                oss << conn->getDistributionCenterOrigin() << " -> " << conn->getDistributionCenterDestination() 
-                    << " (" << conn->getDistance() << ") ";
+                Arista* arista = std::any_cast<Arista*>(current->getData());
+                oss << arista->origen << " -> " << arista->destino 
+                    << " (" << arista->peso << ") ";
             } catch (const bad_any_cast&) {
                 oss << "[invalid] ";
             }
@@ -95,11 +108,11 @@ public:
     }
 
     ~HashGraphNode() {
-        // Limpiar las conexiones
-        Node* current = connections.getHead();
+        // Limpiar las aristas
+        Node* current = aristas.getHead();
         while (current != nullptr) {
-            Connection* conn = any_cast<Connection*>(current->getData());
-            delete conn;
+            Arista* arista = any_cast<Arista*>(current->getData());
+            delete arista;
             current = current->getNext();
         }
     }
@@ -134,12 +147,12 @@ public:
             // Crear un nuevo nodo con los datos copiados
             HashGraphNode* newNode = new HashGraphNode(originalNode->getCode(), originalNode->getData());
             
-            // Copiar las conexiones
+            // Copiar las aristas
             const List& originalConnections = originalNode->getConnections();
             Node* connectionNode = originalConnections.getHead();
             while (connectionNode != nullptr) {
-                Connection* originalConn = any_cast<Connection*>(connectionNode->getData());
-                newNode->addConnection(originalConn->getDistributionCenterDestination(), originalConn->getDistance());
+                Arista* originalArista = any_cast<Arista*>(connectionNode->getData());
+                newNode->addArista(originalArista->destino, originalArista->peso);
                 connectionNode = connectionNode->getNext();
             }
             
@@ -179,8 +192,8 @@ public:
                 const List& originalConnections = originalNode->getConnections();
                 Node* connectionNode = originalConnections.getHead();
                 while (connectionNode != nullptr) {
-                    Connection* originalConn = any_cast<Connection*>(connectionNode->getData());
-                    newNode->addConnection(originalConn->getDistributionCenterDestination(), originalConn->getDistance());
+                    Arista* originalArista = any_cast<Arista*>(connectionNode->getData());
+                    newNode->addArista(originalArista->destino, originalArista->peso);
                     connectionNode = connectionNode->getNext();
                 }
                 
@@ -233,7 +246,7 @@ public:
         }
 
         HashGraphNode* originNode = any_cast<HashGraphNode*>(nodes->search(origin));
-        originNode->addConnection(destination, weight);
+        originNode->addArista(destination, weight);
         return true;
     }
     
@@ -250,31 +263,16 @@ public:
         }
 
         HashGraphNode* originNode = any_cast<HashGraphNode*>(nodes->search(origin));
-        originNode->addConnection(destination, weight);
+        originNode->addArista(destination, weight);
         return true;
     }
     
-    // Método para agregar conexión usando objeto Connection existente
-    bool addConnection(Connection* connection) {
-        string origin = connection->getDistributionCenterOrigin();
-        string destination = connection->getDistributionCenterDestination();
-        
-        if (!nodes->contains(origin)) {
-            cerr << "Error: Nodo origen '" << origin << "' no existe." << endl;
-            return false;
-        }
-
-        if (!nodes->contains(destination)) {
-            cerr << "Error: Nodo destino '" << destination << "' no existe." << endl;
-            return false;
-        }
-
-        HashGraphNode* originNode = any_cast<HashGraphNode*>(nodes->search(origin));
-        originNode->addConnection(connection);
-        return true;
+    // Método para agregar conexión desde capa de negocio (Connection -> Arista)
+    bool addConnectionFromBusiness(const std::string& origin, const std::string& destination, double weight = 1.0) {
+        return addConnection(origin, destination, weight);  // Reutiliza la lógica existente
     }
     
-    // Agregar una conexión bidireccional usando objetos Connection
+    // Agregar una conexión bidireccional usando aristas internas
     bool addUndirectedConnection(string node1, string node2, double weight = 1.0) {
         bool success1 = addConnection(node1, node2, weight);
         bool success2 = addConnection(node2, node1, weight);
@@ -329,8 +327,8 @@ public:
         
         Node* current = aristas.getHead();
         while (current != nullptr) {
-            Connection* conn = any_cast<Connection*>(current->getData());
-            neighbors.push(conn->getDistributionCenterDestination());
+            Arista* arista = any_cast<Arista*>(current->getData());
+            neighbors.push(arista->destino);
             current = current->getNext();
         }
         
@@ -348,9 +346,9 @@ public:
         
         Node* current = aristas.getHead();
         while (current != nullptr) {
-            Connection* conn = any_cast<Connection*>(current->getData());
-            if (conn->getDistributionCenterDestination() == destination) {
-                return conn->getDistance();
+            Arista* arista = any_cast<Arista*>(current->getData());
+            if (arista->destino == destination) {
+                return arista->peso;
             }
             current = current->getNext();
         }

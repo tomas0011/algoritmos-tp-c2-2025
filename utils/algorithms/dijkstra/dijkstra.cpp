@@ -1,4 +1,4 @@
-#include "dijkstra.h"
+#include "Dijkstra.h"
 #include <iostream>
 
 using namespace std;
@@ -108,9 +108,9 @@ DijkstraGraphResult* dijkstra(const GraphHashTable& graph,
             Node* aristaNode = aristas->getHead();
             
             while (aristaNode != nullptr) {
-                Connection* arista = any_cast<Connection*>(aristaNode->getData());
-                string v = arista->getDistributionCenterDestination();
-                double weight = arista->getDistance();
+                Arista* arista = any_cast<Arista*>(aristaNode->getData());
+                string v = arista->destino;
+                double weight = arista->peso;
                 
                 double newDist = uDist + weight;
                 

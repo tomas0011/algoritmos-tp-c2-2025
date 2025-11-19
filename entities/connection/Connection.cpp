@@ -5,7 +5,7 @@ Connection::Connection(int id, const std::string& distributionCenterOrigin, cons
     : id(id), distributionCenterOrigin(distributionCenterOrigin), distributionCenterDestination(distributionCenterDestination), distance(distance) {}
 
 void Connection::display() const {
-    std::cout << "ID: " << id << ", Origin: " << distributionCenterOrigin << ", Destination: " << distributionCenterDestination << ", Distance: " << distance << std::endl;
+    std::cout << "ID: " << id << ", Origen: " << distributionCenterOrigin << ", Destino: " << distributionCenterDestination << ", Distancia: " << distance << std::endl;
 }
 
 int Connection::getId() const { return id; }
