@@ -71,7 +71,7 @@ private:
     Node* raiz;
 public:
     Tree (any data) {
-        this->raiz = new Node(data) ;
+        this->raiz = new Node(data);
     }
 
     Node* getRaiz() const { return raiz; }

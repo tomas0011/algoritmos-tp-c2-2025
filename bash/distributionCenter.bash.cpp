@@ -18,6 +18,8 @@ void showDistributionCenterMenu() {
         std::cout << "6. Conectar centros de distribucion.\n";
         std::cout << "7. Mostrar estadisticas generales.\n";
         std::cout << "8. Calcular camino minimo entre centros. (A.5)\n";
+        std::cout << "9. Agregar paquete a un centro.\n";
+        std::cout << "10. Mostrar paquetes del warehouse de un centro.\n";
         std::cout << "0. Volver al menu principal\n";
         std::cout << "Seleccione una opcion: ";
         choice = getValidIntInput(0, 8);
@@ -117,8 +119,77 @@ void showDistributionCenterMenu() {
                 distributionCenterService->calculateShortestPath(origin, destination);
                 break;
             }
+            case 9: {
+
+                std::string centerCode, pkgId, recipient, address;
+                float weight;
+
+
+                std::cout << "Ingrese el codigo del centro: ";
+                std::cin >> centerCode;
+
+                std::cout << "Ingrese el ID del paquete: ";
+                std::cin >> pkgId;
+
+                std::cout << "Ingrese el destinatario: ";
+                std::cin.ignore();
+                std::getline(std::cin, recipient);
+
+                std::cout << "Ingrese la direccion: ";
+                std::getline(std::cin, address);
+
+                std::cout << "Ingrese el peso (kg): ";
+                std::cin >> weight;
+
+                int id = std::stoi(pkgId);          
+                double price = 0;                    
+                int priority = 1;                    
+                double weightDouble = static_cast<double>(weight);
+
+                Package pkg(id, recipient, price, priority, weightDouble);
+
+
+                distributionCenterService->addPackageToCenter(centerCode, pkg);
+                break;
+            }
+
+            case 10: {
+                std::string centerCode;
+                std::cout << "Ingrese el codigo del centro: ";
+                std::cin >> centerCode;
+
+                // 1. Obtener la lista del warehouse
+                List warehouse = distributionCenterService->getWarehouseOfCenter(centerCode);
+
+                // 2. Validar si está vacío
+                if (warehouse.isEmpty()) {
+                    std::cout << "[INFO] No se encontraron paquetes en el centro: " 
+                            << centerCode << "\n";
+                    break;
+                }
+
+                // 3. Mostrar los paquetes
+                std::cout << "\n=== Paquetes en warehouse del centro " 
+                        << centerCode << " ===\n";
+
+                Node* current = warehouse.getHead();
+
+                while (current != nullptr) {
+                    try {
+                        Package pkg = std::any_cast<Package>(current->getData());
+                        pkg.display();
+
+                    } catch (const std::bad_any_cast&) {
+                        std::cout << "[ERROR] Un elemento del warehouse no es un Package válido.\n";
+                    }
+
+                    current = current->getNext();
+                }
+
+                break;
+            }
             case 0:
-                std::cout << "Volviendo al menú principal...\n";
+                std::cout << "Volviendo al menu principal...\n";
                 break;
             default:
                 std::cout << "Opcion invalida. Intente de nuevo.\n";
@@ -153,7 +224,7 @@ void showDisplayAllDistributionCenterMenu() {
                 distributionCenterService->displayCentersSortedByEmployees();
                 break;
             case 0:
-                std::cout << "Volviendo al menú principal...\n";
+                std::cout << "Volviendo al menu principal...\n";
                 break;
             default:
                 std::cout << "Opcion invalida. Intente de nuevo.\n";

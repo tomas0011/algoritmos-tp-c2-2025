@@ -1,4 +1,4 @@
-#include "Dijkstra.h"
+#include "dijkstra.h"
 #include <iostream>
 
 using namespace std;

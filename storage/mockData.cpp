@@ -1,6 +1,6 @@
 #include "mockData.h"
 #include "storage.h"
-#include "../services/connection/ConnectionService.h"
+#include "../services/connection/connectionService.h"
 #include <iostream>
 #include <utils/algorithms/parseDate/parseDate.h>
 
@@ -62,31 +62,25 @@ void initializeMockData() {
     Shipment ship8(8, "In Transit", 65.0, 3, 130.0, 13.0, 2, "BUE", pkgListShip2, "BUE", "TUC", 2, strToDate("09-11-2025"), -1, -1, -1);
     Shipment ship9(9, "Pending", 40.0, 1, 80.0, 7.0, 1, "BUE", pkgListShip3, "BUE", "SAL", 1, strToDate("11-11-2025"), -1, -1, -1);
     Shipment ship10(10, "Pending", 90.0, 2, 180.0, 20.0, 2, "SAL", pkgListShip1, "SAL", "CBA", 2, strToDate("10-11-2025"), -1, -1, -1);
-    
-    // Crear ConnectionService primero
-    ConnectionService* connService = new ConnectionService(connections);
-    
-    DistributionCenterManager* manager = new DistributionCenterManager(connService);
+
+    distributionCenterService->addCenter("CBA", "Cordoba Center", "Cordoba", 300, 10, 9);
+    distributionCenterService->addCenter("MZA", "Mendoza Center", "Mendoza", 250, 12, 13);
+    distributionCenterService->addCenter("BUE", "Buenos Aires Center", "Buenos Aires", 400, 1, 12);
+    distributionCenterService->addCenter("ROS", "Rosario Center", "Rosario", 200, 5, 8);
+    distributionCenterService->addCenter("TUC", "Tucuman Center", "Tucuman", 180, 4, 6);
+    distributionCenterService->addCenter("SAL", "Salta Center", "Salta", 160, 2, 5);
+
+    distributionCenterService->addConnection("CBA", "MZA", 900);   // Cordoba - Mendoza
+    distributionCenterService->addConnection("CBA", "BUE", 700);   // Cordoba - Buenos Aires
+    distributionCenterService->addConnection("CBA", "ROS", 400);   // Cordoba - Rosario
+    distributionCenterService->addConnection("MZA", "BUE", 1100);  // Mendoza - Buenos Aires
+    distributionCenterService->addConnection("BUE", "ROS", 300);   // Buenos Aires - Rosario
+    distributionCenterService->addConnection("TUC", "CBA", 550);   // Tucuman - Cordoba
+    distributionCenterService->addConnection("TUC", "SAL", 300);   // Tucuman - Salta
+    distributionCenterService->addConnection("SAL", "CBA", 800);   // Salta - Cordoba
+
+    DistributionCenterManager* manager = new DistributionCenterManager(distributionCenterNetwork);
     allocated_managers++;  // Trackear allocación
-    
-    // Initialize distribution center managers BEFORE pushing
-
-    manager->createDistributionCenter("CBA", "Cordoba Center", "Cordoba", 300, 10, 9);
-    manager->createDistributionCenter("MZA", "Mendoza Center", "Mendoza", 250, 12, 13);
-    manager->createDistributionCenter("BUE", "Buenos Aires Center", "Buenos Aires", 400, 1, 12);
-    manager->createDistributionCenter("ROS", "Rosario Center", "Rosario", 200, 5, 8);
-    manager->createDistributionCenter("TUC", "Tucuman Center", "Tucuman", 180, 4, 6);
-    manager->createDistributionCenter("SAL", "Salta Center", "Salta", 160, 2, 5);
-
-    manager->relateDistributionCenter("CBA", "MZA", 900);   // Cordoba - Mendoza
-    manager->relateDistributionCenter("CBA", "BUE", 700);   // Cordoba - Buenos Aires
-    manager->relateDistributionCenter("CBA", "ROS", 400);   // Cordoba - Rosario
-    manager->relateDistributionCenter("MZA", "BUE", 1100);  // Mendoza - Buenos Aires
-    manager->relateDistributionCenter("BUE", "ROS", 300);   // Buenos Aires - Rosario
-    manager->relateDistributionCenter("TUC", "CBA", 550);   // Tucuman - Cordoba
-    manager->relateDistributionCenter("TUC", "SAL", 300);   // Tucuman - Salta
-    manager->relateDistributionCenter("SAL", "CBA", 800);   // Salta - Cordoba
-    
     distributionCenterManagers.push(std::any(manager));
     
     packages.push(std::any(pkg1));
