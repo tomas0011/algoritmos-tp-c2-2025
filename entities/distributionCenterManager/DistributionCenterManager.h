@@ -3,27 +3,40 @@
 
 #include <string>
 #include "../distributionCenter/DistributionCenter.h"
-#include "../../utils/dataStructures/graph/GraphHashTable.h"
+#include "../connection/Connection.h"
+#include "../../utils/dataStructures/Graph/GraphHashTable.h"
 #include "../../utils/dataStructures/list/List.h"
+#include "../../services/connection/connectionService.h"
 
 class DistributionCenterManager{
     private:
-        List distributionCenterPtrs;  //  Ahora almacena DistributionCenter* simples
-        GraphHashTable distributionCenterNetwork;
+        List distributionCenterList;  // Almacena DistributionCenter*
+        GraphHashTable& distributionCenterNetwork;  // Grafo técnico con aristas
+        
+        // Método privado para sincronizar Connection con arista del grafo
+        void addConnectionToGraph(const Connection& conn);
     public:
-        DistributionCenterManager();
-        ~DistributionCenterManager();  //  Necesario para liberar memoria
+        DistributionCenterManager(GraphHashTable& distributionCenterNetwork);
+        ~DistributionCenterManager();
+        
+        // Gestión de centros
         DistributionCenter createDistributionCenter(std::string code, std::string name, std::string city, int capacity, int dailyPackages, int employees);
-        void relateDistributionCenter(std::string code1, std::string code2, int distance);
         bool hasCenter(std::string code) const;
         DistributionCenter* getCenter(std::string code) const;
         int getDistributionCentersCount() const;
         List getDistributionCentersCodes();
-        void displayStatistics();
-        List* getConnections(std::string code) const;
         void getCenters();
         DistributionCenter* getById(std::string id);
-        GraphHashTable& getNetwork() const;
+        
+        // Gestión de Connections (usando ConnectionService)
+        void createConnection(std::string originCode, std::string destinationCode, double distance);
+        void createBidirectionalConnection(std::string originCode, std::string destinationCode, double distance);
+        void relateDistributionCenter(std::string code1, std::string code2, int distance);  // Crea connection + arista
+        
+        // Operaciones técnicas (usan el grafo interno)
+        void displayStatistics();
+        List* getConnections(std::string code) const;  // Para compatibilidad
+        GraphHashTable& getNetwork() const;  // Para algoritmos como Dijkstra
         List& getDistributionCentersList();
 };
 

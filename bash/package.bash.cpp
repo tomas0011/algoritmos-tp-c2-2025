@@ -12,7 +12,7 @@ void showPackageMenu() {
         std::cout << "3. Actualizar un paquete\n";
         std::cout << "4. Eliminar un paquete\n";
         std::cout << "5. Mostrar todos los paquetes\n";
-        std::cout << "0. Volver al menú principal\n";
+        std::cout << "0. Volver al menu principal\n";
         std::cout << "Seleccione una opcion: ";
         std::cin >> choice;
 

@@ -1,4 +1,5 @@
 #include "connection.bash.h"
+#include "bash.h"
 #include "services/initializeServices.h"
 #include <iostream>
 
@@ -11,31 +12,29 @@ void showConnectionMenu() {
         std::cout << "3. Actualizar una conexion\n";
         std::cout << "4. Eliminar una conexion\n";
         std::cout << "5. Mostrar todas las conexiones\n";
-        std::cout << "0. Volver al menú principal\n";
+        std::cout << "0. Volver al menu principal\n";
         std::cout << "Seleccione una opcion: ";
-        std::cin >> choice;
+        choice = getValidIntInput(0, 5);
 
         switch (choice) {
             case 1: {
-                int id, origin, destination;
+                std::string origin, destination;
                 double distance;
 
-                std::cout << "Ingrese el ID de la conexion: ";
-                std::cin >> id;
-                std::cout << "Ingrese el ID del centro origen: ";
-                std::cin >> origin;
-                std::cout << "Ingrese el ID del centro destino: ";
-                std::cin >> destination;
-                std::cout << "Ingrese la distancia: ";
-                std::cin >> distance;
+                std::cout << "Ingrese el codigo del centro origen (ej: BUE, MZA, CBA): ";
+                origin = getValidStringInput();
+                std::cout << "Ingrese el codigo del centro destino (ej: BUE, MZA, CBA): ";
+                destination = getValidStringInput();
+                std::cout << "Ingrese la distancia (km): ";
+                distance = getValidDoubleInput(0.1, 10000.0);
 
-                connectionService->createConnection(id, origin, destination, distance);
+                connectionService->createConnection(origin, destination, distance);
                 break;
             }
             case 2: {
                 int id;
                 std::cout << "Ingrese el ID de la conexion: ";
-                std::cin >> id;
+                id = getValidIntInput(1, 99999);
 
                 Connection* connection = connectionService->getConnectionById(id);
                 if (connection != nullptr) {
@@ -47,11 +46,12 @@ void showConnectionMenu() {
                 break;
             }
             case 3: {
-                int id, origin, destination;
+                int id;
+                std::string origin, destination;
                 double distance;
 
                 std::cout << "Ingrese el ID de la conexion a actualizar: ";
-                std::cin >> id;
+                id = getValidIntInput(1, 99999);
 
                 Connection* existing = connectionService->getConnectionById(id);
                 if (existing == nullptr) {
@@ -60,12 +60,12 @@ void showConnectionMenu() {
                 }
                 delete existing;
 
-                std::cout << "Ingrese el nuevo ID del centro origen: ";
-                std::cin >> origin;
-                std::cout << "Ingrese el nuevo ID del centro destino: ";
-                std::cin >> destination;
-                std::cout << "Ingrese la nueva distancia: ";
-                std::cin >> distance;
+                std::cout << "Ingrese el nuevo codigo del centro origen (ej: BUE, MZA, CBA): ";
+                origin = getValidStringInput();
+                std::cout << "Ingrese el nuevo codigo del centro destino (ej: BUE, MZA, CBA): ";
+                destination = getValidStringInput();
+                std::cout << "Ingrese la nueva distancia (km): ";
+                distance = getValidDoubleInput(0.1, 10000.0);
 
                 connectionService->updateConnection(id, origin, destination, distance);
                 break;
@@ -73,7 +73,7 @@ void showConnectionMenu() {
             case 4: {
                 int id;
                 std::cout << "Ingrese el ID de la conexion a eliminar: ";
-                std::cin >> id;
+                id = getValidIntInput(1, 99999);
 
                 char confirm;
                 std::cout << "¿Esta seguro de eliminar la conexion con ID " << id << "? (s/n): ";

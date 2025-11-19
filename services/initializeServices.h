@@ -1,15 +1,18 @@
 #ifndef INITIALIZE_SERVICES_H
 #define INITIALIZE_SERVICES_H
 
+#include "../storage/storage.h"
 #include "package/packageService.h"
 #include "shipment/shipmentService.h"
-#include "../storage/storage.h"
 #include "client/clientService.h"
 #include "employee/employeeService.h"
-#include "Connection/ConnectionService.h"
+#include "connection/connectionService.h"
 #include "transport/transportService.h"
 #include "distributionCenter/distributionCenterService.h"
+#include "../entities/distributionCenterManager/DistributionCenterManager.h"
 
+// Global manager instances
+extern DistributionCenterManager* distributionCenterManager;
 
 // Global service instances
 extern PackageService* packageService;

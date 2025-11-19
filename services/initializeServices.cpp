@@ -1,5 +1,8 @@
 #include "initializeServices.h"
 
+// Global manager instances
+DistributionCenterManager* distributionCenterManager = nullptr;
+
 // Global service instances
 PackageService* packageService = nullptr;
 ShipmentService* shipmentService = nullptr;
@@ -10,18 +13,22 @@ TransportService* transportService = nullptr;
 DistributionCenterService* distributionCenterService = nullptr;
 
 void initializeServices() {
+    // Initialize managers
+    distributionCenterManager = new DistributionCenterManager(distributionCenterNetwork);
+
     // Initialize services
     packageService = new PackageService(packages);
     clientService = new ClientService(clients);
     employeeService = new EmployeeService(employees);
-    connectionService = new ConnectionService(connections);
+    connectionService = new ConnectionService(distributionCenterManager, connections);
     transportService = new TransportService(transports);
-    distributionCenterService = new DistributionCenterService(distributionCenters, distributionCenterManagers);
+    distributionCenterService = new DistributionCenterService(connectionService, distributionCenterManager, distributionCenters, distributionCenterManagers);
     shipmentService = new ShipmentService(transportService, distributionCenterService, shipments);
 }
 
 void cleanupServices() {
     // Free all allocated services
+    delete distributionCenterManager;
     delete packageService;
     delete shipmentService;
     delete clientService;
@@ -31,6 +38,7 @@ void cleanupServices() {
     delete distributionCenterService;
     
     // Reset pointers to nullptr
+    distributionCenterManager = nullptr;
     packageService = nullptr;
     shipmentService = nullptr;
     clientService = nullptr;

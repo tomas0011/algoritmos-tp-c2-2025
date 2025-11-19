@@ -1,6 +1,9 @@
-#include "knapsack.h"    // la versión nueva de la mochila
+#include "knapsack.h"   // la versión nueva de la mochila
+#include "../../../entities/package/Package.h"
+#include "../../dataStructures/list/List.h"
 #include <iostream>
 using namespace std;
+
 
 int main() {
     Package p1(1, "Laptop", 400.0, 1, 3.0);
@@ -10,7 +13,8 @@ int main() {
     Package p5(5, "Zapatillas", 150.0, 1, 2.5);
     Package p6(6, "Microfono", 250.0, 1, 1.0);
     Package p7(7, "Auriculares", 20.0, 1, 0.1);
-    Package p8(8, "Diamante", 2000.0, 10, 1.0);
+    Package p8(8, "Diamante", 2000.0, 1, 1.0);
+    Package p9(9, "ipad", 300.0, 2, 1.5);
 
     // -----------------------------
     // CAMBIO: usamos List en lugar de vector
@@ -24,6 +28,7 @@ int main() {
     paquetes.push(any(p6));
     paquetes.push(any(p7));
     paquetes.push(any(p8));
+    paquetes.push(any(p9));
 
     double pesoMaximo = 5.0;
 

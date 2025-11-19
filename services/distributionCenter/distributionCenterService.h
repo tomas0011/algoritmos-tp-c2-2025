@@ -9,11 +9,17 @@
 
 class DistributionCenterService {
 private:
+    ConnectionService* connectionService;
+    DistributionCenterManager* manager;
     List& distributionCenters;
-    List& distributionCenterManagers;
+    List& distributionCenterManagers; // TODO: Quitar
 
 public:
-    DistributionCenterService(List& centersList, List& centerManagersList);
+    DistributionCenterService(
+        ConnectionService* connectionService,
+        DistributionCenterManager* manager,
+        List& centersList,
+        List& centerManagersList);
     ~DistributionCenterService();
 
     // CRUD operations según Item A del enunciado
@@ -46,6 +52,13 @@ public:
     
     // Obtener un centro por codigo
     DistributionCenter* getCenter(const std::string& code);
+
+    // Agregar un paquete al almacén de un centro
+    void addPackageToCenter(const std::string& centerCode, const Package& pkg);
+
+    // Obtener el warehouse (lista de paquetes) de un centro por código
+    // Devuelve una copia de la lista interna para evitar exponer referencias directas.
+    List getWarehouseOfCenter(const std::string& centerCode);
     
     // Obtener todos los centros como List 
     List getAllCenters();
@@ -53,13 +66,13 @@ public:
     // Obtener estadisticas generales
     void displayStatistics();
     
-    // Cargar centros desde datos mock o archivo
-    void loadMockCenters();
+    // === Gestión de Conexiones ===
     
-    // === Gestion de Conexiones ===
-    
-    // Agregar una conexion bidireccional entre dos centros
+    // Agregar una conexión unidireccional entre dos centros
     bool addConnection(const std::string& origin, const std::string& destination, double distance);
+    
+    // Agregar una conexión bidireccional entre dos centros
+    bool addBidirectionalConnection(const std::string& origin, const std::string& destination, double distance);
     
     // Mostrar todas las conexiones de un centro
     void showCenterConnections(const std::string& code);
