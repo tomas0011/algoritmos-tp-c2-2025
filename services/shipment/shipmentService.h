@@ -57,6 +57,7 @@ public:
 
     // Punto C
 
+    List getDistributionCenterPackages(std::string distributionCenterId) const;
     List generateOptimalCargoForTransport(int transportId, std::string distributionCenterId) const;
 };
 

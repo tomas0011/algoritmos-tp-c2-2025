@@ -155,7 +155,31 @@ List ShipmentService::findShipmentsByClient(int clientId) {
     return result;
 }
 
+List ShipmentService::getDistributionCenterPackages(std::string distributionCenterId) const {
+    DistributionCenter* centro = distributionCenterService->getCenter(distributionCenterId);
+    if (centro) {
+        List result;
+        Node* currentShipment = shipments.getHead();
+        while (currentShipment != nullptr) {
+            try {
+                Shipment* shipment = std::any_cast<Shipment*>(currentShipment->getData());
+                Node* currentPackage = shipment->getPackages().getHead();
+                while (currentPackage != nullptr) {
+                    Shipment* package = std::any_cast<Shipment*>(currentPackage->getData());
+                    result.push(package);
+                    currentPackage = currentPackage->getNext();
+                }
+            } catch (const std::bad_any_cast&) {}
+            currentShipment = currentShipment->getNext();
+        }
+        return result;
+    } else {
+        return List();
+    }
+}
+
 List ShipmentService::generateOptimalCargoForTransport(int transportId, std::string distributionCenterId) const {
+    std::cout << "[DEBUG] Inputs :: transportId: " << transportId << " | distributionCenterId: " << distributionCenterId << "\n";
     // 1. Obtener el transporte
     Transport* transporte = transportService->getTransportById(transportId);
     if (!transporte) {
@@ -168,6 +192,8 @@ List ShipmentService::generateOptimalCargoForTransport(int transportId, std::str
         delete transporte;
         return {};
     }
+    std::cout << "[DEBUG] transport\n";
+    transporte->display();
 
     // 2. Obtener el DistributionCenter asociado
     DistributionCenter* centro = distributionCenterService->getCenter(distributionCenterId);
@@ -177,8 +203,12 @@ List ShipmentService::generateOptimalCargoForTransport(int transportId, std::str
         return {};
     }
 
+    std::cout << "[DEBUG] distributionCenter\n";
+    centro->display();
+
     // 3. Obtener los paquetes del warehouse
-    List paquetesDisponibles = centro->getWarehouse();
+    List paquetesDisponibles = getDistributionCenterPackages(distributionCenterId);
+    paquetesDisponibles.display();
     List* availablePackagesList = new List();
     Node* current = paquetesDisponibles.getHead();
     while (current != nullptr) {
@@ -190,6 +220,7 @@ List ShipmentService::generateOptimalCargoForTransport(int transportId, std::str
     }
 
     // 4. Ejecutar la mochila 0-1
+    std::cout << "[DEBUG] capacity: " << capacidad << "\n";
     ResultadoMochila resultado = resolverMochila(
         *availablePackagesList,
         capacidad
