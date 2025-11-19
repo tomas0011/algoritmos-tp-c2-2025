@@ -22,7 +22,7 @@ SRCS = main.cpp \
        services/distributionCenter/distributionCenterService.cpp \
        services/client/clientService.cpp \
        services/employee/employeeService.cpp \
-       services/Connection/ConnectionService.cpp \
+       services/connection/ConnectionService.cpp \
        services/transport/transportService.cpp \
        entities/employee/Employee.cpp \
        entities/distributionCenter/DistributionCenter.cpp \

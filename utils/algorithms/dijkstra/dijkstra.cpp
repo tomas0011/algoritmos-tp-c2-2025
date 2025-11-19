@@ -1,4 +1,4 @@
-#include "dijkstra.h"
+#include "Dijkstra.h"
 #include <iostream>
 
 using namespace std;
@@ -51,9 +51,9 @@ DijkstraGraphResult* dijkstra(const GraphHashTable& graph,
     }
     
     // Inicializar estructuras
-    result->distances = new HashTable(23);
-    result->previous = new HashTable(23);
-    HashTable visited(23);
+    result->distances = new HashTable(47);
+    result->previous = new HashTable(47);
+    HashTable visited(47);
     
     // Inicializar distancias a infinito y visitados a false
     List allNodes = graph.getNodeCodes();
@@ -108,9 +108,9 @@ DijkstraGraphResult* dijkstra(const GraphHashTable& graph,
             Node* aristaNode = aristas->getHead();
             
             while (aristaNode != nullptr) {
-                GraphArista* arista = any_cast<GraphArista*>(aristaNode->getData());
-                string v = arista->getDestination();
-                double weight = arista->getWeight();
+                Arista* arista = any_cast<Arista*>(aristaNode->getData());
+                string v = arista->destino;
+                double weight = arista->peso;
                 
                 double newDist = uDist + weight;
                 

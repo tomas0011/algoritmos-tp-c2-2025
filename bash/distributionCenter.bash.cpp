@@ -1,4 +1,5 @@
 #include "distributionCenter.bash.h"
+#include "bash.h"
 #include "services/initializeServices.h"
 #include <iostream>
 #include <string>
@@ -17,15 +18,15 @@ void showDistributionCenterMenu() {
         std::cout << "6. Conectar centros de distribucion.\n";
         std::cout << "7. Mostrar estadisticas generales.\n";
         std::cout << "8. Calcular camino minimo entre centros. (A.5)\n";
-        std::cout << "0. Volver al menú principal\n";
+        std::cout << "0. Volver al menu principal\n";
         std::cout << "Seleccione una opcion: ";
-        std::cin >> choice;
+        choice = getValidIntInput(0, 8);
 
         switch (choice) {
             case 1: {
                 std::string code;
                 std::cout << "Ingrese el codigo del centro (ej: CBA, MZA, BUE): ";
-                std::cin >> code;
+                code = getValidStringInput();
                 distributionCenterService->showCenterInfo(code);
                 break;
             }
@@ -34,18 +35,17 @@ void showDistributionCenterMenu() {
                 int capacity, dailyPackages, numEmployees;
                 
                 std::cout << "Ingrese el codigo del centro (3 letras, ej: CBA): ";
-                std::cin >> code;
+                code = getValidStringInput();
                 std::cout << "Ingrese el nombre del centro: ";
-                std::cin.ignore();
-                std::getline(std::cin, name);
+                name = getValidStringInput();
                 std::cout << "Ingrese la ciudad: ";
-                std::getline(std::cin, city);
+                city = getValidStringInput();
                 std::cout << "Ingrese la capacidad: ";
-                std::cin >> capacity;
+                capacity = getValidIntInput(1, 10000);
                 std::cout << "Ingrese los paquetes diarios: ";
-                std::cin >> dailyPackages;
+                dailyPackages = getValidIntInput(1, 1000);
                 std::cout << "Ingrese el número de empleados: ";
-                std::cin >> numEmployees;
+                numEmployees = getValidIntInput(1, 100);
                 
                 distributionCenterService->addCenter(code, name, city, capacity, dailyPackages, numEmployees);
                 break;
@@ -53,11 +53,12 @@ void showDistributionCenterMenu() {
             case 3: {
                 std::string code;
                 std::cout << "Ingrese el codigo del centro a eliminar: ";
-                std::cin >> code;
+                code = getValidStringInput();
                 
                 char confirm;
                 std::cout << "¿Esta seguro de eliminar el centro '" << code << "'? (s/n): ";
-                std::cin >> confirm;
+                std::string confirmStr = getValidStringInput();
+                confirm = confirmStr.empty() ? 'n' : confirmStr[0];
                 
                 if (confirm == 's' || confirm == 'S') {
                     distributionCenterService->removeCenter(code);
@@ -71,7 +72,7 @@ void showDistributionCenterMenu() {
                 int capacity, dailyPackages, numEmployees;
                 
                 std::cout << "Ingrese el codigo del centro a actualizar: ";
-                std::cin >> code;
+                code = getValidStringInput();
                 
                 if (!distributionCenterService->centerExists(code)) {
                     std::cout << "Error: Centro no encontrado." << std::endl;
@@ -79,11 +80,11 @@ void showDistributionCenterMenu() {
                 }
                 
                 std::cout << "Ingrese la nueva capacidad: ";
-                std::cin >> capacity;
+                capacity = getValidIntInput(1, 10000);
                 std::cout << "Ingrese los nuevos paquetes diarios: ";
-                std::cin >> dailyPackages;
+                dailyPackages = getValidIntInput(1, 1000);
                 std::cout << "Ingrese el nuevo número de empleados: ";
-                std::cin >> numEmployees;
+                numEmployees = getValidIntInput(1, 100);
                 
                 distributionCenterService->updateCenter(code, capacity, dailyPackages, numEmployees);
                 break;
@@ -95,11 +96,11 @@ void showDistributionCenterMenu() {
                 std::string origin, destination;
                 int distance;
                 std::cout << "Ingrese el codigo del centro origen: ";
-                std::cin >> origin;
+                origin = getValidStringInput();
                 std::cout << "Ingrese el codigo del centro destino: ";
-                std::cin >> destination;
+                destination = getValidStringInput();
                 std::cout << "Ingrese la distancia entre estos centros: ";
-                std::cin >> distance;
+                distance = getValidIntInput(1, 10000);
                 distributionCenterService->addConnection(origin, destination, distance);
                 break;
             }
@@ -109,9 +110,9 @@ void showDistributionCenterMenu() {
             case 8: {
                 std::string origin, destination;
                 std::cout << "Ingrese el codigo del centro origen: ";
-                std::cin >> origin;
+                origin = getValidStringInput();
                 std::cout << "Ingrese el codigo del centro destino: ";
-                std::cin >> destination;
+                destination = getValidStringInput();
                 
                 distributionCenterService->calculateShortestPath(origin, destination);
                 break;
@@ -134,9 +135,9 @@ void showDisplayAllDistributionCenterMenu() {
         std::cout << "2. Obtener centros ordenados por capacidad.\n";
         std::cout << "3. Obtener centros ordenados por paquetes procesados.\n";
         std::cout << "4. Obtener centros ordenados por cantidad de empleados.\n";
-        std::cout << "0. Volver al menú principal\n";
+        std::cout << "0. Volver al menu principal\n";
         std::cout << "Seleccione una opcion: ";
-        std::cin >> choice;
+        choice = getValidIntInput(0, 4);
 
         switch (choice) {
             case 1:
