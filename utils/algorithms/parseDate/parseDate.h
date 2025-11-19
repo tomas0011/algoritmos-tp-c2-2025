@@ -6,6 +6,8 @@
 #include <sstream>
 #include <iomanip>
 
-time_t parseDate(const std::string& dateStr);
+time_t strToDate(const std::string& dateStr);
+
+std::string dateToStr(time_t date);
 
 #endif // PARSE_DATE_H

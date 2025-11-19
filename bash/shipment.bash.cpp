@@ -154,8 +154,8 @@ void showShipmentMenu() {
                 std::cin >> endDateStr;
 
                 // Parse dates
-                time_t start = parseDate(startDateStr);
-                time_t end = parseDate(endDateStr);
+                time_t start = strToDate(startDateStr);
+                time_t end = strToDate(endDateStr);
 
                 if (start == -1 || end == -1) {
                     std::cout << "Formato de fecha invalido. Use dd-mm-aaaa." << std::endl;

@@ -1,5 +1,6 @@
 #include "Shipment.h"
 #include <iostream>
+#include <utils/algorithms/parseDate/parseDate.h>
 
 Shipment::Shipment(int id, const std::string& state, double cost, int priority, double totalPrice, double totalWeight,
                    int shimpmentManagerId, std::string distributionCenterId, const std::vector<Package>& packages,
@@ -15,8 +16,8 @@ void Shipment::display() const {
               << ", TotalPrice: " << totalPrice << ", TotalWeight: " << totalWeight
               << ", ShipmentManagerId: " << shimpmentManagerId << ", DistributionCenterId: " << distributionCenterId
               << ", OriginId: " << originId << ", DestinationId: " << destinationId << ", ClientId: " << clientId
-              << ", CreateDate: " << createDate << ", LeftWarehouseDate: " << leftWarehouseDate
-              << ", EstimatedDeliveryDate: " << estimatedDeliveryDate << ", DeliveryDate: " << deliveryDate << std::endl;
+              << ", CreateDate: " << dateToStr(createDate) << ", LeftWarehouseDate: " << dateToStr(leftWarehouseDate)
+              << ", EstimatedDeliveryDate: " << dateToStr(estimatedDeliveryDate) << ", DeliveryDate: " << dateToStr(deliveryDate) << std::endl;
     for (const auto& pkg : packages) {
         pkg.display();
     }
