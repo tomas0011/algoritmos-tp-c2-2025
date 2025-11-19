@@ -20,6 +20,7 @@ void showShipmentMenu() {
         std::cout << "6. Calcular el total de envíos por centro por rango de fechas. (B.1)\n";
         std::cout << "7. Detectar centros con sobrecarga. (B.2)\n";
         std::cout << "8. Obtener envios de un cliente por paquete. (B.3)\n";
+        std::cout << "9. Preparar transporte en centro de distribucion. (C.1)\n";
         std::cout << "0. Volver al menú principal\n";
         std::cout << "Seleccione una opcion: ";
         std::cin >> choice;
@@ -185,6 +186,23 @@ void showShipmentMenu() {
                 std::cout << "Envios del cliente " << clientId << ":\n";
                 for (const auto& shipment : shipments) {
                     shipment.display();
+                }
+                break;
+            }
+            case 9: {
+                std::string distributionCenterId;
+                std::cout << "Ingrese el ID del centro de distribucion: ";
+                std::cin >> distributionCenterId;
+
+                int transportId;
+                std::cout << "Ingrese el ID del Transporte: ";
+                std::cin >> transportId;
+
+                std::vector<Package> packages = shipmentService->generateOptimalCargoForTransport(transportId, distributionCenterId);
+                std::cout << "Transporte " << transportId << " en centro " << distributionCenterId
+                    << " preparado con " << packages.size() << " paquetes optimos" << ":\n";
+                for (const auto& packages : packages) {
+                    packages.display();
                 }
                 break;
             }

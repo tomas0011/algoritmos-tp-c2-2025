@@ -47,18 +47,17 @@ public:
 
     // Punto B
 
-    //cantidad total de envios por centro de distribucion entre dos fechas
+    // B.1: cantidad total de envios por centro de distribucion entre dos fechas
     int totalShipmentsByCenterAndDate(std::string centerId, time_t start, time_t end);
     
-    // centros de distribucion que han sobrepasado un limite semanal de envios
+    // B.2: centros de distribucion que han sobrepasado un limite semanal de envios
     std::vector<std::string> overloadedCenters();
 
-    // envios pertenecientes a un cliente
+    // B.3 envios pertenecientes a un cliente
     std::vector<Shipment> findShipmentsByClient(int clientId);
 
-    // Punto C
-
-    std::vector<Package> generarCargaOptima(int transportId, std::string distributionCenterId) const;
+    // C.1: generar carga optima para un transporte en un centro de distribucion
+    std::vector<Package> generateOptimalCargoForTransport(int transportId, std::string distributionCenterId) const;
 };
 
 #endif // SHIPMENT_SERVICE_H

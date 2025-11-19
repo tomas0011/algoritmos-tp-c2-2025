@@ -180,10 +180,7 @@ std::vector<Shipment> ShipmentService::findShipmentsByClient(int clientId) {
     return result;
 }
 
-// -----------------------------------------------------
-//        NUEVO MÉTODO: GENERAR CARGA ÓPTIMA
-// -----------------------------------------------------
-std::vector<Package> ShipmentService::generarCargaOptima(int transportId, std::string distributionCenterId) const {
+std::vector<Package> ShipmentService::generateOptimalCargoForTransport(int transportId, std::string distributionCenterId) const {
     // 1. Obtener el transporte
     Transport* transporte = transportService->getTransportById(transportId);
     if (!transporte) {
