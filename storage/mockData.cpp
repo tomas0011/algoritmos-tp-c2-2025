@@ -3,10 +3,10 @@
 #include <iostream>
 #include <utils/algorithms/parseDate/parseDate.h>
 
-// Global mock data instances
-Package pkg1(1, 10.0, 1, 2.5);
-Package pkg2(2, 15.0, 2, 3.5);
-Package pkg3(3, 8.0, 1, 1.5);
+// Mock data definitions - now using storage lists
+Package pkg1(1, "medias", 10.5, 1, 2.0);
+Package pkg2(2, "celular", 15.0, 2, 3.5);
+Package pkg3(3, "campera", 8.0, 1, 1.5);
 
 // Mock shipments data
 Employee emp1(1, "Alice", 1);
