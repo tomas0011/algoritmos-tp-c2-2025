@@ -22,7 +22,7 @@ void showDistributionCenterMenu() {
         std::cout << "10. Mostrar paquetes del warehouse de un centro.\n";
         std::cout << "0. Volver al menu principal\n";
         std::cout << "Seleccione una opcion: ";
-        choice = getValidIntInput(0, 8);
+        choice = getValidIntInput(0, 10);
 
         switch (choice) {
             case 1: {
@@ -120,10 +120,10 @@ void showDistributionCenterMenu() {
                 break;
             }
             case 9: {
-
-                std::string centerCode, pkgId, recipient, address;
+                std::string centerCode, pkgId, name;
                 float weight;
-
+                double price;
+                int priority;
 
                 std::cout << "Ingrese el codigo del centro: ";
                 std::cin >> centerCode;
@@ -131,25 +131,23 @@ void showDistributionCenterMenu() {
                 std::cout << "Ingrese el ID del paquete: ";
                 std::cin >> pkgId;
 
-                std::cout << "Ingrese el destinatario: ";
+                std::cout << "Ingrese el nombre del paquete: ";
                 std::cin.ignore();
-                std::getline(std::cin, recipient);
-
-                std::cout << "Ingrese la direccion: ";
-                std::getline(std::cin, address);
+                std::getline(std::cin, name);
 
                 std::cout << "Ingrese el peso (kg): ";
                 std::cin >> weight;
 
+                std::cout << "Ingrese el precio: ";
+                std::cin >> price;
+
+                std::cout << "Ingrese la prioridad: ";
+                std::cin >> priority;
+
                 int id = std::stoi(pkgId);          
-                double price = 0;                    
-                int priority = 1;                    
                 double weightDouble = static_cast<double>(weight);
 
-                Package pkg(id, recipient, price, priority, weightDouble);
-
-
-                distributionCenterService->addPackageToCenter(centerCode, pkg);
+                distributionCenterService->addPackageToCenter(centerCode, id, name, price, priority, weightDouble);
                 break;
             }
 

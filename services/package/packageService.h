@@ -20,6 +20,7 @@ public:
     // Utility functions
     void displayAllPackages();
     int getPackageCount();
+    List& getPackagesOfCenter(const std::string& code);
 };
 
 #endif // PACKAGE_SERVICE_H

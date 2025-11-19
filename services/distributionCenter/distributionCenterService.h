@@ -6,10 +6,12 @@
 #include <iostream>
 #include <string>
 #include <entities/distributionCenterManager/DistributionCenterManager.h>
+#include "../package/packageService.h"
 
 class DistributionCenterService {
 private:
     ConnectionService* connectionService;
+    PackageService* packageService;
     DistributionCenterManager* manager;
     List& distributionCenters;
     List& distributionCenterManagers; // TODO: Quitar
@@ -17,6 +19,7 @@ private:
 public:
     DistributionCenterService(
         ConnectionService* connectionService,
+        PackageService* packageService,
         DistributionCenterManager* manager,
         List& centersList,
         List& centerManagersList);
@@ -54,7 +57,7 @@ public:
     DistributionCenter* getCenter(const std::string& code);
 
     // Agregar un paquete al almacén de un centro
-    void addPackageToCenter(const std::string& centerCode, const Package& pkg);
+    void addPackageToCenter(const std::string& centerCode, int id, const std::string& name, double price, int priority, double weight);
 
     // Obtener el warehouse (lista de paquetes) de un centro por código
     // Devuelve una copia de la lista interna para evitar exponer referencias directas.

@@ -22,8 +22,17 @@ void initializeServices() {
     employeeService = new EmployeeService(employees);
     connectionService = new ConnectionService(distributionCenterManager, connections);
     transportService = new TransportService(transports);
-    distributionCenterService = new DistributionCenterService(connectionService, distributionCenterManager, distributionCenters, distributionCenterManagers);
-    shipmentService = new ShipmentService(transportService, distributionCenterService, shipments);
+    distributionCenterService = new DistributionCenterService(
+        connectionService,
+        packageService,
+        distributionCenterManager,
+        distributionCenters,
+        distributionCenterManagers);
+    shipmentService = new ShipmentService(
+        transportService,
+        packageService,
+        distributionCenterService,
+        shipments);
 }
 
 void cleanupServices() {

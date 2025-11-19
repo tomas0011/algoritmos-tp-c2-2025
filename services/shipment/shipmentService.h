@@ -17,12 +17,14 @@
 class ShipmentService {
 private:
     TransportService* transportService;
+    PackageService* packageService;
     DistributionCenterService* distributionCenterService;
     List& shipments;
 
 public:
     ShipmentService(
         TransportService* transportService,
+        PackageService* packageService,
         DistributionCenterService* distributionCenterService,
         List& shipmentsList);
 
