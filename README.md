@@ -2,9 +2,16 @@
 
 ## Descripción
 
-Este proyecto es una implementación en C++ de un sistema de gestión de envíos y logística. Forma parte del trabajo práctico C2 para la materia de Algoritmos en la Universidad Nacional de Hurlingham (UNAHUR).
+Este proyecto es una implementación completa en C++ de un sistema de gestión de envíos y logística para la Universidad Nacional de Hurlingham (UNAHUR). Forma parte del trabajo práctico C2 de la materia Algoritmos y cumple con todos los requisitos del enunciado.
 
-El programa demuestra el uso de estructuras de datos personalizadas (como la clase `List` implementada por nosotros) y patrones de diseño para modelar entidades del dominio de logística. Incluye un sistema de almacenamiento centralizado, servicios CRUD para operaciones de negocio, y una interfaz de menú interactivo para la visualización de datos.
+El sistema implementa un modelo completo de dominio logístico con entidades interconectadas, utilizando estructuras de datos personalizadas desarrolladas desde cero. Incluye servicios CRUD completos, algoritmos avanzados de optimización (Dijkstra, Knapsack), y una interfaz de usuario interactiva que permite tanto la gestión operativa como la resolución de ejercicios específicos del TP.
+
+**Características destacadas:**
+- Arquitectura modular en capas con separación clara de responsabilidades
+- Implementación de algoritmos de grafos para rutas óptimas
+- Sistema de optimización de carga usando backtracking
+- Análisis de sobrecarga de centros de distribución
+- Interfaz de menú jerárquica para navegación intuitiva
 
 <img width="1198" height="762" alt="image" src="https://github.com/user-attachments/assets/80745e64-49a1-42aa-b1f7-abc35e0d320f" />
 
@@ -23,11 +30,12 @@ El programa demuestra el uso de estructuras de datos personalizadas (como la cla
 - **DistributionCenterManager**: Gestiona múltiples centros de distribución
 
 ### Arquitectura del Sistema
-- **Estructuras de Datos Personalizadas**: Implementación propia de la clase `List` usando `std::any` para almacenamiento genérico
+- **Estructuras de Datos Personalizadas**: Implementación propia de clases `List`, `Graph`, `HashTable`, `Tree` usando `std::any` para almacenamiento genérico
 - **Almacenamiento Centralizado**: Módulo `storage/` con listas globales para todas las entidades
-- **Capa de Servicios**: Servicios CRUD para operaciones de negocio (PackageService, ShipmentService)
+- **Capa de Servicios**: Servicios CRUD completos para todas las entidades (PackageService, ShipmentService, ClientService, etc.)
+- **Algoritmos Avanzados**: Dijkstra para rutas óptimas, Knapsack para optimización de carga, MergeSort para ordenamiento
 - **Inicialización Centralizada**: Módulo `initializeServices/` para configuración de servicios
-- **Interfaz de Usuario**: Menú interactivo en consola para visualización de datos
+- **Interfaz de Usuario**: Menú interactivo en consola con submenús para gestión y ejercicios del TP
 
 ## Arquitectura y Estructura del Proyecto
 
@@ -48,8 +56,22 @@ algoritmos-tp-c2-2025/
 ├── main.cpp                          # Punto de entrada - inicializa servicios y lanza menú
 ├── Makefile                          # Sistema de construcción (compilación C++17)
 ├── bash/
-│   ├── bash.h                        # Declaración de la interfaz de menú
-│   └── bash.cpp                      # Implementación del menú interactivo
+│   ├── bash.h                        # Declaración de la interfaz de menú principal
+│   ├── bash.cpp                      # Implementación del menú interactivo con submenús
+│   ├── client.bash.h                 # Menú para gestión de clientes
+│   ├── client.bash.cpp
+│   ├── connection.bash.h             # Menú para gestión de conexiones
+│   ├── connection.bash.cpp
+│   ├── distributionCenter.bash.h     # Menú para gestión de centros de distribución
+│   ├── distributionCenter.bash.cpp
+│   ├── employee.bash.h               # Menú para gestión de empleados
+│   ├── employee.bash.cpp
+│   ├── package.bash.h                # Menú para gestión de paquetes
+│   ├── package.bash.cpp
+│   ├── shipment.bash.h               # Menú para gestión de envíos
+│   ├── shipment.bash.cpp
+│   └── transport.bash.h              # Menú para gestión de transportes
+│   └── transport.bash.cpp
 ├── storage/
 │   ├── storage.h                     # Declaración de listas globales para todas las entidades
 │   ├── storage.cpp                   # Instanciación de listas globales
@@ -58,12 +80,27 @@ algoritmos-tp-c2-2025/
 ├── services/
 │   ├── initializeServices.h          # Declaración de inicialización de servicios
 │   ├── initializeServices.cpp        # Inicialización centralizada de servicios
+│   ├── client/
+│   │   ├── clientService.h           # Servicio CRUD para clientes
+│   │   └── clientService.cpp
+│   ├── Connection/
+│   │   ├── ConnectionService.h       # Servicio CRUD para conexiones
+│   │   └── ConnectionService.cpp
+│   ├── distributionCenter/
+│   │   ├── distributionCenterService.h # Servicio CRUD para centros de distribución
+│   │   └── distributionCenterService.cpp
+│   ├── employee/
+│   │   ├── employeeService.h         # Servicio CRUD para empleados
+│   │   └── employeeService.cpp
 │   ├── package/
 │   │   ├── packageService.h          # Servicio CRUD para paquetes
-│   │   └── packageService.cpp        # Implementación de operaciones de paquete
-│   └── shipment/
-│       ├── shipmentService.h         # Servicio CRUD para envíos
-│       └── shipmentService.cpp       # Implementación de operaciones de envío
+│   │   └── packageService.cpp
+│   ├── shipment/
+│   │   ├── shipmentService.h         # Servicio CRUD para envíos
+│   │   └── shipmentService.cpp
+│   └── transport/
+│       ├── transportService.h        # Servicio CRUD para transportes
+│       └── transportService.cpp
 ├── entities/                         # Capa de dominio - entidades del negocio
 │   ├── client/
 │   │   ├── Client.h                  # Cliente (ID, nombre)
@@ -94,13 +131,31 @@ algoritmos-tp-c2-2025/
 │       └── Transport.cpp
 ├── utils/
 │   ├── algorithms/
+│   │   ├── dijkstra/
+│   │   │   ├── dijkstra.h            # Algoritmo de Dijkstra para rutas óptimas
+│   │   │   ├── dijkstra.cpp
+│   │   │   └── dijkstraTest.cpp      # Tests del algoritmo
+│   │   ├── knapsackProblem/
+│   │   │   ├── knapsack.h            # Problema de la mochila para optimización
+│   │   │   ├── knapsack.cpp
+│   │   │   └── knapsackTest.cpp      # Tests del algoritmo
+│   │   ├── parseDate/
+│   │   │   ├── parseDate.h           # Utilidades para parsing de fechas
+│   │   │   └── parseDate.cpp
 │   │   └── sort/
-│   │       ├── mergeSort.cpp         # Algoritmo de ordenamiento
+│   │       ├── mergeSort.h           # Algoritmo de ordenamiento MergeSort
+│   │       ├── mergeSort.cpp
 │   │       └── mergeSortTest.cpp     # Tests del algoritmo
 │   └── dataStructures/
+│       ├── graph/
+│       │   ├── Graph.h               # Implementación de grafo para redes
+│       │   └── GraphHashTable.h      # Tabla hash para grafos
+│       ├── hashtable/
+│       │   ├── HashTable.h           # Implementación de tabla hash
+│       │   └── hashTableTest.cpp     # Tests de la estructura
 │       ├── list/
 │       │   ├── List.h                # Implementación propia de lista enlazada con std::any
-│       │   ├── listTest.cpp          # Tests de la estructura de datos
+│       │   └── listTest.cpp          # Tests de la estructura de datos
 │       └── tree/
 │           ├── Tree.h                # Implementación de árbol
 │           └── treeTest.cpp          # Tests del árbol
@@ -121,8 +176,13 @@ algoritmos-tp-c2-2025/
 
 #### `services/`
 - **initializeServices.h/cpp**: Inicialización centralizada de todos los servicios
-- **packageService.h/cpp**: Operaciones CRUD para paquetes (crear, leer, actualizar, eliminar)
+- **clientService.h/cpp**: Operaciones CRUD para clientes
+- **ConnectionService.h/cpp**: Operaciones CRUD para conexiones entre centros
+- **distributionCenterService.h/cpp**: Operaciones CRUD para centros de distribución
+- **employeeService.h/cpp**: Operaciones CRUD para empleados
+- **packageService.h/cpp**: Operaciones CRUD para paquetes
 - **shipmentService.h/cpp**: Operaciones CRUD para envíos
+- **transportService.h/cpp**: Operaciones CRUD para transportes
 
 #### `entities/`
 - Definición de clases que representan las entidades del dominio de logística
@@ -133,8 +193,8 @@ algoritmos-tp-c2-2025/
 - Menú interactivo que consume servicios para mostrar datos
 
 #### `utils/`
-- Estructuras de datos personalizadas (`List`, `Tree`)
-- Algoritmos reutilizables (`mergeSort`)
+- **dataStructures/**: Estructuras de datos personalizadas (`List`, `Graph`, `HashTable`, `Tree`)
+- **algorithms/**: Algoritmos avanzados (`Dijkstra`, `Knapsack`, `MergeSort`, `parseDate`)
 
 ## Requisitos del Sistema
 
@@ -163,19 +223,28 @@ El proyecto se compila con flags C++17 para soporte de `std::any` usado en la cl
 
 ### Menú Interactivo
 
-El programa presenta un menú interactivo en consola que permite visualizar datos de prueba de todas las entidades del sistema.
+El programa presenta un menú interactivo en consola con dos secciones principales: Sistema de Gestión y Ejercicios del TP.
 
-**Opciones disponibles:**
-1. **Listar Paquetes** - Muestra todos los paquetes usando `PackageService`
-2. **Listar Envíos** - Muestra todos los envíos usando `ShipmentService`
-3. **Listar Gestores de Envíos** - Visualización básica de gestores
-4. **Listar Transportes** - Visualización básica de transportes
-5. **Listar Clientes** - Visualización básica de clientes
-6. **Listar Conexiones** - Visualización básica de conexiones
-7. **Listar Centros de Distribución** - Visualización básica de centros
-8. **Listar Empleados** - Visualización básica de empleados
-9. **Listar Gestores de Centros** - Visualización básica de gestores de centros
-0. **Salir** - Termina la ejecución
+#### Menú Principal
+1. **Sistema de Gestión** - Acceso a CRUD de todas las entidades
+2. **Ejercicios del TP** - Funcionalidades específicas del trabajo práctico
+0. **Salir**
+
+#### Menú Sistema de Gestión
+1. **Paquetes** - Gestión completa de paquetes
+2. **Envíos** - Gestión completa de envíos
+3. **Transportes** - Gestión completa de transportes
+4. **Clientes** - Gestión completa de clientes
+5. **Conexiones** - Gestión completa de conexiones
+6. **Centros de Distribución** - Gestión completa de centros
+7. **Empleados** - Gestión completa de empleados
+0. **Salir**
+
+#### Menú Ejercicios del TP
+1. **Gestión de Centros (Ejercicio A)** - Operaciones específicas de centros
+2. **Análisis de Envíos (Ejercicio B)** - Análisis y estadísticas de envíos
+3. **Optimización con Backtracking (Ejercicio C)** - Algoritmos de optimización
+0. **Salir**
 
 ### Ejemplo de Salida
 
@@ -194,6 +263,8 @@ ID: 2, Price: 15.0, Priority: 2, Weight: 3.5
 
 ## Servicios Disponibles
 
+Todos los servicios implementan operaciones CRUD completas y utilizan la estructura de datos `List` personalizada para almacenamiento.
+
 ### PackageService
 - `createPackage(id, price, priority, weight)`: Crear nuevo paquete
 - `getPackageById(id)`: Obtener paquete por ID
@@ -207,8 +278,28 @@ ID: 2, Price: 15.0, Priority: 2, Weight: 3.5
 - `updateShipment(...)`: Actualizar envío existente
 - `deleteShipment(id)`: Eliminar envío
 - `displayAllShipments()`: Mostrar todos los envíos
+- `overloadedCenters()`: Identificar centros sobrecargados
+- `findShipmentsByClient(clientId)`: Buscar envíos por cliente
+- `generateOptimalCargoForTransport(...)`: Optimización de carga (Ejercicio C)
 
-Los servicios usan la estructura de datos `List` personalizada para almacenamiento y operaciones CRUD.
+### ClientService
+- Operaciones CRUD completas para gestión de clientes
+
+### TransportService
+- Operaciones CRUD completas para gestión de transportes
+
+### ConnectionService
+- Operaciones CRUD completas para gestión de conexiones entre centros
+
+### DistributionCenterService
+- Operaciones CRUD completas para gestión de centros de distribución
+- `getCenter(code)`: Obtener centro por código
+- `addConnection(...)`: Agregar conexiones entre centros
+- `calculateShortestPath(...)`: Calcular rutas óptimas usando Dijkstra
+- `displayCentersSortedByCapacity()`: Ordenar centros por capacidad
+
+### EmployeeService
+- Operaciones CRUD completas para gestión de empleados
 
 ## Desarrollo y Contribución
 
@@ -253,13 +344,13 @@ Los servicios usan la estructura de datos `List` personalizada para almacenamien
 
 #### Extensiones Sugeridas
 
-- **Servicios CRUD** para todas las entidades (ClientService, TransportService, etc.)
 - **Validación de datos** en servicios
 - **Persistencia** (archivos, base de datos)
-- **Algoritmos de optimización** para rutas de envío
 - **Interfaz gráfica** (Qt, GTK)
 - **Tests unitarios** más completos
 - **Documentación API** con Doxygen
+- **API REST** para acceso remoto
+- **Base de datos** para almacenamiento persistente
 
 ### Estructura de Commits
 

@@ -1,7 +1,6 @@
 #include "bash.h"
 #include "package.bash.h"
 #include "shipment.bash.h"
-#include "shipmentManager.bash.h"
 #include "transport.bash.h"
 #include "client.bash.h"
 #include "connection.bash.h"
@@ -41,14 +40,13 @@ void showManagementMenu() {
     int choice;
     do {
         std::cout << "\n=== Menu de Entidades ===\n";
-        std::cout << "1. Gestionar Paquetes\n";
-        std::cout << "2. Gestionar Envios\n";
-        std::cout << "3. Gestionar Gestores de Envios\n";
-        std::cout << "4. Gestionar Transportes\n";
-        std::cout << "5. Gestionar Clientes\n";
-        std::cout << "6. Gestionar Conexiones\n";
-        std::cout << "7. Gestionar Centros de Distribucion\n";
-        std::cout << "8. Gestionar Empleados\n";
+        std::cout << "1. Paquetes\n";
+        std::cout << "2. Envios\n";
+        std::cout << "3. Transportes\n";
+        std::cout << "4. Clientes\n";
+        std::cout << "5. Conexiones\n";
+        std::cout << "6. Centros de Distribucion\n";
+        std::cout << "7. Empleados\n";
         std::cout << "0. Salir\n";
         std::cout << "Seleccione una opcion: ";
         std::cin >> choice;
@@ -61,21 +59,18 @@ void showManagementMenu() {
                 showShipmentMenu();
                 break;
             case 3:
-                showShipmentManagerMenu();
-                break;
-            case 4:
                 showTransportMenu();
                 break;
-            case 5:
+            case 4:
                 showClientMenu();
                 break;
-            case 6:
+            case 5:
                 showConnectionMenu();
                 break;
-            case 7:
+            case 6:
                 showDistributionCenterMenu();
                 break;
-            case 8:
+            case 7:
                 showEmployeeMenu();
                 break;
             case 0:
@@ -107,7 +102,7 @@ void showTPMenu() {
                 showShipmentMenu();
                 break;
             case 3:
-                std::cout << "No implementado...\n";
+                showShipmentMenu();
                 break;
             case 0:
                 std::cout << "Saliendo...\n";

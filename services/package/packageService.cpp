@@ -3,8 +3,8 @@
 
 PackageService::PackageService(List& packagesList) : packages(packagesList) {}
 
-void PackageService::createPackage(int id, double price, int priority, double weight) {
-    Package newPackage(id, price, priority, weight);
+void PackageService::createPackage(int id, const std::string& name, double price, int priority, double weight) {
+    Package newPackage(id, name, price, priority, weight);
     packages.push(newPackage);
     std::cout << "Package created successfully." << std::endl;
 }
@@ -25,7 +25,7 @@ Package* PackageService::getPackageById(int id) {
     return nullptr;
 }
 
-void PackageService::updatePackage(int id, double price, int priority, double weight) {
+void PackageService::updatePackage(int id,const std::string& name, double price, int priority, double weight) {
     List newList;
     Node* current = packages.getHead();
     bool found = false;
@@ -34,7 +34,7 @@ void PackageService::updatePackage(int id, double price, int priority, double we
         try {
             Package pkg = std::any_cast<Package>(current->getData());
             if (pkg.getId() == id) {
-                Package updatedPackage(id, price, priority, weight);
+                Package updatedPackage(id, name, price, priority, weight);
                 newList.push(updatedPackage);
                 found = true;
             } else {

@@ -1,17 +1,15 @@
-#include <vector>
-#include <any>
 #include "knapsack.h"
 #include "entities/package/Package.h"
-#include "utils/dataStructures/list/List.h"   // donde tengas tu List
+#include "utils/dataStructures/list/List.h" 
 
 // ---------------------------------------------------------
 
 void backtrackingList(
-    Node* nodo,                         // nodo actual de la lista
+    Node* nodo,                 // nodo actual
     double pesoActual,
     double precioActual,
     double pesoMaximo,
-    std::vector<Package>& solucionActual,
+    List& solucionActual,       
     ResultadoMochila& mejor
 ) {
     if (nodo == nullptr) {
@@ -44,7 +42,7 @@ void backtrackingList(
     double nuevoPeso = pesoActual + paquete.getWeight();
 
     if (nuevoPeso <= pesoMaximo) {
-        solucionActual.push_back(paquete);
+        solucionActual.push(any(paquete));
 
         backtrackingList(
             nodo->getNext(),
@@ -55,7 +53,7 @@ void backtrackingList(
             mejor
         );
 
-        solucionActual.pop_back();
+        solucionActual.popBack();
     }
 }
 
@@ -65,15 +63,17 @@ ResultadoMochila resolverMochila(
     const List& paquetes,
     double pesoMaximo
 ) {
-    ResultadoMochila mejor = {0, {}};
-    std::vector<Package> actual;
+    ResultadoMochila mejor;
+    mejor.precioMaximo = 0;
+
+    List solucionActual;  // empieza vacía
 
     backtrackingList(
         paquetes.getHead(),   // empezamos desde el primer nodo
         0,
         0,
         pesoMaximo,
-        actual,
+        solucionActual,
         mejor
     );
 

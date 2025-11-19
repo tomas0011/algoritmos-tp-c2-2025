@@ -86,6 +86,26 @@ public:
         current->setNext(newNode);
     }
 
+    void popBack() {
+    if (head == nullptr) return;
+
+    // Solo un nodo
+    if (head->getNext() == nullptr) {
+        delete head;
+        head = nullptr;
+        return;
+    }
+
+    // Recorrer hasta el penúltimo
+    Node* actual = head;
+    while (actual->getNext()->getNext() != nullptr) {
+        actual = actual->getNext();
+    }
+
+    delete actual->getNext();
+    actual->setNext(nullptr);
+}
+
     void display() const {
         Node* current = head;
         while (current != nullptr) {
@@ -134,6 +154,10 @@ public:
     Node* getHead() const {
         return head;
     }
+    
+    void setHead(Node* newHead) {
+        head = newHead;
+    }
 
     Node* getNodeAt(int index) const {
         if (index < 0) return nullptr;
@@ -152,6 +176,10 @@ public:
             current = current->getNext();
         }
         return sublist;
+    }
+
+    bool isEmpty() const {
+        return head == nullptr;
     }
 };
 

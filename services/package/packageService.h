@@ -12,9 +12,9 @@ public:
     PackageService(List& packagesList);
 
     // CRUD operations
-    void createPackage(int id, double price, int priority, double weight);
+    void createPackage(int id, const std::string& nombre, double price, int priority, double weight);
     Package* getPackageById(int id);
-    void updatePackage(int id, double price, int priority, double weight);
+    void updatePackage(int id, const std::string& nombre, double price, int priority, double weight);
     void deletePackage(int id);
 
     // Utility functions

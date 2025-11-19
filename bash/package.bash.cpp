@@ -23,6 +23,9 @@ void showPackageMenu() {
 
                 std::cout << "Ingrese el ID del paquete: ";
                 std::cin >> id;
+                std::string name;
+                std::cout << "Ingrese el nombre: ";
+                std::cin >> name;
                 std::cout << "Ingrese el precio: ";
                 std::cin >> price;
                 std::cout << "Ingrese la prioridad (1-5): ";
@@ -30,7 +33,7 @@ void showPackageMenu() {
                 std::cout << "Ingrese el peso: ";
                 std::cin >> weight;
 
-                packageService->createPackage(id, price, priority, weight);
+                packageService->createPackage(id, name, price, priority, weight);
                 break;
             }
             case 2: {
@@ -41,7 +44,6 @@ void showPackageMenu() {
                 Package* pkg = packageService->getPackageById(id);
                 if (pkg != nullptr) {
                     pkg->display();
-                    delete pkg;
                 } else {
                     std::cout << "Paquete no encontrado." << std::endl;
                 }
@@ -59,8 +61,11 @@ void showPackageMenu() {
                     std::cout << "Paquete no encontrado." << std::endl;
                     break;
                 }
-                delete existingPkg;
 
+                                
+                std::string name;
+                std::cout << "Ingrese el nuevo nombre: ";
+                std::cin >> name;
                 std::cout << "Ingrese el nuevo precio: ";
                 std::cin >> price;
                 std::cout << "Ingrese la nueva prioridad (1-5): ";
@@ -68,7 +73,7 @@ void showPackageMenu() {
                 std::cout << "Ingrese el nuevo peso: ";
                 std::cin >> weight;
 
-                packageService->updatePackage(id, price, priority, weight);
+                packageService->updatePackage(id, name, price, priority, weight);
                 break;
             }
             case 4: {
@@ -91,7 +96,7 @@ void showPackageMenu() {
                 packageService->displayAllPackages();
                 break;
             case 0:
-                std::cout << "Volviendo al menú principal...\n";
+                std::cout << "Volviendo al menu principal...\n";
                 break;
             default:
                 std::cout << "Opcion invalida. Intente de nuevo.\n";
