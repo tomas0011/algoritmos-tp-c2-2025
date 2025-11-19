@@ -28,7 +28,18 @@ void showConnectionMenu() {
                 std::cout << "Ingrese la distancia (km): ";
                 distance = getValidDoubleInput(0.1, 10000.0);
 
-                connectionService->createConnection(origin, destination, distance);
+                char bidirectional;
+                std::cout << "Conexion bidireccional? (s/n): ";
+                std::string bidirStr = getValidStringInput();
+                bidirectional = bidirStr.empty() ? 'n' : bidirStr[0];
+
+                if (bidirectional == 's' || bidirectional == 'S') {
+                    connectionService->createBidirectionalConnection(origin, destination, distance);
+                } else if (bidirectional == 'n' || bidirectional == 'N') {
+                    connectionService->createConnection(origin, destination, distance);
+                } else {
+                    std::cout << "Opcion invalida. Operacion cancelada." << std::endl;
+                }
                 break;
             }
             case 2: {

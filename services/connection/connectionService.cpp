@@ -80,13 +80,30 @@ void ConnectionService::createConnectionWithoutValidation(const std::string& dis
 }
 
 void ConnectionService::createBidirectionalConnection(const std::string& distributionCenterOrigin, const std::string& distributionCenterDestination, double distance) {
+    // Validar que los centros existan antes de crear ambas conexiones
+    if (!centerExists(distributionCenterOrigin) || !centerExists(distributionCenterDestination)) {
+        std::cout << "Error: Uno o ambos centros de distribucion no existen." << std::endl;
+        std::cout << "Origen: " << distributionCenterOrigin << " - " << (centerExists(distributionCenterOrigin) ? "Existe" : "No existe") << std::endl;
+        std::cout << "Destino: " << distributionCenterDestination << " - " << (centerExists(distributionCenterDestination) ? "Existe" : "No existe") << std::endl;
+        return;
+    }
+    
     // Crear conexion de ida
-    createConnection(distributionCenterOrigin, distributionCenterDestination, distance);
+    int id1 = generateNextId();
+    manager->createConnection(distributionCenterOrigin, distributionCenterDestination, distance);
+    Connection newConnection1(id1, distributionCenterOrigin, distributionCenterDestination, distance);
+    connections.push(newConnection1);
     
     // Crear conexion de vuelta
-    createConnection(distributionCenterDestination, distributionCenterOrigin, distance);
+    int id2 = generateNextId();
+    manager->createConnection(distributionCenterDestination, distributionCenterOrigin, distance);
+    Connection newConnection2(id2, distributionCenterDestination, distributionCenterOrigin, distance);
+    connections.push(newConnection2);
     
-    std::cout << "Conexion bidireccional creada: " << distributionCenterOrigin << " <-> " << distributionCenterDestination << " (" << distance << " km)" << std::endl;
+    std::cout << "Conexion bidireccional creada exitosamente:" << std::endl;
+    std::cout << "  - " << distributionCenterOrigin << " -> " << distributionCenterDestination << " (ID: " << id1 << ")" << std::endl;
+    std::cout << "  - " << distributionCenterDestination << " -> " << distributionCenterOrigin << " (ID: " << id2 << ")" << std::endl;
+    std::cout << "  Distancia: " << distance << " km" << std::endl;
 }
 
 void ConnectionService::createBidirectionalConnectionWithoutValidation(const std::string& distributionCenterOrigin, const std::string& distributionCenterDestination, double distance) {
