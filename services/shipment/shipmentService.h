@@ -4,7 +4,6 @@
 #include "../../entities/shipment/Shipment.h"
 #include "../../utils/dataStructures/list/List.h"
 #include "../../storage/storage.h"
-#include <vector>
 #include <ctime>
 #include <unordered_map>
 
@@ -18,13 +17,13 @@ public:
     // CRUD operations
     void createShipment(int id, const std::string& state, double cost, int priority, double totalPrice,
                        double totalWeight, int shimpmentManagerId, std::string distributionCenterId,
-                       const std::vector<Package>& packages, int originId, int destinationId,
+                       List packages, int originId, int destinationId,
                        int clientId, time_t createDate, time_t leftWarehouseDate,
                        time_t estimatedDeliveryDate, time_t deliveryDate);
     Shipment* getShipmentById(int id);
     void updateShipment(int id, const std::string& state, double cost, int priority, double totalPrice,
                        double totalWeight, int shimpmentManagerId, std::string distributionCenterId,
-                       const std::vector<Package>& packages, int originId, int destinationId,
+                       List packages, int originId, int destinationId,
                        int clientId, time_t createDate, time_t leftWarehouseDate,
                        time_t estimatedDeliveryDate, time_t deliveryDate);
     void deleteShipment(int id);
@@ -39,10 +38,10 @@ public:
     int totalShipmentsByCenterAndDate(std::string centerId, time_t start, time_t end);
     
     // centros de distribucion que han sobrepasado un limite semanal de envios
-    std::vector<std::string> overloadedCenters(int weeklyLimit);
+    List overloadedCenters(int weeklyLimit); 
 
     // envios pertenecientes a un cliente
-    std::vector<Shipment> findShipmentsByClient(int clientId);
+    List findShipmentsByClient(int clientId);  
 
 };
 

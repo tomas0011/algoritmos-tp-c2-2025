@@ -4,13 +4,12 @@
 DistributionCenterManager::DistributionCenterManager() : distributionCenterNetwork(23) {}
 
 DistributionCenter DistributionCenterManager::createDistributionCenter(std::string code, std::string name, std::string city, int capacity, int dailyPackages, int employees) {
-    // For now, create empty vectors for employees and connections
-    // In a real implementation, these would be populated based on the parameters
-    std::vector<Employee> empVector;
-    std::vector<Connection> connVector;
-    std::vector<Package> pkgVector;
+    
+    List empList;
+    List connList;
+    List pkgList
 
-    DistributionCenter center(code, name, city, capacity, dailyPackages, employees, empVector, connVector, pkgVector);
+    DistributionCenter center(code, name, city, capacity, dailyPackages, employees, empList, connList, pkgList);
     distributionCenters.push_back(center);
     distributionCenterNetwork.addNode(code, &distributionCenters.back());
 
@@ -67,14 +66,20 @@ GraphHashTable& DistributionCenterManager::getNetwork() const {
     return const_cast<GraphHashTable&>(distributionCenterNetwork);
 }
 
-const std::vector<DistributionCenter>& DistributionCenterManager::getDistributionCenters() const {
-    return distributionCenters;
+List DistributionCenterManager::getDistributionCentersList() const {
+    List list;
+
+    for (const DistributionCenter& dc : distributionCenters) {
+        list.push((void*)&dc);
+    }
+
+    return list;
 }
 
 DistributionCenter* DistributionCenterManager::getById(std::string id) {
     for (auto& center : distributionCenters) {
         if (center.getCode() == id) {
-            return &center;   // devolvés puntero al objeto real del vector
+            return &center;   // devolvés puntero al objeto real 
         }
     }
     return nullptr; // si no lo encontró

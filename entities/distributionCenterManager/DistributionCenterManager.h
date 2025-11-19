@@ -1,10 +1,11 @@
 #ifndef DISTRIBUTIONCENTER_MANAGER_H
 #define DISTRIBUTIONCENTER_MANAGER_H
 
-#include <vector>
+
 #include <string>
 #include "../distributionCenter/DistributionCenter.h"
 #include "../../utils/dataStructures/graph/GraphHashTable.h"
+#include "../../utils/dataStructures/list/List.h"
 
 class DistributionCenterManager{
     private:
@@ -23,7 +24,7 @@ class DistributionCenterManager{
         void getCenters();
         DistributionCenter* getById(std::string id);
         GraphHashTable& getNetwork() const;
-        const std::vector<DistributionCenter>& getDistributionCenters() const;
+         List getDistributionCentersList() const;
         DistributionCenter* getById(int id);
 };
 

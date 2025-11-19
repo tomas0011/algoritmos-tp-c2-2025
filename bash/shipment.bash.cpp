@@ -2,10 +2,10 @@
 #include "services/initializeServices.h"
 #include <iostream>
 #include <string>
-#include <vector>
 #include <ctime>
 #include <sstream>
 #include <iomanip>
+#include "../../utils/dataStructures/list/List.h"
 
 // Helper function to parse date string in dd-mm-yyyy format to time_t
 time_t parseDate(const std::string& dateStr) {
@@ -65,7 +65,8 @@ void showShipmentMenu() {
                 std::cout << "Ingrese el ID del cliente: ";
                 std::cin >> clientId;
 
-                std::vector<Package> packages; // vacío por simplicidad
+                // Usamos List para paquetes (vacío por simplicidad)
+                List packages;
                 time_t now = time(nullptr);
 
                 shipmentService->createShipment(id, state, cost, priority, totalPrice, totalWeight,
@@ -124,7 +125,7 @@ void showShipmentMenu() {
                 std::cout << "Ingrese el nuevo ID del cliente: ";
                 std::cin >> clientId;
 
-                std::vector<Package> packages;
+                List packages;
                 time_t now = time(nullptr);
 
                 shipmentService->updateShipment(id, state, cost, priority, totalPrice, totalWeight,
@@ -184,10 +185,16 @@ void showShipmentMenu() {
                 std::cout << "Ingrese el limite semanal: ";
                 std::cin >> weeklyLimit;
 
-                std::vector<std::string> overloadedCenters = shipmentService->overloadedCenters(weeklyLimit);
+                List overloaded = shipmentService->overloadedCenters(weeklyLimit);
                 std::cout << "Centros con sobrecarga (mas de " << weeklyLimit << " envios):\n";
-                for (const auto& centerId : overloadedCenters) {
-                    std::cout << "- " << centerId << std::endl;
+                
+                Node* curr = overloaded.getHead();
+                while (curr != nullptr) {
+                    try {
+                        std::string centerId = std::any_cast<std::string>(curr->getData());
+                        std::cout << "- " << centerId << std::endl;
+                    } catch (const std::bad_any_cast&) {}
+                    curr = curr->getNext();
                 }
                 break;
             }
@@ -196,10 +203,16 @@ void showShipmentMenu() {
                 std::cout << "Ingrese el ID del Cliente: ";
                 std::cin >> clientId;
 
-                std::vector<Shipment> shipments = shipmentService->findShipmentsByClient(clientId);
+                 List shipmentsList = shipmentService->findShipmentsByClient(clientId);
                 std::cout << "Envios del cliente " << clientId << ":\n";
-                for (const auto& shipment : shipments) {
-                    shipment.display();
+                
+                Node* curr = shipmentsList.getHead();
+                while (curr != nullptr) {
+                    try {
+                        Shipment s = std::any_cast<Shipment>(curr->getData());
+                        s.display();
+                    } catch (const std::bad_any_cast&) {}
+                    curr = curr->getNext();
                 }
                 break;
             }

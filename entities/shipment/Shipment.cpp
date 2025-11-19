@@ -2,7 +2,7 @@
 #include <iostream>
 
 Shipment::Shipment(int id, const std::string& state, double cost, int priority, double totalPrice, double totalWeight,
-                   int shimpmentManagerId, std::string distributionCenterId, const std::vector<Package>& packages,
+                   int shimpmentManagerId, std::string distributionCenterId, List packages,
                    int originId, int destinationId, int clientId, time_t createDate, time_t leftWarehouseDate,
                    time_t estimatedDeliveryDate, time_t deliveryDate)
     : id(id), state(state), cost(cost), priority(priority), totalPrice(totalPrice), totalWeight(totalWeight),
@@ -17,8 +17,15 @@ void Shipment::display() const {
               << ", OriginId: " << originId << ", DestinationId: " << destinationId << ", ClientId: " << clientId
               << ", CreateDate: " << createDate << ", LeftWarehouseDate: " << leftWarehouseDate
               << ", EstimatedDeliveryDate: " << estimatedDeliveryDate << ", DeliveryDate: " << deliveryDate << std::endl;
-    for (const auto& pkg : packages) {
-        pkg.display();
+    
+    // Recorremos List de packages
+    Node* current = packages.getHead();
+    while (current != nullptr) {
+        try {
+            Package pkg = std::any_cast<Package>(current->getData());
+            pkg.display();
+        } catch (const std::bad_any_cast&) {}
+        current = current->getNext();
     }
 }
 
@@ -29,8 +36,15 @@ int Shipment::getPriority() const { return priority; }
 double Shipment::getTotalPrice() const { return totalPrice; }
 double Shipment::getTotalWeight() const { return totalWeight; }
 int Shipment::getShimpmentManagerId() const { return shimpmentManagerId; }
-std::string Shipment::getDistributionCenterId() const { return distributionCenterId; }
-const std::vector<Package>& Shipment::getPackages() const { return packages; }
+
+std::string Shipment::getDistributionCenterId() const {
+    return distributionCenterId;
+}
+
+List Shipment::getPackages() const {      // ← CAMBIO
+    return packages;
+}
+
 int Shipment::getOriginId() const { return originId; }
 int Shipment::getDestinationId() const { return destinationId; }
 int Shipment::getClientId() const { return clientId; }

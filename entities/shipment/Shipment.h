@@ -2,9 +2,10 @@
 #define SHIPMENT_H
 
 #include <string>
-#include <vector>
 #include <ctime>
 #include "../package/Package.h"
+#include "../utils/dataStructures/list/List.h"
+
 
 class Shipment {
 private:
@@ -16,7 +17,7 @@ private:
     double totalWeight;
     int shimpmentManagerId;
     std::string distributionCenterId;
-    std::vector<Package> packages;
+    List packages;
     int originId;
     int destinationId;
     int clientId;
@@ -27,7 +28,7 @@ private:
 
 public:
     Shipment(int id, const std::string& state, double cost, int priority, double totalPrice, double totalWeight,
-             int shimpmentManagerId, std::string distributionCenterId, const std::vector<Package>& packages,
+             int shimpmentManagerId, std::string distributionCenterId, const  List packages,
              int originId, int destinationId, int clientId, time_t createDate, time_t leftWarehouseDate,
              time_t estimatedDeliveryDate, time_t deliveryDate);
     void display() const;
@@ -41,7 +42,7 @@ public:
     double getTotalWeight() const;
     int getShimpmentManagerId() const;
     std::string getDistributionCenterId() const;
-    const std::vector<Package>& getPackages() const;
+    List getPackages() const;
     int getOriginId() const;
     int getDestinationId() const;
     int getClientId() const;

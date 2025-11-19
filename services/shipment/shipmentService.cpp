@@ -6,7 +6,7 @@ ShipmentService::ShipmentService(List& shipmentsList) : shipments(shipmentsList)
 
 void ShipmentService::createShipment(int id, const std::string& state, double cost, int priority, double totalPrice,
                                     double totalWeight, int shimpmentManagerId, std::string distributionCenterId,
-                                    const std::vector<Package>& packages, int originId, int destinationId,
+                                    List packages, int originId, int destinationId,
                                     int clientId, time_t createDate, time_t leftWarehouseDate,
                                     time_t estimatedDeliveryDate, time_t deliveryDate) {
     Shipment newShipment(id, state, cost, priority, totalPrice, totalWeight, shimpmentManagerId,
@@ -34,7 +34,7 @@ Shipment* ShipmentService::getShipmentById(int id) {
 
 void ShipmentService::updateShipment(int id, const std::string& state, double cost, int priority, double totalPrice,
                                     double totalWeight, int shimpmentManagerId, std::string distributionCenterId,
-                                    const std::vector<Package>& packages, int originId, int destinationId,
+                                    List packages, int originId, int destinationId,
                                     int clientId, time_t createDate, time_t leftWarehouseDate,
                                     time_t estimatedDeliveryDate, time_t deliveryDate) {
     List newList;
@@ -135,43 +135,44 @@ int ShipmentService::totalShipmentsByCenterAndDate(std::string centerId, time_t 
     return count;
 }
 
-std::vector<std::string> ShipmentService::overloadedCenters(int weeklyLimit) {
-    std::unordered_map<std::string, int> shipmentCount;
-    std::vector<std::string> overloaded;
+List ShipmentService::overloadedCenters(int weeklyLimit) {
+    std::unordered_map<std::string, int> counter;
+    List result;
+
     Node* current = shipments.getHead();
 
     while (current != nullptr) {
         try {
             Shipment ship = std::any_cast<Shipment>(current->getData());
-            shipmentCount[ship.getDistributionCenterId()]++;
-        } catch (const std::bad_any_cast&) {}
+            counter[ship.getDistributionCenterId()]++;
+        } catch (...) {}
+
         current = current->getNext();
     }
 
-    for (const auto& [centerId, count] : shipmentCount) {
-        if (count > weeklyLimit) {
-            overloaded.push_back(centerId);
+    for (auto& p : counter) {
+        if (p.second > weeklyLimit) {
+            result.push(p.first);   // almacena string
         }
     }
 
-    // Complejidad temporal: O(n)
-    return overloaded;
+    return result;
 }
 
-std::vector<Shipment> ShipmentService::findShipmentsByClient(int clientId) {
-    std::vector<Shipment> result;
+List ShipmentService::findShipmentsByClient(int clientId) {
+    List result;
     Node* current = shipments.getHead();
 
     while (current != nullptr) {
         try {
             Shipment ship = std::any_cast<Shipment>(current->getData());
             if (ship.getClientId() == clientId) {
-                result.push_back(ship);
+                result.push(ship);
             }
-        } catch (const std::bad_any_cast&) {}
+        } catch (...) {}
+
         current = current->getNext();
     }
 
-    // Complejidad temporal: O(n)
     return result;
 }

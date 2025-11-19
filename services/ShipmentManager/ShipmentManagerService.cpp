@@ -1,6 +1,7 @@
 #include "ShipmentManagerService.h"
 #include <iostream>
 #include "../../utils/algorithms/knapsackProblem/knapsack.h"
+#include <any>
 
 ShipmentManagerService::ShipmentManagerService(
     TransportService* transportService,
@@ -12,7 +13,7 @@ ShipmentManagerService::ShipmentManagerService(
     this->distributionCenterService = distributionCenterService;
 }
 
-void ShipmentManagerService::createShipmentManager(int id, int transportId, const std::vector<Connection>& path, int distributionCenterId) {
+void ShipmentManagerService::createShipmentManager(int id, int transportId, const List& path, int distributionCenterId) {
     ShipmentManager newShipmentManager(id, transportId, path, distributionCenterId);
     shipmentManagers.push(newShipmentManager);
     std::cout << "Shipment Manager created successfully." << std::endl;
@@ -34,7 +35,7 @@ ShipmentManager* ShipmentManagerService::getShipmentManagerById(int id) {
     return nullptr;
 }
 
-void ShipmentManagerService::updateShipmentManager(int id, int transportId, const std::vector<Connection>& path, int distributionCenterId) {
+void ShipmentManagerService::updateShipmentManager(int id, int transportId, const List& path, int distributionCenterId) {
     List newList;
     Node* current = shipmentManagers.getHead();
     bool found = false;
@@ -111,7 +112,7 @@ int ShipmentManagerService::getShipmentManagerCount() {
 // -----------------------------------------------------
 //        NUEVO MÉTODO: GENERAR CARGA ÓPTIMA
 // -----------------------------------------------------
-std::vector<Package> ShipmentManagerService::generarCargaOptima(int transportId, std::string distributionCenterId) const {
+List ShipmentManagerService::generarCargaOptima(int transportId, std::string distributionCenterId) const {
     // 1. Obtener el transporte
     Transport* transporte = transportService->getTransportById(transportId);
     if (!transporte) {
@@ -136,15 +137,19 @@ std::vector<Package> ShipmentManagerService::generarCargaOptima(int transportId,
     }
 
     // 3. Obtener los paquetes del warehouse
-    std::vector<Package> paquetesDisponibles = centro->getWarehouse();
-    List* availablePackagesList = new List();
-    for (const Package& pkg : paquetesDisponibles) {
-        availablePackagesList->push(pkg);
-    }    
+    const List& paquetesDisponibles = centro->getWarehouse();
+
+    // Hacer una copia porque el knapsack lo recibe por referencia no const
+    List availablePackagesList = paquetesDisponibles;
+
+    // List* availablePackagesList = new List();
+    // for (const Package& pkg : paquetesDisponibles) {
+    //     availablePackagesList->push(pkg);
+    // }    
 
     // 4. Ejecutar la mochila 0-1
     ResultadoMochila resultado = resolverMochila(
-        *availablePackagesList,
+        availablePackagesList,
         capacidad
     );
 

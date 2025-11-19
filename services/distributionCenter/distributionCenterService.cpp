@@ -121,40 +121,47 @@ bool DistributionCenterService::updateCenter(const std::string& code, int capaci
 
 // Mostrar todos los centros
 void DistributionCenterService::displayAllCenters() {
-    DistributionCenterManager distributionCenterManager = any_cast<DistributionCenterManager>(distributionCenterManagers.getHead()->getData());
-    if (distributionCenterManager.getDistributionCentersCount() == 0) {
-        std::cout << "No hay centros de distribucion registrados." << std::endl;
+    DistributionCenterManager distributionCenterManager =
+        any_cast<DistributionCenterManager>(distributionCenterManagers.getHead()->getData());
+
+    int count = distributionCenterManager.getDistributionCentersCount();
+
+    if (count == 0) {
+        std::cout << "No hay centros de distribucion registrados.\n";
         return;
     }
 
-    std::cout << "\n=== Todos los Centros de Distribucion ===" << std::endl;
-    std::cout << "Total: " << distributionCenterManager.getDistributionCentersCount() << " centros" << std::endl;
-    std::cout << std::string(80, '-') << std::endl;
+    std::cout << "\n=== Todos los Centros de Distribucion ===\n";
+    std::cout << "Total: " << count << " centros\n";
+    std::cout << std::string(80, '-') << "\n";
 
-    List allCodes = distributionCenterManager.getDistributionCentersCodes();
-    Node* current = allCodes.getHead();
+    List codes = distributionCenterManager.getDistributionCentersCodes();
+    Node* current = codes.getHead();
 
-    while (current != nullptr) {
+    while (current) {
         std::string code = any_cast<std::string>(current->getData());
-        DistributionCenter* distributionCenterFound = distributionCenterManager.getCenter(code);
-        std::cout << distributionCenterFound->toString() << std::endl;
+        DistributionCenter* c = distributionCenterManager.getCenter(code);
+        std::cout << c->toString() << "\n";
         current = current->getNext();
     }
-    std::cout << std::string(80, '-') << std::endl;
+
+    std::cout << std::string(80, '-') << "\n";
 }
 
-// Obtener todos los centros como vector
-std::vector<DistributionCenter*> DistributionCenterService::getAllCenters() {
-    DistributionCenterManager distributionCenterManager = any_cast<DistributionCenterManager>(distributionCenterManagers.getHead()->getData());
-    std::vector<DistributionCenter*> result;
 
-    List allCodes = distributionCenterManager.getDistributionCentersCodes();
-    Node* current = allCodes.getHead();
 
-    while (current != nullptr) {
+List DistributionCenterService::getAllCenters() {
+    DistributionCenterManager manager =
+        any_cast<DistributionCenterManager>(distributionCenterManagers.getHead()->getData());
+
+    List result;
+    List codes = manager.getDistributionCentersCodes();
+
+    Node* current = codes.getHead();
+
+    while (current) {
         std::string code = any_cast<std::string>(current->getData());
-        DistributionCenter* center = distributionCenterManager.getCenter(code);
-        result.push_back(center);
+        result.push(manager.getCenter(code));
         current = current->getNext();
     }
 
@@ -163,87 +170,100 @@ std::vector<DistributionCenter*> DistributionCenterService::getAllCenters() {
 
 // Mostrar centros ordenados por capacidad
 void DistributionCenterService::displayCentersSortedByCapacity() {
-    DistributionCenterManager distributionCenterManager = any_cast<DistributionCenterManager>(distributionCenterManagers.getHead()->getData());
-    
-    if (distributionCenterManager.getDistributionCentersCount() == 0) {
-        std::cout << "No hay centros de distribucion registrados." << std::endl;
+    DistributionCenterManager manager =
+        any_cast<DistributionCenterManager>(distributionCenterManagers.getHead()->getData());
+
+    if (manager.getDistributionCentersCount() == 0) {
+        std::cout << "No hay centros registrados.\n";
         return;
     }
-    
-    // Obtener copias de los centros
-    const std::vector<DistributionCenter>& centers = distributionCenterManager.getDistributionCenters();
-    std::vector<DistributionCenter> centersCopy(centers.begin(), centers.end());
-    
-    // Ordenar por capacidad (descendente)
-    std::sort(centersCopy.begin(), centersCopy.end(),
-              [](const DistributionCenter& a, const DistributionCenter& b) {
-                  return a.getCapacity() > b.getCapacity();
-              });
-    
-    std::cout << "\n=== Centros Ordenados por Capacidad ===" << std::endl;
-    std::cout << std::string(80, '-') << std::endl;
-    
-    for (const auto& center : centersCopy) {
-        std::cout << center.toString() << std::endl;
+
+    List listCenters = getAllCenters();
+    std::vector<DistributionCenter*> centers;
+
+    Node* current = listCenters.getHead();
+    while (current) {
+        centers.push_back(any_cast<DistributionCenter*>(current->getData()));
+        current = current->getNext();
     }
-    std::cout << std::string(80, '-') << std::endl;
+
+    std::sort(centers.begin(), centers.end(),
+              [](DistributionCenter* a, DistributionCenter* b) {
+                  return a->getCapacity() > b->getCapacity();
+              });
+
+    std::cout << "\n=== Centros Ordenados por Capacidad ===\n";
+
+    for (auto* c : centers)
+        std::cout << c->toString() << "\n";
+
+    std::cout << std::string(80, '-') << "\n";
 }
 
 // Mostrar centros ordenados por paquetes procesados
 void DistributionCenterService::displayCentersSortedByPackages() {
-    DistributionCenterManager distributionCenterManager = any_cast<DistributionCenterManager>(distributionCenterManagers.getHead()->getData());
-    
-    if (distributionCenterManager.getDistributionCentersCount() == 0) {
-        std::cout << "No hay centros de distribucion registrados." << std::endl;
+    DistributionCenterManager manager =
+        any_cast<DistributionCenterManager>(distributionCenterManagers.getHead()->getData());
+
+    if (manager.getDistributionCentersCount() == 0) {
+        std::cout << "No hay centros registrados.\n";
         return;
     }
-    
-    // Obtener copias de los centros
-    const std::vector<DistributionCenter>& centers = distributionCenterManager.getDistributionCenters();
-    std::vector<DistributionCenter> centersCopy(centers.begin(), centers.end());
-    
-    // Ordenar por paquetes diarios (descendente)
-    std::sort(centersCopy.begin(), centersCopy.end(),
-              [](const DistributionCenter& a, const DistributionCenter& b) {
-                  return a.getDailyPackages() > b.getDailyPackages();
-              });
-    
-    std::cout << "\n=== Centros Ordenados por Paquetes Diarios ===" << std::endl;
-    std::cout << std::string(80, '-') << std::endl;
-    
-    for (const auto& center : centersCopy) {
-        std::cout << center.toString() << std::endl;
+
+    List listCenters = getAllCenters();
+    std::vector<DistributionCenter*> centers;
+
+    Node* current = listCenters.getHead();
+    while (current) {
+        centers.push_back(any_cast<DistributionCenter*>(current->getData()));
+        current = current->getNext();
     }
-    std::cout << std::string(80, '-') << std::endl;
+
+    std::sort(centers.begin(), centers.end(),
+              [](DistributionCenter* a, DistributionCenter* b) {
+                  return a->getDailyPackages() > b->getDailyPackages();
+              });
+
+    std::cout << "\n=== Centros Ordenados por Paquetes ===\n";
+
+    for (auto* c : centers)
+        std::cout << c->toString() << "\n";
+
+    std::cout << std::string(80, '-') << "\n";
 }
 
 // Mostrar centros ordenados por cantidad de empleados
 void DistributionCenterService::displayCentersSortedByEmployees() {
-    DistributionCenterManager distributionCenterManager = any_cast<DistributionCenterManager>(distributionCenterManagers.getHead()->getData());
-    
-    if (distributionCenterManager.getDistributionCentersCount() == 0) {
-        std::cout << "No hay centros de distribucion registrados." << std::endl;
+    DistributionCenterManager manager =
+        any_cast<DistributionCenterManager>(distributionCenterManagers.getHead()->getData());
+
+    if (manager.getDistributionCentersCount() == 0) {
+        std::cout << "No hay centros registrados.\n";
         return;
     }
-    
-    // Obtener copias de los centros
-    const std::vector<DistributionCenter>& centers = distributionCenterManager.getDistributionCenters();
-    std::vector<DistributionCenter> centersCopy(centers.begin(), centers.end());
-    
-    // Ordenar por número de empleados (descendente)
-    std::sort(centersCopy.begin(), centersCopy.end(),
-              [](const DistributionCenter& a, const DistributionCenter& b) {
-                  return a.getNumEmployees() > b.getNumEmployees();
-              });
-    
-    std::cout << "\n=== Centros Ordenados por Cantidad de Empleados ===" << std::endl;
-    std::cout << std::string(80, '-') << std::endl;
-    
-    for (const auto& center : centersCopy) {
-        std::cout << center.toString() << std::endl;
+
+    List listCenters = getAllCenters();
+    std::vector<DistributionCenter*> centers;
+
+    Node* current = listCenters.getHead();
+    while (current) {
+        centers.push_back(any_cast<DistributionCenter*>(current->getData()));
+        current = current->getNext();
     }
-    std::cout << std::string(80, '-') << std::endl;
+
+    std::sort(centers.begin(), centers.end(),
+              [](DistributionCenter* a, DistributionCenter* b) {
+                  return a->getNumEmployees() > b->getNumEmployees();
+              });
+
+    std::cout << "\n=== Centros Ordenados por Empleados ===\n";
+
+    for (auto* c : centers)
+        std::cout << c->toString() << "\n";
+
+    std::cout << std::string(80, '-') << "\n";
 }
+
 
 // Verificar si un centro existe
 bool DistributionCenterService::centerExists(const std::string& code) {

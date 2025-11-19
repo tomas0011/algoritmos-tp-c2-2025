@@ -2,10 +2,10 @@
 #define DISTRIBUTION_CENTER_H
 
 #include <string>
-#include <vector>
 #include "../package/Package.h"
 #include "../employee/Employee.h"
 #include "../connection/Connection.h"
+#include "../../utils/dataStructures/list/List.h"
 
 class DistributionCenter {
 private:
@@ -15,9 +15,9 @@ private:
     int capacity;               // Capacidad total de paquetes
     int dailyPackages;          // Paquetes procesados diariamente
     int numEmployees;           // Número de empleados
-    std::vector<Employee> employees;      // Lista detallada de empleados (opcional)
-    std::vector<Connection> connections;  // Conexiones con otros centros
-    std::vector<Package> warehouse;       // Paquetes en almacen
+    List employees;      // Lista detallada de empleados (opcional)
+    List connections;  // Conexiones con otros centros
+    List warehouse;         // Paquetes en almacen
 
 public:
     // Constructor principal (según formato del archivo centros.txt)
@@ -30,7 +30,7 @@ public:
         int numEmployees
     );
 
-    // Constructor completo (con vectores opcionales)
+    // Constructor completo
     DistributionCenter(
         const std::string& code,
         const std::string& name,
@@ -38,9 +38,9 @@ public:
         int capacity,
         int dailyPackages,
         int numEmployees,
-        const std::vector<Employee>& employees,
-        const std::vector<Connection>& connections = {},
-        const std::vector<Package>& warehouse = {}
+         const List& employees,
+        const List& connections,
+        const List& warehouse
     );
 
     void display() const;
@@ -53,9 +53,10 @@ public:
     int getCapacity() const;
     int getDailyPackages() const;
     int getNumEmployees() const;
-    const std::vector<Employee>& getEmployees() const;
-    const std::vector<Connection>& getConnections() const;
-    const std::vector<Package>& getWarehouse() const;
+    const List& getEmployees() const;
+    const List& getConnections() const;
+    const List& getWarehouse() const;
+
 
     // Setters
     void setCapacity(int cap);

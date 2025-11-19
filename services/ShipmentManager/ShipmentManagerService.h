@@ -22,15 +22,15 @@ public:
         List& shipmentManagersList);
 
     // CRUD operations
-    void createShipmentManager(int id, int transportId, const std::vector<Connection>& path, int distributionCenterId);
+    void createShipmentManager(int id, int transportId, const List& path, int distributionCenterId);
     ShipmentManager* getShipmentManagerById(int id);
-    void updateShipmentManager(int id, int transportId, const std::vector<Connection>& path, int distributionCenterId);
+    void updateShipmentManager(int id, int transportId, const List& path, int distributionCenterId);
     void deleteShipmentManager(int id);
 
     // Utility functions
     void displayAllShipmentManagers();
     int getShipmentManagerCount();
-    std::vector<Package> generarCargaOptima(int transportId, std::string distributionCenterId) const;
+    List generarCargaOptima(int transportId, std::string distributionCenterId) const;
 };
 
 #endif // SHIPMENT_MANAGER_SERVICE_H

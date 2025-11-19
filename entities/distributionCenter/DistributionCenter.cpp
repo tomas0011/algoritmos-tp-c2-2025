@@ -1,6 +1,7 @@
 #include "DistributionCenter.h"
 #include <iostream>
 #include <sstream>
+#include <any>
 
 // Constructor principal (según formato del archivo centros.txt)
 DistributionCenter::DistributionCenter(
@@ -14,7 +15,7 @@ DistributionCenter::DistributionCenter(
     : code(code), name(name), city(city), 
       capacity(capacity), dailyPackages(dailyPackages), numEmployees(numEmployees) {}
 
-// Constructor completo (con vectores opcionales)
+// Constructor completo
 DistributionCenter::DistributionCenter(
     const std::string& code,
     const std::string& name,
@@ -22,9 +23,9 @@ DistributionCenter::DistributionCenter(
     int capacity,
     int dailyPackages,
     int numEmployees,
-    const std::vector<Employee>& employees,
-    const std::vector<Connection>& connections,
-    const std::vector<Package>& warehouse
+    const List& employees,
+    const List& connections,
+    const List& warehouse
 )
     : code(code), name(name), city(city),
       capacity(capacity), dailyPackages(dailyPackages), numEmployees(numEmployees),
@@ -80,9 +81,9 @@ const std::string& DistributionCenter::getCity() const { return city; }
 int DistributionCenter::getCapacity() const { return capacity; }
 int DistributionCenter::getDailyPackages() const { return dailyPackages; }
 int DistributionCenter::getNumEmployees() const { return numEmployees; }
-const std::vector<Employee>& DistributionCenter::getEmployees() const { return employees; }
-const std::vector<Connection>& DistributionCenter::getConnections() const { return connections; }
-const std::vector<Package>& DistributionCenter::getWarehouse() const { return warehouse; }
+const List& DistributionCenter::getEmployees() const { return employees; }
+const List& DistributionCenter::getConnections() const { return connections; }
+const List& DistributionCenter::getWarehouse() const { return warehouse; }
 
 // Setters
 void DistributionCenter::setCapacity(int cap) { capacity = cap; }
