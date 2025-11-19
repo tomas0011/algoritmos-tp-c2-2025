@@ -70,14 +70,14 @@ void initializeMockData() {
     distributionCenterService->addCenter("TUC", "Tucuman Center", "Tucuman", 180, 4, 6);
     distributionCenterService->addCenter("SAL", "Salta Center", "Salta", 160, 2, 5);
 
-    distributionCenterService->addConnection("CBA", "MZA", 900);   // Cordoba - Mendoza
-    distributionCenterService->addConnection("CBA", "BUE", 700);   // Cordoba - Buenos Aires
-    distributionCenterService->addConnection("CBA", "ROS", 400);   // Cordoba - Rosario
-    distributionCenterService->addConnection("MZA", "BUE", 1100);  // Mendoza - Buenos Aires
-    distributionCenterService->addConnection("BUE", "ROS", 300);   // Buenos Aires - Rosario
-    distributionCenterService->addConnection("TUC", "CBA", 550);   // Tucuman - Cordoba
-    distributionCenterService->addConnection("TUC", "SAL", 300);   // Tucuman - Salta
-    distributionCenterService->addConnection("SAL", "CBA", 800);   // Salta - Cordoba
+    distributionCenterService->addBidirectionalConnection("CBA", "MZA", 900);   // Cordoba - Mendoza
+    distributionCenterService->addBidirectionalConnection("CBA", "BUE", 700);   // Cordoba - Buenos Aires
+    distributionCenterService->addBidirectionalConnection("CBA", "ROS", 400);   // Cordoba - Rosario
+    distributionCenterService->addBidirectionalConnection("MZA", "BUE", 1100);  // Mendoza - Buenos Aires
+    distributionCenterService->addBidirectionalConnection("BUE", "ROS", 300);   // Buenos Aires - Rosario
+    distributionCenterService->addBidirectionalConnection("TUC", "CBA", 550);   // Tucuman - Cordoba
+    distributionCenterService->addBidirectionalConnection("TUC", "SAL", 300);   // Tucuman - Salta
+    distributionCenterService->addBidirectionalConnection("SAL", "CBA", 800);   // Salta - Cordoba
 
     DistributionCenterManager* manager = new DistributionCenterManager(distributionCenterNetwork);
     allocated_managers++;  // Trackear allocación
