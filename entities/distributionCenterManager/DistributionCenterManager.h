@@ -8,11 +8,11 @@
 
 class DistributionCenterManager{
     private:
-        List distributionCenterPtrs;  // ← Ahora almacena DistributionCenter* simples
+        List distributionCenterPtrs;  //  Ahora almacena DistributionCenter* simples
         GraphHashTable distributionCenterNetwork;
     public:
         DistributionCenterManager();
-        ~DistributionCenterManager();  // ← Necesario para liberar memoria
+        ~DistributionCenterManager();  //  Necesario para liberar memoria
         DistributionCenter createDistributionCenter(std::string code, std::string name, std::string city, int capacity, int dailyPackages, int employees);
         void relateDistributionCenter(std::string code1, std::string code2, int distance);
         bool hasCenter(std::string code) const;
@@ -24,7 +24,7 @@ class DistributionCenterManager{
         void getCenters();
         DistributionCenter* getById(std::string id);
         GraphHashTable& getNetwork() const;
-        List& getDistributionCentersList();  // ← Cambiado: retorna List en lugar de const vector&
+        List& getDistributionCentersList();  //  Cambiado: retorna List en lugar de const vector&
 };
 
 #endif // DISTRIBUTIONCENTER_MANAGER_H

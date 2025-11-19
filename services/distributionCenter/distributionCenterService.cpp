@@ -167,11 +167,89 @@ void DistributionCenterService::displayCentersSortedByCapacity() {
 }
 
 void DistributionCenterService::displayCentersSortedByPackages() {
-    std::cout << "Funcion displayCentersSortedByPackages no completamente implementada." << std::endl;
+    if (distributionCenterManagers.isEmpty()) {
+        std::cout << "No hay gestores de centros disponibles.\n";
+        return;
+    }
+
+    try {
+        DistributionCenterManager* manager = std::any_cast<DistributionCenterManager*>(distributionCenterManagers.getHead()->getData());
+        List& centersList = manager->getDistributionCentersList();
+
+        if (centersList.isEmpty()) {
+            std::cout << "No hay centros registrados.\n";
+            return;
+        }
+
+        std::cout << "\n=== Centros Ordenados por Paquetes Diarios ===\n";
+
+        // Use custom mergeSort with lambda comparator
+        mergeSort(centersList, [](const std::any& a, const std::any& b) -> bool {
+            try {
+                DistributionCenter* centerA = std::any_cast<DistributionCenter*>(a);
+                DistributionCenter* centerB = std::any_cast<DistributionCenter*>(b);
+                return centerA->getDailyPackages() < centerB->getDailyPackages();
+            } catch (const std::bad_any_cast&) {
+                return false;
+            }
+        });
+
+        // Display sorted centers
+        Node* current = centersList.getHead();
+        while (current != nullptr) {
+            try {
+                DistributionCenter* center = std::any_cast<DistributionCenter*>(current->getData());
+                center->display();
+                std::cout << std::string(80, '-') << "\n";
+            } catch (const std::bad_any_cast&) {}
+            current = current->getNext();
+        }
+    } catch (const std::bad_any_cast&) {
+        std::cout << "Error al acceder al gestor de centros." << std::endl;
+    }
 }
 
 void DistributionCenterService::displayCentersSortedByEmployees() {
-    std::cout << "Funcion displayCentersSortedByEmployees no completamente implementada." << std::endl;
+    if (distributionCenterManagers.isEmpty()) {
+        std::cout << "No hay gestores de centros disponibles.\n";
+        return;
+    }
+
+    try {
+        DistributionCenterManager* manager = std::any_cast<DistributionCenterManager*>(distributionCenterManagers.getHead()->getData());
+        List& centersList = manager->getDistributionCentersList();
+
+        if (centersList.isEmpty()) {
+            std::cout << "No hay centros registrados.\n";
+            return;
+        }
+
+        std::cout << "\n=== Centros Ordenados por Empleados ===\n";
+
+        // Use custom mergeSort with lambda comparator
+        mergeSort(centersList, [](const std::any& a, const std::any& b) -> bool {
+            try {
+                DistributionCenter* centerA = std::any_cast<DistributionCenter*>(a);
+                DistributionCenter* centerB = std::any_cast<DistributionCenter*>(b);
+                return centerA->getNumEmployees() < centerB->getNumEmployees();
+            } catch (const std::bad_any_cast&) {
+                return false;
+            }
+        });
+
+        // Display sorted centers
+        Node* current = centersList.getHead();
+        while (current != nullptr) {
+            try {
+                DistributionCenter* center = std::any_cast<DistributionCenter*>(current->getData());
+                center->display();
+                std::cout << std::string(80, '-') << "\n";
+            } catch (const std::bad_any_cast&) {}
+            current = current->getNext();
+        }
+    } catch (const std::bad_any_cast&) {
+        std::cout << "Error al acceder al gestor de centros." << std::endl;
+    }
 }
 
 bool DistributionCenterService::centerExists(const std::string& code) {

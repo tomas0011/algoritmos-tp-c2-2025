@@ -3,16 +3,16 @@
 
 DistributionCenterManager::DistributionCenterManager() : distributionCenterNetwork(23) {}
 
-// ← Destructor para liberar memoria manualmente
+// Destructor para liberar memoria manualmente
 DistributionCenterManager::~DistributionCenterManager() {
     Node* current = distributionCenterPtrs.getHead();
     while (current != nullptr) {
         Node* nextNode = current->getNext();
         try {
             DistributionCenter* centerPtr = std::any_cast<DistributionCenter*>(current->getData());
-            delete centerPtr;  // ← Liberar DistributionCenter
+            delete centerPtr;  // Liberar DistributionCenter
         } catch (const std::bad_any_cast&) {}
-        delete current;  // ← Liberar Node
+        delete current;  // Liberar Node
         current = nextNode;
     }
     // Clear the list head
@@ -24,12 +24,12 @@ DistributionCenter DistributionCenterManager::createDistributionCenter(std::stri
     List connVector;
     List pkgVector;
 
-    // ← Simplificado: usar new simple en lugar de unique_ptr
+    // Simplificado: usar new simple en lugar de unique_ptr
     DistributionCenter* centerPtr = new DistributionCenter(code, name, city, capacity, dailyPackages, employees, empVector, connVector, pkgVector);
     
-    // ← Almacenar puntero simple en List
+    // Almacenar puntero simple en List
     distributionCenterPtrs.push(centerPtr);
-    // ← Puntero sigue siendo estable
+    //  Puntero sigue siendo estable
     distributionCenterNetwork.addNode(code, centerPtr);
 
     std::cout << "Distribution Center created: " << name << " in " << city << std::endl;
@@ -45,14 +45,14 @@ bool DistributionCenterManager::hasCenter(std::string code) const {
 }
 
 DistributionCenter* DistributionCenterManager::getCenter(std::string code) const {
-    // ← Simplificado: iterar sobre punteros simples
+    //  Simplificado: iterar sobre punteros simples
     Node* current = distributionCenterPtrs.getHead();
     
     while (current != nullptr) {
         try {
             DistributionCenter* centerPtr = std::any_cast<DistributionCenter*>(current->getData());
             if (centerPtr->getCode() == code) {
-                return centerPtr;  // ← Retornar puntero simple
+                return centerPtr;  //  Retornar puntero simple
             }
         } catch (const std::bad_any_cast&) {}
         current = current->getNext();
@@ -61,7 +61,7 @@ DistributionCenter* DistributionCenterManager::getCenter(std::string code) const
 }
 
 int DistributionCenterManager::getDistributionCentersCount() const {
-    return distributionCenterPtrs.getSize();  // ← Cambio: usar getSize() de List en lugar de size() de vector
+    return distributionCenterPtrs.getSize();  //  Cambio: usar getSize() de List en lugar de size() de vector
 }
 
 List DistributionCenterManager::getDistributionCentersCodes() {
@@ -101,10 +101,10 @@ GraphHashTable& DistributionCenterManager::getNetwork() const {
 }
 
 List& DistributionCenterManager::getDistributionCentersList() {
-    return distributionCenterPtrs;  // ← Cambiado: retornar referencia a List en lugar de vector
+    return distributionCenterPtrs;  //  Cambiado: retornar referencia a List en lugar de vector
 }
 
 DistributionCenter* DistributionCenterManager::getById(std::string id) {
-    // ← Cambio: reutilizar getCenter que ya busca por código
+    //  Cambio: reutilizar getCenter que ya busca por código
     return getCenter(id);
 }

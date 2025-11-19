@@ -1,4 +1,5 @@
 #include "mockData.h"
+#include "storage.h"
 #include <iostream>
 
 // Global mock data instances
@@ -66,16 +67,42 @@ void initializeMockData() {
     Shipment ship1(1, "In Transit", 50.0, 1, 100.0, 10.0, 1, "BUE", pkgListShip1, "BUE", "MZA", 1, time(nullptr), time(nullptr), time(nullptr), time(nullptr));
     Shipment ship2(2, "Delivered", 75.0, 2, 150.0, 15.0, 2, "BUE", pkgListShip2, "BUE", "MZA", 2, time(nullptr), time(nullptr), time(nullptr), time(nullptr));
     
-    // Create other mock objects
+    DistributionCenterManager* manager = new DistributionCenterManager();
+    
+    manager->createDistributionCenter("BUE", "Buenos Aires", "Buenos Aires", 1000, 50, 20);
+    manager->createDistributionCenter("MZA", "Mendoza", "Mendoza", 800, 30, 15);
+    manager->createDistributionCenter("CBA", "Cordoba", "Cordoba", 600, 40, 18);
+    
+    distributionCenterManagers.push(std::any(manager));
+    
+    packages.push(std::any(pkg1));
+    packages.push(std::any(pkg2));
+    packages.push(std::any(pkg3));
+    
+    shipments.push(std::any(new Shipment(ship1)));
+    shipments.push(std::any(new Shipment(ship2)));
+    
+    employees.push(std::any(emp1));
+    employees.push(std::any(emp2));
+    
+    connections.push(std::any(conn1));
+    connections.push(std::any(conn2));
+    
+    shipmentManagers.push(std::any(sm1));
+    shipmentManagers.push(std::any(sm2));
+    
+    transports.push(std::any(trans1));
+    transports.push(std::any(trans2));
+    
+    clients.push(std::any(client1));
+    clients.push(std::any(client2));
+    
     List emptyConnVector;
     ShipmentManager sm1(1, 1, emptyConnVector, 1);
     ShipmentManager sm2(2, 2, emptyConnVector, 2);
     
     Transport trans1(1, "Truck", 1000.0);
     Transport trans2(2, "Van", 500.0);
-    
-    Client client1(1, "John Doe");
-    Client client2(2, "Jane Smith");
     
     std::cout << "Mock data initialized successfully." << std::endl;
 }
