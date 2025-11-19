@@ -7,29 +7,15 @@
 #include <sstream>
 #include "../hashtable/HashTable.h"
 #include "../list/List.h"
+#include "../../../entities/connection/Connection.h"
 
 using namespace std;
 
-class GraphArista {
-private:
-    string origin;      // codigo del nodo origen
-    string destination; // codigo del nodo destino
-    double weight;      // peso de la arista
-
-public:
-    GraphArista(string orig, string dest, double w = 1.0)
-        : origin(orig), destination(dest), weight(w) {}
-
-    string getOrigin() const { return origin; }
-    string getDestination() const { return destination; }
-    double getWeight() const { return weight; }
-
-    string toString() const {
-        ostringstream oss;
-        oss << origin << " -> " << destination << " (" << weight << ")";
-        return oss.str();
-    }
-};
+// Función helper para generar IDs únicos para Connection
+inline int generateConnectionId() {
+    static int nextId = 1;
+    return nextId++;
+}
 
 // =======================================================
 // Clase HashGraphNode (Nodo del Grafo con HashTable)
@@ -38,7 +24,7 @@ class HashGraphNode {
 private:
     string code;        // codigo único del nodo (ej: CBA, MZA)
     any data;           // dato generico (puede ser DistributionCenter*)
-    List aristas;         // lista de aristas salientes
+    List connections;   // lista de conexiones salientes
 
 public:
     HashGraphNode(string nodeCode, any nodeData)
@@ -46,16 +32,30 @@ public:
 
     string getCode() const { return code; }
     any getData() const { return data; }
-    const List& getAristas() const { return aristas; }
-
-    // Agregar una arista saliente
-    void addArista(string destination, double weight = 1.0) {
-        aristas.push(new GraphArista(code, destination, weight));
+    const List& getConnections() const { return connections; }
+    
+    // Método para obtener conexiones (alias para compatibilidad)
+    const List& getAristas() const { return connections; }
+    
+    // Método para agregar conexiones usando objetos Connection
+    void addConnection(string destination, double weight = 1.0) {
+        Connection* connection = new Connection(generateConnectionId(), code, destination, weight);
+        connections.push(connection);
+    }
+    
+    // Método para agregar conexión usando objeto Connection existente
+    void addConnection(Connection* connection) {
+        connections.push(connection);
     }
 
-    // Obtener todas las aristas como lista
-    List* getAristasList() {
-        return &aristas;
+    // Obtener todas las conexiones como lista
+    List* getConnectionsList() {
+        return &connections;
+    }
+    
+    // Versión const para métodos const
+    const List* getConnectionsList() const {
+        return &connections;
     }
 
     string dataToString() const {
@@ -79,10 +79,15 @@ public:
         ostringstream oss;
         oss << code << " (" << dataToString() << ") -> ";
         
-        Node* current = aristas.getHead();
+        Node* current = connections.getHead();
         while (current != nullptr) {
-            GraphArista* arista = any_cast<GraphArista*>(current->getData());
-            oss << arista->toString() << " ";
+            try {
+                Connection* conn = std::any_cast<Connection*>(current->getData());
+                oss << conn->getDistributionCenterOrigin() << " -> " << conn->getDistributionCenterDestination() 
+                    << " (" << conn->getDistance() << ") ";
+            } catch (const bad_any_cast&) {
+                oss << "[invalid] ";
+            }
             current = current->getNext();
         }
         
@@ -90,11 +95,11 @@ public:
     }
 
     ~HashGraphNode() {
-        // Limpiar las aristas
-        Node* current = aristas.getHead();
+        // Limpiar las conexiones
+        Node* current = connections.getHead();
         while (current != nullptr) {
-            GraphArista* arista = any_cast<GraphArista*>(current->getData());
-            delete arista;
+            Connection* conn = any_cast<Connection*>(current->getData());
+            delete conn;
             current = current->getNext();
         }
     }
@@ -129,13 +134,13 @@ public:
             // Crear un nuevo nodo con los datos copiados
             HashGraphNode* newNode = new HashGraphNode(originalNode->getCode(), originalNode->getData());
             
-            // Copiar las aristas
-            const List& originalAristas = originalNode->getAristas();
-            Node* aristaNode = originalAristas.getHead();
-            while (aristaNode != nullptr) {
-                GraphArista* originalArista = any_cast<GraphArista*>(aristaNode->getData());
-                newNode->addArista(originalArista->getDestination(), originalArista->getWeight());
-                aristaNode = aristaNode->getNext();
+            // Copiar las conexiones
+            const List& originalConnections = originalNode->getConnections();
+            Node* connectionNode = originalConnections.getHead();
+            while (connectionNode != nullptr) {
+                Connection* originalConn = any_cast<Connection*>(connectionNode->getData());
+                newNode->addConnection(originalConn->getDistributionCenterDestination(), originalConn->getDistance());
+                connectionNode = connectionNode->getNext();
             }
             
             nodes->insert(code, newNode);
@@ -171,12 +176,12 @@ public:
                 
                 HashGraphNode* newNode = new HashGraphNode(originalNode->getCode(), originalNode->getData());
                 
-                const List& originalAristas = originalNode->getAristas();
-                Node* aristaNode = originalAristas.getHead();
-                while (aristaNode != nullptr) {
-                    GraphArista* originalArista = any_cast<GraphArista*>(aristaNode->getData());
-                    newNode->addArista(originalArista->getDestination(), originalArista->getWeight());
-                    aristaNode = aristaNode->getNext();
+                const List& originalConnections = originalNode->getConnections();
+                Node* connectionNode = originalConnections.getHead();
+                while (connectionNode != nullptr) {
+                    Connection* originalConn = any_cast<Connection*>(connectionNode->getData());
+                    newNode->addConnection(originalConn->getDistributionCenterDestination(), originalConn->getDistance());
+                    connectionNode = connectionNode->getNext();
                 }
                 
                 nodes->insert(code, newNode);
@@ -228,14 +233,51 @@ public:
         }
 
         HashGraphNode* originNode = any_cast<HashGraphNode*>(nodes->search(origin));
-        originNode->addArista(destination, weight);
+        originNode->addConnection(destination, weight);
         return true;
     }
+    
+    // Nuevo método para agregar conexiones usando objetos Connection
+    bool addConnection(string origin, string destination, double weight = 1.0) {
+        if (!nodes->contains(origin)) {
+            cerr << "Error: Nodo origen '" << origin << "' no existe." << endl;
+            return false;
+        }
 
-    // Agregar una arista bidireccional (no dirigida)
-    bool addUndirectedArista(string node1, string node2, double weight = 1.0) {
-        bool success1 = addArista(node1, node2, weight);
-        bool success2 = addArista(node2, node1, weight);
+        if (!nodes->contains(destination)) {
+            cerr << "Error: Nodo destino '" << destination << "' no existe." << endl;
+            return false;
+        }
+
+        HashGraphNode* originNode = any_cast<HashGraphNode*>(nodes->search(origin));
+        originNode->addConnection(destination, weight);
+        return true;
+    }
+    
+    // Método para agregar conexión usando objeto Connection existente
+    bool addConnection(Connection* connection) {
+        string origin = connection->getDistributionCenterOrigin();
+        string destination = connection->getDistributionCenterDestination();
+        
+        if (!nodes->contains(origin)) {
+            cerr << "Error: Nodo origen '" << origin << "' no existe." << endl;
+            return false;
+        }
+
+        if (!nodes->contains(destination)) {
+            cerr << "Error: Nodo destino '" << destination << "' no existe." << endl;
+            return false;
+        }
+
+        HashGraphNode* originNode = any_cast<HashGraphNode*>(nodes->search(origin));
+        originNode->addConnection(connection);
+        return true;
+    }
+    
+    // Agregar una conexión bidireccional usando objetos Connection
+    bool addUndirectedConnection(string node1, string node2, double weight = 1.0) {
+        bool success1 = addConnection(node1, node2, weight);
+        bool success2 = addConnection(node2, node1, weight);
         return success1 && success2;
     }
 
@@ -269,7 +311,9 @@ public:
         }
         
         HashGraphNode* node = any_cast<HashGraphNode*>(nodes->search(code));
-        return node->getAristasList();
+        // Necesitamos devolver un puntero no const, pero el método debe ser const
+        // Para esto, devolvemos el puntero de manera que se pueda modificar
+        return const_cast<List*>(node->getConnectionsList());
     }
 
     // Obtener vecinos de un nodo (nodos adyacentes)
@@ -285,8 +329,8 @@ public:
         
         Node* current = aristas.getHead();
         while (current != nullptr) {
-            GraphArista* arista = any_cast<GraphArista*>(current->getData());
-            neighbors.push(arista->getDestination());
+            Connection* conn = any_cast<Connection*>(current->getData());
+            neighbors.push(conn->getDistributionCenterDestination());
             current = current->getNext();
         }
         
@@ -304,9 +348,9 @@ public:
         
         Node* current = aristas.getHead();
         while (current != nullptr) {
-            GraphArista* arista = any_cast<GraphArista*>(current->getData());
-            if (arista->getDestination() == destination) {
-                return arista->getWeight();
+            Connection* conn = any_cast<Connection*>(current->getData());
+            if (conn->getDistributionCenterDestination() == destination) {
+                return conn->getDistance();
             }
             current = current->getNext();
         }

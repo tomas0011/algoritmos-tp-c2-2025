@@ -3,6 +3,7 @@
 
 #include <string>
 #include "../distributionCenter/DistributionCenter.h"
+#include "../connection/Connection.h"
 #include "../../utils/dataStructures/graph/GraphHashTable.h"
 #include "../../utils/dataStructures/list/List.h"
 

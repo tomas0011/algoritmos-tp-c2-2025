@@ -53,8 +53,11 @@ double getValidDoubleInput(double min, double max) {
 // Función para validar input string de forma robusta
 std::string getValidStringInput() {
     std::string value;
-    // Limpiar cualquier newline residual
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    
+    // Limpiar buffer si hay un newline residual
+    if (std::cin.peek() == '\n') {
+        std::cin.ignore();
+    }
     
     while (true) {
         std::getline(std::cin, value);

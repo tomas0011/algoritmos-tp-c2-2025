@@ -12,9 +12,8 @@ Package pkg3(3, "Lavaropas", 350, 1, 85);
 Employee emp1(1, "Alice", 1);
 Employee emp2(2, "Bob", 2);
 
-Connection conn1(1, 1, 2, 50.0);
-Connection conn2(2, 2, 3, 75.0);
-
+Connection conn1(1, "BUE", "MZA", 50.0);
+Connection conn2(2, "MZA", "CBA", 75.0);
 ShipmentManager sm1(1, 1, List(), 1);
 ShipmentManager sm2(2, 2, List(), 2);
 

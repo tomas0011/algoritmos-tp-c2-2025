@@ -37,7 +37,8 @@ DistributionCenter DistributionCenterManager::createDistributionCenter(std::stri
 }
 
 void DistributionCenterManager::relateDistributionCenter(std::string code1, std::string code2, int distance) {
-    distributionCenterNetwork.addArista(code1, code2, distance);
+    // Usar el nuevo método que crea objetos Connection solo en el grafo interno
+    distributionCenterNetwork.addConnection(code1, code2, distance);
 }
 
 bool DistributionCenterManager::hasCenter(std::string code) const {

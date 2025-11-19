@@ -108,9 +108,9 @@ DijkstraGraphResult* dijkstra(const GraphHashTable& graph,
             Node* aristaNode = aristas->getHead();
             
             while (aristaNode != nullptr) {
-                GraphArista* arista = any_cast<GraphArista*>(aristaNode->getData());
-                string v = arista->getDestination();
-                double weight = arista->getWeight();
+                Connection* arista = any_cast<Connection*>(aristaNode->getData());
+                string v = arista->getDistributionCenterDestination();
+                double weight = arista->getDistance();
                 
                 double newDist = uDist + weight;
                 

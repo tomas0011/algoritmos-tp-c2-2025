@@ -1,9 +1,42 @@
 #include "ConnectionService.h"
 #include <iostream>
+#include <algorithm>
+
+// Inicializar el contador estático
+int ConnectionService::nextId = 1;
 
 ConnectionService::ConnectionService(List& connectionsList) : connections(connectionsList) {}
 
-void ConnectionService::createConnection(int id, int distributionCenterOrigin, int distributionCenterDestination, double distance) {
+int ConnectionService::generateNextId() {
+    // Buscar el ID más alto existente y generar el siguiente
+    int maxId = 0;
+    Node* current = connections.getHead();
+    while (current != nullptr) {
+        try {
+            Connection conn = std::any_cast<Connection>(current->getData());
+            if (conn.getId() > maxId) {
+                maxId = conn.getId();
+            }
+        } catch (const std::bad_any_cast& e) {
+            // Skip invalid entries
+        }
+        current = current->getNext();
+    }
+    
+    // Usar el mayor entre nextId y maxId + 1
+    nextId = std::max(nextId, maxId + 1);
+    return nextId++;
+}
+
+// Versión con ID automático
+void ConnectionService::createConnection(const std::string& distributionCenterOrigin, const std::string& distributionCenterDestination, double distance) {
+    int id = generateNextId();
+    Connection newConnection(id, distributionCenterOrigin, distributionCenterDestination, distance);
+    connections.push(newConnection);
+    std::cout << "Connection created successfully with ID: " << id << std::endl;
+}
+
+void ConnectionService::createConnection(int id, const std::string& distributionCenterOrigin, const std::string& distributionCenterDestination, double distance) {
     Connection newConnection(id, distributionCenterOrigin, distributionCenterDestination, distance);
     connections.push(newConnection);
     std::cout << "Connection created successfully." << std::endl;
@@ -25,7 +58,7 @@ Connection* ConnectionService::getConnectionById(int id) {
     return nullptr;
 }
 
-void ConnectionService::updateConnection(int id, int distributionCenterOrigin, int distributionCenterDestination, double distance) {
+void ConnectionService::updateConnection(int id, const std::string& distributionCenterOrigin, const std::string& distributionCenterDestination, double distance) {
     List newList;
     Node* current = connections.getHead();
     bool found = false;

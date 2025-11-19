@@ -7,30 +7,31 @@
 #include <sstream>
 #include <string>
 #include <typeinfo>
+#include "../../../entities/connection/Connection.h"
 
 using namespace std;
 
-
-class Arista {
+class GraphConnection {
 private:
-    int origen;   // indice del nodo origen
-    int destino;  // indice del nodo destino
-    double peso;  // peso de la arista
-
-    //no se guarda explicitamente un indice dentro de la clase node, pero su indice esta implicito: 
-    //es su posicion dentro del vector<Node*> nodes del Graph.
+    Connection* connection;  // Puntero a objeto Connection
 
 public:
-    Arista(int origen, int destino, double peso = 1.0) //peso por defecto, si no le pones, es 1
-        : origen(origen), destino(destino), peso(peso) {}
+    GraphConnection(Connection* conn) : connection(conn) {}
+    
+    ~GraphConnection() {
+        delete connection;
+    }
 
-    int getOrigen() const { return origen; }
-    int getDestino() const { return destino; }
-    double getPeso() const { return peso; }
+    Connection* getConnection() const { return connection; }
+    std::string getOrigen() const { return connection->getDistributionCenterOrigin(); }
+    std::string getDestino() const { return connection->getDistributionCenterDestination(); }
+    double getPeso() const { return connection->getDistance(); }
 
     string toString() const {
         ostringstream oss;
-        oss << "(origen: " << origen << ", dest: " << destino << ", peso: " << peso << ")";
+        oss << "(origen: " << connection->getDistributionCenterOrigin() 
+            << ", dest: " << connection->getDistributionCenterDestination() 
+            << ", dist: " << connection->getDistance() << ")";
         return oss.str();
     }
 };
@@ -38,22 +39,21 @@ public:
 class GraphNode {
 private:
     any data;                 // dato generico
-    List aristas;       // lista de aristas
+    List connections;       // lista de conexiones
 
 public:
     GraphNode(any newData)
         : data(newData) {}
 
     any getData() const { return data; }
-
-
-    //esta funcion la usa la clase grafo, agrega validacion
-    void addArista(int origen, int destino, double peso = 1.0) {
-    aristas.push(Arista(origen, destino, peso));
+    
+    // Agregar conexión usando objeto Connection
+    void addConnection(Connection* connection) {
+        connections.push(new GraphConnection(connection));
     }
 
-    const List& getAristas() const {
-        return aristas;
+    const List& getConnections() const {
+        return connections;
     }
 
     string dataToString() const {
@@ -73,15 +73,17 @@ public:
         }
     }
 
-
-
     string toString() const {
         ostringstream oss;
         oss << dataToString() << " -> ";
-        ::Node* current = aristas.getHead();
+        ::Node* current = connections.getHead();
         while (current != nullptr) {
-            Arista arista = any_cast<Arista>(current->getData());
-            oss << arista.toString() << " ";
+            try {
+                GraphConnection* graphConn = std::any_cast<GraphConnection*>(current->getData());
+                oss << graphConn->toString() << " ";
+            } catch (const bad_any_cast&) {
+                oss << "[invalid] ";
+            }
             current = current->getNext();
         }
         return oss.str();
@@ -109,16 +111,22 @@ public:
         return nodes.getSize() - 1;
     }
 
-    // agrega una arista desde origen a destino
-void addArista(int origen, int destino, double peso = 1.0) {
-    if (origen >= 0 && origen < nodes.getSize() &&
-        destino >= 0 && destino < nodes.getSize()) {
-        GraphNode* nodeOrigen = any_cast<GraphNode*>(nodes.getNodeAt(origen)->getData());
-        nodeOrigen->addArista(origen, destino, peso);
-    } else {
-        cerr << "Error: indice de nodo invalido." << endl;
+    // agrega una conexión desde origen a destino
+    void addConnection(int origen, int destino, double peso = 1.0) {
+        if (origen >= 0 && origen < nodes.getSize() &&
+            destino >= 0 && destino < nodes.getSize()) {
+            GraphNode* nodeOrigen = any_cast<GraphNode*>(nodes.getNodeAt(origen)->getData());
+            
+            // Crear códigos temporales para la conexión
+            std::string originCode = "N" + std::to_string(origen);
+            std::string destCode = "N" + std::to_string(destino);
+            
+            Connection* conn = new Connection(0, originCode, destCode, peso);
+            nodeOrigen->addConnection(conn);
+        } else {
+            cerr << "Error: indice de nodo invalido." << endl;
+        }
     }
-}
 
     GraphNode* getNode(int index) const {
         if (index >= 0 && index < nodes.getSize()) {

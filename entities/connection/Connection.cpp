@@ -1,7 +1,7 @@
 #include "Connection.h"
 #include <iostream>
 
-Connection::Connection(int id, int distributionCenterOrigin, int distributionCenterDestination, double distance)
+Connection::Connection(int id, const std::string& distributionCenterOrigin, const std::string& distributionCenterDestination, double distance)
     : id(id), distributionCenterOrigin(distributionCenterOrigin), distributionCenterDestination(distributionCenterDestination), distance(distance) {}
 
 void Connection::display() const {
@@ -9,6 +9,6 @@ void Connection::display() const {
 }
 
 int Connection::getId() const { return id; }
-int Connection::getDistributionCenterOrigin() const { return distributionCenterOrigin; }
-int Connection::getDistributionCenterDestination() const { return distributionCenterDestination; }
+const std::string& Connection::getDistributionCenterOrigin() const { return distributionCenterOrigin; }
+const std::string& Connection::getDistributionCenterDestination() const { return distributionCenterDestination; }
 double Connection::getDistance() const { return distance; }

@@ -400,9 +400,13 @@ void DistributionCenterService::showCenterConnections(const std::string& code) {
         int count = 0;
 
         while (current != nullptr) {
-            GraphArista* edge = std::any_cast<GraphArista*>(current->getData());
-            std::cout << "  " << code << " -> " << edge->getDestination()
-                      << " (" << edge->getWeight() << " km)" << std::endl;
+            try {
+                Connection* conn = std::any_cast<Connection*>(current->getData());
+                std::cout << "  " << code << " -> " << conn->getDistributionCenterDestination()
+                          << " (" << conn->getDistance() << " km)" << std::endl;
+            } catch (const std::bad_any_cast&) {
+                std::cout << "  [conexion invalida]" << std::endl;
+            }
             current = current->getNext();
             count++;
         }
@@ -438,9 +442,13 @@ void DistributionCenterService::displayAllConnections() {
                     hasConnections = true;
                     Node* edgeNode = edges->getHead();
                     while (edgeNode != nullptr) {
-                        GraphArista* edge = std::any_cast<GraphArista*>(edgeNode->getData());
-                        std::cout << code << " -> " << edge->getDestination()
-                                  << " (" << edge->getWeight() << " km)" << std::endl;
+                        try {
+                            Connection* conn = std::any_cast<Connection*>(edgeNode->getData());
+                            std::cout << code << " -> " << conn->getDistributionCenterDestination()
+                                      << " (" << conn->getDistance() << " km)" << std::endl;
+                        } catch (const std::bad_any_cast&) {
+                            std::cout << code << " -> [conexion invalida]" << std::endl;
+                        }
                         edgeNode = edgeNode->getNext();
                     }
                 }

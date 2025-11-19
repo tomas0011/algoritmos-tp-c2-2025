@@ -7,14 +7,22 @@
 class ConnectionService {
 private:
     List& connections;
+    static int nextId; // Para generar IDs automáticamente
+
+    // Método privado para generar siguiente ID
+    int generateNextId();
 
 public:
     ConnectionService(List& connectionsList);
 
     // CRUD operations
-    void createConnection(int id, int distributionCenterOrigin, int distributionCenterDestination, double distance);
+    void createConnection(int id, const std::string& distributionCenterOrigin, const std::string& distributionCenterDestination, double distance);
+    
+    // Versión que genera ID automáticamente
+    void createConnection(const std::string& distributionCenterOrigin, const std::string& distributionCenterDestination, double distance);
+    
     Connection* getConnectionById(int id);
-    void updateConnection(int id, int distributionCenterOrigin, int distributionCenterDestination, double distance);
+    void updateConnection(int id, const std::string& distributionCenterOrigin, const std::string& distributionCenterDestination, double distance);
     void deleteConnection(int id);
 
     // Utility functions
