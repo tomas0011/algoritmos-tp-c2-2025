@@ -2,8 +2,8 @@
 #include <iostream>
 
 Shipment::Shipment(int id, const std::string& state, double cost, int priority, double totalPrice, double totalWeight,
-                   int shimpmentManagerId, std::string distributionCenterId, List packages,
-                   int originId, int destinationId, int clientId, time_t createDate, time_t leftWarehouseDate,
+                   int shimpmentManagerId, std::string distributionCenterId, const List& packages,
+                   std::string originId, std::string destinationId, int clientId, time_t createDate, time_t leftWarehouseDate,
                    time_t estimatedDeliveryDate, time_t deliveryDate)
     : id(id), state(state), cost(cost), priority(priority), totalPrice(totalPrice), totalWeight(totalWeight),
       shimpmentManagerId(shimpmentManagerId), distributionCenterId(distributionCenterId), packages(packages),
@@ -18,7 +18,7 @@ void Shipment::display() const {
               << ", CreateDate: " << createDate << ", LeftWarehouseDate: " << leftWarehouseDate
               << ", EstimatedDeliveryDate: " << estimatedDeliveryDate << ", DeliveryDate: " << deliveryDate << std::endl;
     
-    // Recorremos List de packages
+    // Iterar manualmente sobre packages en lugar de range-based loop
     Node* current = packages.getHead();
     while (current != nullptr) {
         try {
@@ -36,17 +36,10 @@ int Shipment::getPriority() const { return priority; }
 double Shipment::getTotalPrice() const { return totalPrice; }
 double Shipment::getTotalWeight() const { return totalWeight; }
 int Shipment::getShimpmentManagerId() const { return shimpmentManagerId; }
-
-std::string Shipment::getDistributionCenterId() const {
-    return distributionCenterId;
-}
-
-List Shipment::getPackages() const {      // ← CAMBIO
-    return packages;
-}
-
-int Shipment::getOriginId() const { return originId; }
-int Shipment::getDestinationId() const { return destinationId; }
+std::string Shipment::getDistributionCenterId() const { return distributionCenterId; }
+const List& Shipment::getPackages() const { return packages; }
+std::string Shipment::getOriginId() const { return originId; }
+std::string Shipment::getDestinationId() const { return destinationId; }
 int Shipment::getClientId() const { return clientId; }
 time_t Shipment::getCreateDate() const { return createDate; }
 time_t Shipment::getLeftWarehouseDate() const { return leftWarehouseDate; }

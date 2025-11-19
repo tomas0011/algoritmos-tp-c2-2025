@@ -5,7 +5,7 @@
 #include <ctime>
 #include <sstream>
 #include <iomanip>
-#include "../../utils/dataStructures/list/List.h"
+#include "../utils/dataStructures/list/List.h"
 
 // Helper function to parse date string in dd-mm-yyyy format to time_t
 time_t parseDate(const std::string& dateStr) {
@@ -14,32 +14,48 @@ time_t parseDate(const std::string& dateStr) {
 
     ss >> std::get_time(&tm, "%d-%m-%Y");
     if (ss.fail()) {
-        return -1; // Invalid format
+        std::cout << "Error parsing date: " << dateStr << std::endl;
+        return time(nullptr);
     }
+    
     return std::mktime(&tm);
 }
 
+// Helper function to format time_t to string
+std::string formatDate(time_t timestamp) {
+    std::tm* tm = std::localtime(&timestamp);
+    std::ostringstream ss;
+    ss << std::put_time(tm, "%d-%m-%Y");
+    return ss.str();
+}
+
 void showShipmentMenu() {
+    std::cout << "\\n=== Menu Envios ===" << std::endl;
+    std::cout << "1. Crear envio" << std::endl;
+    std::cout << "2. Ver envio por ID" << std::endl;
+    std::cout << "3. Actualizar envio" << std::endl;
+    std::cout << "4. Eliminar envio" << std::endl;
+    std::cout << "5. Ver todos los envios" << std::endl;
+    std::cout << "6. Contar envios por centro y fecha" << std::endl;
+    std::cout << "7. Ver centros sobrecargados" << std::endl;
+    std::cout << "8. Buscar envios por cliente" << std::endl;
+    std::cout << "0. Volver al menu principal" << std::endl;
+    std::cout << "Ingrese su opcion: ";
+}
+
+void handleShipmentMenu() {
+    ShipmentService* shipmentServicePtr = shipmentService;
+    
     int choice;
     do {
-        std::cout << "\n=== Gestion de Envios (Item B) ===\n";
-        std::cout << "1. Crear un nuevo envio\n";
-        std::cout << "2. Mostrar informacion de un envio por ID\n";
-        std::cout << "3. Actualizar un envio\n";
-        std::cout << "4. Eliminar un envio\n";
-        std::cout << "5. Mostrar todos los envios\n";
-        std::cout << "6. Calcular el total de envíos por centro por rango de fechas. (B.1)\n";
-        std::cout << "7. Detectar centros con sobrecarga. (B.2)\n";
-        std::cout << "8. Obtener envios de un cliente por paquete. (B.3)\n";
-        std::cout << "0. Volver al menú principal\n";
-        std::cout << "Seleccione una opcion: ";
+        showShipmentMenu();
         std::cin >> choice;
 
         switch (choice) {
             case 1: {
-                int id, priority, shipmentManagerId, originId, destinationId, clientId;
+                int id, priority, shipmentManagerId, clientId;
                 double cost, totalPrice, totalWeight;
-                std::string state, distributionCenterId;
+                std::string state, distributionCenterId, originId, destinationId;
 
                 std::cout << "Ingrese el ID del envio: ";
                 std::cin >> id;
@@ -59,17 +75,17 @@ void showShipmentMenu() {
                 std::cout << "Ingrese el ID del centro de distribucion: ";
                 std::cin >> distributionCenterId;
                 std::cout << "Ingrese el ID de origen: ";
-                std::cin >> originId;
+                std::cin.ignore();
+                std::getline(std::cin, originId);
                 std::cout << "Ingrese el ID de destino: ";
-                std::cin >> destinationId;
+                std::getline(std::cin, destinationId);
                 std::cout << "Ingrese el ID del cliente: ";
                 std::cin >> clientId;
 
-                // Usamos List para paquetes (vacío por simplicidad)
-                List packages;
+                List packages; // vacío por simplicidad
                 time_t now = time(nullptr);
 
-                shipmentService->createShipment(id, state, cost, priority, totalPrice, totalWeight,
+                shipmentServicePtr->createShipment(id, state, cost, priority, totalPrice, totalWeight,
                                                shipmentManagerId, distributionCenterId, packages,
                                                originId, destinationId, clientId, now, now, now, now);
                 break;
@@ -79,29 +95,27 @@ void showShipmentMenu() {
                 std::cout << "Ingrese el ID del envio: ";
                 std::cin >> id;
 
-                Shipment* shipment = shipmentService->getShipmentById(id);
+                Shipment* shipment = shipmentServicePtr->getShipmentById(id);
                 if (shipment != nullptr) {
                     shipment->display();
-                    delete shipment;
                 } else {
                     std::cout << "Envio no encontrado." << std::endl;
                 }
                 break;
             }
             case 3: {
-                int id, priority, shipmentManagerId, originId, destinationId, clientId;
+                int id, priority, shipmentManagerId, clientId;
                 double cost, totalPrice, totalWeight;
-                std::string state, distributionCenterId;
+                std::string state, distributionCenterId, originId, destinationId;
 
                 std::cout << "Ingrese el ID del envio a actualizar: ";
                 std::cin >> id;
 
-                Shipment* existing = shipmentService->getShipmentById(id);
+                Shipment* existing = shipmentServicePtr->getShipmentById(id);
                 if (existing == nullptr) {
                     std::cout << "Envio no encontrado." << std::endl;
                     break;
                 }
-                delete existing;
 
                 std::cout << "Ingrese el nuevo estado: ";
                 std::cin.ignore();
@@ -117,18 +131,19 @@ void showShipmentMenu() {
                 std::cout << "Ingrese el nuevo ID del gestor de envio: ";
                 std::cin >> shipmentManagerId;
                 std::cout << "Ingrese el nuevo ID del centro de distribucion: ";
-                std::cin >> distributionCenterId;
+                std::cin.ignore();
+                std::getline(std::cin, distributionCenterId);
                 std::cout << "Ingrese el nuevo ID de origen: ";
-                std::cin >> originId;
+                std::getline(std::cin, originId);
                 std::cout << "Ingrese el nuevo ID de destino: ";
-                std::cin >> destinationId;
+                std::getline(std::cin, destinationId);
                 std::cout << "Ingrese el nuevo ID del cliente: ";
                 std::cin >> clientId;
 
                 List packages;
                 time_t now = time(nullptr);
 
-                shipmentService->updateShipment(id, state, cost, priority, totalPrice, totalWeight,
+                shipmentServicePtr->updateShipment(id, state, cost, priority, totalPrice, totalWeight,
                                                shipmentManagerId, distributionCenterId, packages,
                                                originId, destinationId, clientId, now, now, now, now);
                 break;
@@ -137,91 +152,72 @@ void showShipmentMenu() {
                 int id;
                 std::cout << "Ingrese el ID del envio a eliminar: ";
                 std::cin >> id;
-
-                char confirm;
-                std::cout << "¿Esta seguro de eliminar el envio con ID " << id << "? (s/n): ";
-                std::cin >> confirm;
-
-                if (confirm == 's' || confirm == 'S') {
-                    shipmentService->deleteShipment(id);
-                } else {
-                    std::cout << "Operacion cancelada." << std::endl;
-                }
+                shipmentServicePtr->deleteShipment(id);
+                std::cout << "Envio eliminado." << std::endl;
                 break;
             }
-            case 5:
-                shipmentService->displayAllShipments();
+            case 5: {
+                shipmentServicePtr->displayAllShipments();
                 break;
+            }
             case 6: {
-                std::string distributionCenterId;
-                std::cout << "Ingrese el ID del centro de distribucion: ";
-                std::cin >> distributionCenterId;
+                std::string centerId, startDateStr, endDateStr;
+                std::cout << "Ingrese el ID del centro: ";
+                std::cin.ignore();
+                std::getline(std::cin, centerId);
+                std::cout << "Ingrese la fecha de inicio (dd-mm-yyyy): ";
+                std::getline(std::cin, startDateStr);
+                std::cout << "Ingrese la fecha de fin (dd-mm-yyyy): ";
+                std::getline(std::cin, endDateStr);
 
-                std::string startDateStr;
-                std::cout << "Ingrese la fecha de inicio (dd-mm-aaaa): ";
-                std::cin >> startDateStr;
-
-                std::string endDateStr;
-                std::cout << "Ingrese la fecha de fin (dd-mm-aaaa): ";
-                std::cin >> endDateStr;
-
-                // Parse dates
                 time_t start = parseDate(startDateStr);
                 time_t end = parseDate(endDateStr);
 
-                if (start == -1 || end == -1) {
-                    std::cout << "Formato de fecha invalido. Use dd-mm-aaaa." << std::endl;
-                    break;
-                }
-
-                int count = shipmentService->totalShipmentsByCenterAndDate(distributionCenterId, start, end);
-                std::cout << "Total de envios en el centro " << distributionCenterId
-                          << " entre las fechas: " << startDateStr << " y " << endDateStr
-                          << "es: " << count << std::endl;
+                int count = shipmentServicePtr->totalShipmentsByCenterAndDate(centerId, start, end);
+                std::cout << "Total de envios en el centro " << centerId << " entre "
+                         << startDateStr << " y " << endDateStr << ": " << count << std::endl;
                 break;
             }
             case 7: {
-                int weeklyLimit;
-                std::cout << "Ingrese el limite semanal: ";
-                std::cin >> weeklyLimit;
-
-                List overloaded = shipmentService->overloadedCenters(weeklyLimit);
-                std::cout << "Centros con sobrecarga (mas de " << weeklyLimit << " envios):\n";
-                
-                Node* curr = overloaded.getHead();
-                while (curr != nullptr) {
+                List overloaded = shipmentServicePtr->overloadedCenters();
+                std::cout << "Centros sobrecargados:" << std::endl;
+                Node* current = overloaded.getHead();
+                while (current != nullptr) {
                     try {
-                        std::string centerId = std::any_cast<std::string>(curr->getData());
+                        std::string centerId = std::any_cast<std::string>(current->getData());
                         std::cout << "- " << centerId << std::endl;
-                    } catch (const std::bad_any_cast&) {}
-                    curr = curr->getNext();
+                    } catch (const std::bad_any_cast&) {
+                        std::cout << "- [Error en datos]" << std::endl;
+                    }
+                    current = current->getNext();
                 }
                 break;
             }
             case 8: {
                 int clientId;
-                std::cout << "Ingrese el ID del Cliente: ";
+                std::cout << "Ingrese el ID del cliente: ";
                 std::cin >> clientId;
 
-                 List shipmentsList = shipmentService->findShipmentsByClient(clientId);
-                std::cout << "Envios del cliente " << clientId << ":\n";
-                
-                Node* curr = shipmentsList.getHead();
-                while (curr != nullptr) {
+                List clientShipments = shipmentServicePtr->findShipmentsByClient(clientId);
+                std::cout << "Envios del cliente " << clientId << ":" << std::endl;
+                Node* current = clientShipments.getHead();
+                while (current != nullptr) {
                     try {
-                        Shipment s = std::any_cast<Shipment>(curr->getData());
-                        s.display();
-                    } catch (const std::bad_any_cast&) {}
-                    curr = curr->getNext();
+                        Shipment* shipment = std::any_cast<Shipment*>(current->getData());
+                        shipment->display();
+                        std::cout << "------------------------" << std::endl;
+                    } catch (const std::bad_any_cast&) {
+                        std::cout << "Error al procesar envio" << std::endl;
+                    }
+                    current = current->getNext();
                 }
                 break;
             }
             case 0:
-                std::cout << "Volviendo al menú principal...\n";
+                std::cout << "Volviendo al menu principal..." << std::endl;
                 break;
             default:
-                std::cout << "Opcion invalida. Intente de nuevo.\n";
-                break;
+                std::cout << "Opcion no valida. Intente de nuevo." << std::endl;
         }
     } while (choice != 0);
 }

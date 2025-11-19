@@ -40,24 +40,39 @@ void DistributionCenter::display() const {
     std::cout << "Paquetes diarios: " << dailyPackages << std::endl;
     std::cout << "Empleados: " << numEmployees << std::endl;
     
-    if (!employees.empty()) {
-        std::cout << "\nEmpleados detallados (" << employees.size() << "):" << std::endl;
-        for (const auto& emp : employees) {
-            emp.display();
+    if (!employees.isEmpty()) {
+        std::cout << "\nEmpleados detallados (" << employees.getSize() << "):" << std::endl;
+        Node* current = employees.getHead();
+        while (current != nullptr) {
+            try {
+                Employee emp = std::any_cast<Employee>(current->getData());
+                emp.display();
+            } catch (const std::bad_any_cast&) {}
+            current = current->getNext();
         }
     }
     
-    if (!connections.empty()) {
-        std::cout << "\nConexiones (" << connections.size() << "):" << std::endl;
-        for (const auto& conn : connections) {
-            conn.display();
+    if (!connections.isEmpty()) {
+        std::cout << "\nConexiones (" << connections.getSize() << "):" << std::endl;
+        Node* current = connections.getHead();
+        while (current != nullptr) {
+            try {
+                Connection conn = std::any_cast<Connection>(current->getData());
+                conn.display();
+            } catch (const std::bad_any_cast&) {}
+            current = current->getNext();
         }
     }
     
-    if (!warehouse.empty()) {
-        std::cout << "\nPaquetes en almacen (" << warehouse.size() << "):" << std::endl;
-        for (const auto& pkg : warehouse) {
-            pkg.display();
+    if (!warehouse.isEmpty()) {
+        std::cout << "\nPaquetes en almacen (" << warehouse.getSize() << "):" << std::endl;
+        Node* current = warehouse.getHead();
+        while (current != nullptr) {
+            try {
+                Package pkg = std::any_cast<Package>(current->getData());
+                pkg.display();
+            } catch (const std::bad_any_cast&) {}
+            current = current->getNext();
         }
     }
     std::cout << "=============================" << std::endl;
@@ -91,16 +106,16 @@ void DistributionCenter::setDailyPackages(int daily) { dailyPackages = daily; }
 void DistributionCenter::setNumEmployees(int num) { numEmployees = num; }
 
 void DistributionCenter::addEmployee(const Employee& emp) {
-    employees.push_back(emp);
-    numEmployees = employees.size();
+    employees.push(std::any(emp));
+    numEmployees = employees.getSize();
 }
 
 void DistributionCenter::addConnection(const Connection& conn) {
-    connections.push_back(conn);
+    connections.push(std::any(conn));
 }
 
 void DistributionCenter::addPackage(const Package& pkg) {
-    warehouse.push_back(pkg);
+    warehouse.push(std::any(pkg));
 }
 
 

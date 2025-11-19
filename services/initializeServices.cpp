@@ -21,3 +21,25 @@ void initializeServices() {
     distributionCenterService = new DistributionCenterService(distributionCenters, distributionCenterManagers);
     shipmentManagerService = new ShipmentManagerService(transportService, distributionCenterService, shipmentManagers);
 }
+
+void cleanupServices() {
+    // Free all allocated services
+    delete packageService;
+    delete shipmentService;
+    delete clientService;
+    delete employeeService;
+    delete connectionService;
+    delete transportService;
+    delete distributionCenterService;
+    delete shipmentManagerService;
+    
+    // Reset pointers to nullptr
+    packageService = nullptr;
+    shipmentService = nullptr;
+    clientService = nullptr;
+    employeeService = nullptr;
+    connectionService = nullptr;
+    transportService = nullptr;
+    distributionCenterService = nullptr;
+    shipmentManagerService = nullptr;
+}

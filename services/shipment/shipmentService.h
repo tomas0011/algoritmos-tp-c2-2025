@@ -3,7 +3,9 @@
 
 #include "../../entities/shipment/Shipment.h"
 #include "../../utils/dataStructures/list/List.h"
-#include "../../storage/storage.h"
+#include "../../utils/algorithms/knapsackProblem/knapsack.h"
+#include "../../services/transport/transportService.h"
+#include "../../services/distributionCenter/distributionCenterService.h"
 #include <ctime>
 #include <unordered_map>
 
@@ -17,13 +19,13 @@ public:
     // CRUD operations
     void createShipment(int id, const std::string& state, double cost, int priority, double totalPrice,
                        double totalWeight, int shimpmentManagerId, std::string distributionCenterId,
-                       List packages, int originId, int destinationId,
+                       const List& packages, std::string originId, std::string destinationId,
                        int clientId, time_t createDate, time_t leftWarehouseDate,
                        time_t estimatedDeliveryDate, time_t deliveryDate);
     Shipment* getShipmentById(int id);
     void updateShipment(int id, const std::string& state, double cost, int priority, double totalPrice,
                        double totalWeight, int shimpmentManagerId, std::string distributionCenterId,
-                       List packages, int originId, int destinationId,
+                       const List& packages, std::string originId, std::string destinationId,
                        int clientId, time_t createDate, time_t leftWarehouseDate,
                        time_t estimatedDeliveryDate, time_t deliveryDate);
     void deleteShipment(int id);
@@ -38,11 +40,14 @@ public:
     int totalShipmentsByCenterAndDate(std::string centerId, time_t start, time_t end);
     
     // centros de distribucion que han sobrepasado un limite semanal de envios
-    List overloadedCenters(int weeklyLimit); 
+    List overloadedCenters();
 
     // envios pertenecientes a un cliente
-    List findShipmentsByClient(int clientId);  
+    List findShipmentsByClient(int clientId);
 
+    // Punto C
+
+    List generarCargaOptima(int transportId, std::string distributionCenterId) const;
 };
 
 #endif // SHIPMENT_SERVICE_H

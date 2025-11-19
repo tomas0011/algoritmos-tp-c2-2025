@@ -47,8 +47,8 @@ public:
     // Obtener un centro por codigo
     DistributionCenter* getCenter(const std::string& code);
     
-    // Obtener todos los centros como list
-     List getAllCenters();
+    // Obtener todos los centros como List 
+    List getAllCenters();
     
     // Obtener estadisticas generales
     void displayStatistics();

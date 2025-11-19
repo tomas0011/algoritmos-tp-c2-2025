@@ -17,7 +17,7 @@ private:
     int numEmployees;           // Número de empleados
     List employees;      // Lista detallada de empleados (opcional)
     List connections;  // Conexiones con otros centros
-    List warehouse;         // Paquetes en almacen
+    List warehouse;       // Paquetes en almacen
 
 public:
     // Constructor principal (según formato del archivo centros.txt)
@@ -30,7 +30,7 @@ public:
         int numEmployees
     );
 
-    // Constructor completo
+    // Constructor completo (con listas opcionales)
     DistributionCenter(
         const std::string& code,
         const std::string& name,
@@ -38,9 +38,9 @@ public:
         int capacity,
         int dailyPackages,
         int numEmployees,
-         const List& employees,
-        const List& connections,
-        const List& warehouse
+        const List& employees,
+        const List& connections = List(),
+        const List& warehouse = List()
     );
 
     void display() const;
@@ -56,7 +56,6 @@ public:
     const List& getEmployees() const;
     const List& getConnections() const;
     const List& getWarehouse() const;
-
 
     // Setters
     void setCapacity(int cap);

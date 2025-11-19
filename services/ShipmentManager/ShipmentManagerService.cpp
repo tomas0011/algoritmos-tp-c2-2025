@@ -153,8 +153,13 @@ List ShipmentManagerService::generarCargaOptima(int transportId, std::string dis
         capacidad
     );
 
-    // 5. Devolver los seleccionados
+    // 5. Devolver los seleccionados convertidos a List
+    List result;
+    for (const Package& pkg : resultado.paquetesSeleccionados) {
+        result.push(std::any(pkg));
+    }
+    
     delete transporte;
     delete centro;
-    return resultado.paquetesSeleccionados;
+    return result;
 }

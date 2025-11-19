@@ -4,8 +4,7 @@
 #include <string>
 #include <ctime>
 #include "../package/Package.h"
-#include "../utils/dataStructures/list/List.h"
-
+#include "../../utils/dataStructures/list/List.h"
 
 class Shipment {
 private:
@@ -18,8 +17,8 @@ private:
     int shimpmentManagerId;
     std::string distributionCenterId;
     List packages;
-    int originId;
-    int destinationId;
+    std::string originId;
+    std::string destinationId;
     int clientId;
     time_t createDate;
     time_t leftWarehouseDate;
@@ -28,8 +27,8 @@ private:
 
 public:
     Shipment(int id, const std::string& state, double cost, int priority, double totalPrice, double totalWeight,
-             int shimpmentManagerId, std::string distributionCenterId, const  List packages,
-             int originId, int destinationId, int clientId, time_t createDate, time_t leftWarehouseDate,
+             int shimpmentManagerId, std::string distributionCenterId, const List& packages,
+             std::string originId, std::string destinationId, int clientId, time_t createDate, time_t leftWarehouseDate,
              time_t estimatedDeliveryDate, time_t deliveryDate);
     void display() const;
 
@@ -42,9 +41,9 @@ public:
     double getTotalWeight() const;
     int getShimpmentManagerId() const;
     std::string getDistributionCenterId() const;
-    List getPackages() const;
-    int getOriginId() const;
-    int getDestinationId() const;
+    const List& getPackages() const;
+    std::string getOriginId() const;
+    std::string getDestinationId() const;
     int getClientId() const;
     time_t getCreateDate() const;
     time_t getLeftWarehouseDate() const;

@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 #include <ctime>
-#include "../../utils/dataStructures/list/List.h"
+#include "../utils/dataStructures/list/List.h"
 
 void showDistributionCenterMenu() {
     int choice;
