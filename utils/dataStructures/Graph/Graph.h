@@ -96,11 +96,7 @@ public:
     Graph() = default;
 
     ~Graph() {
-        ::Node* current = nodes.getHead();
-        while (current != nullptr) {
-            delete any_cast<GraphNode*>(current->getData());
-            current = current->getNext();
-        }
+        clear();
     }
 
     // agrega un nodo y devuelve su indice
@@ -110,15 +106,15 @@ public:
     }
 
     // agrega una arista desde origen a destino
-void addArista(int origen, int destino, double peso = 1.0) {
-    if (origen >= 0 && origen < nodes.getSize() &&
-        destino >= 0 && destino < nodes.getSize()) {
-        GraphNode* nodeOrigen = any_cast<GraphNode*>(nodes.getNodeAt(origen)->getData());
-        nodeOrigen->addArista(origen, destino, peso);
-    } else {
-        cerr << "Error: indice de nodo invalido." << endl;
+    void addArista(int origen, int destino, double peso = 1.0) {
+        if (origen >= 0 && origen < nodes.getSize() &&
+            destino >= 0 && destino < nodes.getSize()) {
+            GraphNode* nodeOrigen = any_cast<GraphNode*>(nodes.getNodeAt(origen)->getData());
+            nodeOrigen->addArista(origen, destino, peso);
+        } else {
+            cerr << "Error: indice de nodo invalido." << endl;
+        }
     }
-}
 
     GraphNode* getNode(int index) const {
         if (index >= 0 && index < nodes.getSize()) {
@@ -139,6 +135,15 @@ void addArista(int origen, int destino, double peso = 1.0) {
         }
         return oss.str();
     }
+
+    void clear() {
+    ::Node* current = nodes.getHead();
+    while (current != nullptr) {
+        delete any_cast<GraphNode*>(current->getData());
+        current = current->getNext();
+    }
+    nodes.clear(); // limpia la lista, head = nullptr
+}
 
     void display() const {
         cout << toString();

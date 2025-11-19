@@ -48,25 +48,14 @@ public:
 
     List& operator=(const List& other) {
         if (this != &other) {
-            // Delete existing nodes
-            Node* current = head;
-            while (current != nullptr) {
-                Node* temp = current;
-                current = current->getNext();
-                delete temp;
-            }
+            clear();    // liberamos memoria de la lista actual
             copyFrom(other);
         }
         return *this;
     }
 
     ~List() {
-        Node* current = head;
-        while (current != nullptr) {
-            Node* temp = current;
-            current = current->getNext();
-            delete temp;
-        }
+        clear();
     }
 
     void unshift(any data) {
@@ -152,6 +141,16 @@ public:
             current = current->getNext();
         }
         return sublist;
+    }
+
+    void clear() {
+        Node* current = head;
+        while (current != nullptr) {
+            Node* temp = current;
+            current = current->getNext();
+            delete temp;
+        }
+        head = nullptr;
     }
 };
 

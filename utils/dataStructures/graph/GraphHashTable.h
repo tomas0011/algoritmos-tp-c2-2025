@@ -188,17 +188,7 @@ public:
     }
 
     ~GraphHashTable() {
-        // Limpiar todos los nodos
-        List allCodes = nodes->getKeys();
-        Node* current = allCodes.getHead();
-        
-        while (current != nullptr) {
-            string code = any_cast<string>(current->getData());
-            HashGraphNode* node = any_cast<HashGraphNode*>(nodes->search(code));
-            delete node;
-            current = current->getNext();
-        }
-        
+        clear();
         delete nodes;
     }
 
@@ -318,6 +308,22 @@ public:
     bool hasArista(string origin, string destination) const {
         return getAristaWeight(origin, destination) >= 0;
     }
+
+    void clear() {
+    // Eliminar todos los HashGraphNode
+    List allCodes = nodes->getKeys();
+    Node* current = allCodes.getHead();
+    while (current != nullptr) {
+        string code = any_cast<string>(current->getData());
+        HashGraphNode* node = any_cast<HashGraphNode*>(nodes->search(code));
+        delete node;
+        current = current->getNext();
+    }
+    
+    // Limpiar la HashTable
+    nodes->clear();
+    nodeCount = 0;
+}
 
     // Mostrar el grafo completo
     void display() const {

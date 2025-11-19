@@ -64,6 +64,19 @@ public:
 
         return oss.str();
     }
+
+    void clear() {
+        if (left) {
+            left->clear();
+            delete left;
+            left = nullptr;
+        }
+        if (right) {
+            right->clear();
+            delete right;
+            right = nullptr;
+        }
+    }
 };
 
 class Tree {
@@ -82,6 +95,11 @@ public:
 
     void display() const {
         cout << "Raiz: " << raiz->toString() << endl;
+    }
+
+    void clear() {
+        raiz->clear();
+        delete raiz;
     }
 };
 
