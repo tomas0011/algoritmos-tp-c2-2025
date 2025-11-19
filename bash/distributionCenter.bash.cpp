@@ -17,6 +17,8 @@ void showDistributionCenterMenu() {
         std::cout << "6. Conectar centros de distribucion.\n";
         std::cout << "7. Mostrar estadisticas generales.\n";
         std::cout << "8. Calcular camino minimo entre centros. (A.5)\n";
+        std::cout << "9. Agregar paquete a un centro.\n";
+        std::cout << "10. Mostrar paquetes del warehouse de un centro.\n";
         std::cout << "0. Volver al menú principal\n";
         std::cout << "Seleccione una opcion: ";
         std::cin >> choice;
@@ -114,6 +116,41 @@ void showDistributionCenterMenu() {
                 std::cin >> destination;
                 
                 distributionCenterService->calculateShortestPath(origin, destination);
+                break;
+            }
+            case 9: {
+                std::string centerCode;
+                std::string pkgId, recipient, address;
+                float weight;
+
+                std::cout << "Ingrese el codigo del centro: ";
+                std::cin >> centerCode;
+
+                std::cout << "Ingrese el ID del paquete: ";
+                std::cin >> pkgId;
+
+                std::cout << "Ingrese el destinatario: ";
+                std::cin.ignore();
+                std::getline(std::cin, recipient);
+
+                std::cout << "Ingrese la direccion: ";
+                std::getline(std::cin, address);
+
+                std::cout << "Ingrese el peso (kg): ";
+                std::cin >> weight;
+
+                Package pkg(pkgId, recipient, address, weight);
+
+                distributionCenterService->addPackageToCenter(centerCode, pkg);
+                break;
+            }
+
+            case 10: {
+                std::string centerCode;
+                std::cout << "Ingrese el codigo del centro: ";
+                std::cin >> centerCode;
+
+                distributionCenterService->showWarehouse(centerCode);
                 break;
             }
             case 0:

@@ -46,6 +46,13 @@ public:
     
     // Obtener un centro por codigo
     DistributionCenter* getCenter(const std::string& code);
+
+    // Agregar un paquete al almacén de un centro
+    void addPackageToCenter(const std::string& centerCode, const Package& pkg);
+
+    // Obtener el warehouse (lista de paquetes) de un centro por código
+    // Devuelve una copia de la lista interna para evitar exponer referencias directas.
+    List getWarehouseOfCenter(const std::string& centerCode);
     
     // Obtener todos los centros como List 
     List getAllCenters();

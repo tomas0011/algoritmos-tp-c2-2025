@@ -57,6 +57,68 @@ bool DistributionCenterService::addCenter(const std::string& code, const std::st
     }
 }
 
+// Agregar un paquete al almacén de un centro
+void DistributionCenterService::addPackageToCenter(const std::string& centerCode, const Package& pkg) {
+    if (distributionCenterManagers.isEmpty()) {
+        std::cout << "No hay gestores de centros disponibles.\n";
+        return;
+    }
+
+    try {
+        DistributionCenterManager* manager = std::any_cast<DistributionCenterManager*>(distributionCenterManagers.getHead()->getData());
+        if (!manager->hasCenter(centerCode)) {
+            std::cout << "Error: Centro con codigo '" << centerCode << "' no encontrado." << std::endl;
+            return;
+        }
+
+        DistributionCenter* center = manager->getCenter(centerCode);
+        if (center == nullptr) {
+            std::cout << "Error al obtener el centro.\n";
+            return;
+        }
+
+        // Validación simple: revisar capacidad (opcional)
+        // Si querés que el centro no acepte más paquetes cuando supera capacity,
+        // descomentá las siguientes líneas:
+        /*
+        if (center->getWarehouse().getSize() >= center->getCapacity()) {
+            std::cout << "Imposible agregar paquete: centro alcanzó su capacidad máxima.\n";
+            return;
+        }
+        */
+
+        center->addPackage(pkg);
+        std::cout << "Paquete (ID: " << pkg.getId() << ") agregado al centro " << centerCode << " correctamente.\n";
+    } catch (const std::bad_any_cast&) {
+        std::cout << "Error al acceder al gestor de centros." << std::endl;
+    }
+}
+
+// Obtener el warehouse (lista de paquetes) de un centro por código
+List DistributionCenterService::getWarehouseOfCenter(const std::string& centerCode) {
+    List empty;
+    if (distributionCenterManagers.isEmpty()) {
+        return empty;
+    }
+
+    try {
+        DistributionCenterManager* manager = std::any_cast<DistributionCenterManager*>(distributionCenterManagers.getHead()->getData());
+        if (!manager->hasCenter(centerCode)) {
+            return empty;
+        }
+
+        DistributionCenter* center = manager->getCenter(centerCode);
+        if (center == nullptr) {
+            return empty;
+        }
+
+        // Devuelve una copia del List interno (List debe soportar copy).
+        return center->getWarehouse();
+    } catch (const std::bad_any_cast&) {
+        return empty;
+    }
+}
+
 // Eliminar un centro existente
 bool DistributionCenterService::removeCenter(const std::string& code) {
     std::cout << "Funcion removeCenter no implementada." << std::endl;
