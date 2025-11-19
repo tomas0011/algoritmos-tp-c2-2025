@@ -18,5 +18,7 @@ int main() {
     // Call the menu function from bash.cpp
     showMenu();
 
+    cleanupServices();
+
     return 0;
 }
