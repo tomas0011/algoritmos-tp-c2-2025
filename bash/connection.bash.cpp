@@ -11,7 +11,7 @@ void showConnectionMenu() {
         std::cout << "3. Actualizar una conexion\n";
         std::cout << "4. Eliminar una conexion\n";
         std::cout << "5. Mostrar todas las conexiones\n";
-        std::cout << "0. Volver al menú principal\n";
+        std::cout << "0. Volver al menu principal\n";
         std::cout << "Seleccione una opcion: ";
         std::cin >> choice;
 
