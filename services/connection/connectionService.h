@@ -45,6 +45,7 @@ public:
     Connection* getConnectionById(int id);
     void updateConnection(int id, const std::string& distributionCenterOrigin, const std::string& distributionCenterDestination, double distance);
     void deleteConnection(int id);
+    void deleteConnectionsByCenter(const std::string& centerCode);
 
     // Utility functions
     void displayAllConnections();

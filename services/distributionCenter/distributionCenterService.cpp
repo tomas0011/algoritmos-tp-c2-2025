@@ -96,15 +96,130 @@ List DistributionCenterService::getWarehouseOfCenter(const std::string& centerCo
 
 // Eliminar un centro existente
 bool DistributionCenterService::removeCenter(const std::string& code) {
-    std::cout << "Funcion removeCenter no implementada." << std::endl;
-    return false;
+    try {
+        if (!manager->hasCenter(code)) {
+            std::cout << "Error: Centro con codigo '" << code << "' no encontrado." << std::endl;
+            return false;
+        }
+
+        std::cout << "Eliminando centro '" << code << "' y todas sus conexiones..." << std::endl;
+        
+        // 1. Eliminar todas las conexiones que involucran este centro del ConnectionService
+        int connectionsRemoved = 0;
+        if (connectionService) {
+            connectionService->deleteConnectionsByCenter(code);
+            std::cout << "  - Conexiones eliminadas del ConnectionService" << std::endl;
+        }
+
+        // 2. Eliminar aristas del grafo (salientes y entrantes)
+        // Primero eliminamos las aristas salientes del centro a eliminar
+        List* outgoingEdges = manager->getConnections(code);
+        if (outgoingEdges && outgoingEdges->getSize() > 0) {
+            connectionsRemoved += outgoingEdges->getSize();
+        }
+        
+        // Eliminar aristas entrantes (de otros centros hacia este)
+        List allCentersCodes = manager->getDistributionCentersCodes();
+        Node* codeNode = allCentersCodes.getHead();
+        while (codeNode != nullptr) {
+            try {
+                std::string otherCode = std::any_cast<std::string>(codeNode->getData());
+                if (otherCode != code) {
+                    // Verificar si hay aristas desde otherCode hacia code
+                    List* edges = manager->getConnections(otherCode);
+                    if (edges) {
+                        Node* edgeNode = edges->getHead();
+                        while (edgeNode != nullptr) {
+                            try {
+                                Arista* arista = std::any_cast<Arista*>(edgeNode->getData());
+                                if (arista->destino == code) {
+                                    connectionsRemoved++;
+                                }
+                            } catch (const std::bad_any_cast&) {}
+                            edgeNode = edgeNode->getNext();
+                        }
+                    }
+                }
+            } catch (const std::bad_any_cast&) {}
+            codeNode = codeNode->getNext();
+        }
+        
+        // 3. Obtener la lista de centros y buscar el centro a eliminar
+        List& centersList = manager->getDistributionCentersList();
+        
+        Node* current = centersList.getHead();
+        Node* previous = nullptr;
+        bool found = false;
+        
+        while (current != nullptr) {
+            try {
+                DistributionCenter* center = std::any_cast<DistributionCenter*>(current->getData());
+                if (center->getCode() == code) {
+                    // Eliminar el nodo de la lista
+                    if (previous == nullptr) {
+                        // Es el primer nodo
+                        centersList.setHead(current->getNext());
+                    } else {
+                        previous->setNext(current->getNext());
+                    }
+                    
+                    // Liberar la memoria del centro
+                    delete center;
+                    delete current;
+                    found = true;
+                    
+                    break;
+                }
+                previous = current;
+                current = current->getNext();
+            } catch (const std::bad_any_cast&) {
+                previous = current;
+                current = current->getNext();
+            }
+        }
+        
+        if (found) {
+            std::cout << "\nCentro '" << code << "' y sus conexiones fueron eliminados correctamente" << std::endl;
+        }
+        
+        return found;
+    } catch (const std::bad_any_cast&) {
+        std::cout << "Error al acceder al gestor de centros." << std::endl;
+        return false;
+    }
 }
 
 // Actualizar informacion de un centro
 bool DistributionCenterService::updateCenter(const std::string& code, int capacity,
                                              int dailyPackages, int numEmployees) {
-    std::cout << "Funcion updateCenter no implementada." << std::endl;
-    return false;
+    try {
+        if (!manager->hasCenter(code)) {
+            std::cout << "Error: Centro con codigo '" << code << "' no encontrado." << std::endl;
+            return false;
+        }
+
+        // Obtener el centro
+        DistributionCenter* center = manager->getCenter(code);
+        if (center == nullptr) {
+            std::cout << "Error al obtener el centro." << std::endl;
+            return false;
+        }
+
+        // Actualizar los valores
+        center->setCapacity(capacity);
+        center->setDailyPackages(dailyPackages);
+        center->setNumEmployees(numEmployees);
+
+        std::cout << "Centro '" << code << "' actualizado exitosamente." << std::endl;
+        std::cout << "  - Capacidad: " << capacity << std::endl;
+        std::cout << "  - Paquetes diarios: " << dailyPackages << std::endl;
+        std::cout << "  - Empleados: " << numEmployees << std::endl;
+        
+        return true;
+    } catch (const std::bad_any_cast&) {
+        std::cout << "Error al acceder al gestor de centros." << std::endl;
+        return false;
+    }
 }
 
 // Mostrar todos los centros

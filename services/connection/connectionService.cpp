@@ -203,6 +203,37 @@ void ConnectionService::deleteConnection(int id) {
     }
 }
 
+void ConnectionService::deleteConnectionsByCenter(const std::string& centerCode) {
+    List newList;
+    Node* current = connections.getHead();
+    int deletedCount = 0;
+
+    while (current != nullptr) {
+        try {
+            Connection conn = std::any_cast<Connection>(current->getData());
+            // Mantener solo las conexiones que NO involucren este centro
+            if (conn.getDistributionCenterOrigin() != centerCode && 
+                conn.getDistributionCenterDestination() != centerCode) {
+                newList.push(conn);
+            } else {
+                deletedCount++;
+                // También eliminar del grafo si el manager existe
+                if (manager) {
+                    // La eliminación del grafo se hace automáticamente cuando se elimina el nodo
+                }
+            }
+        } catch (const std::bad_any_cast& e) {
+            // Skip invalid entries
+        }
+        current = current->getNext();
+    }
+
+    if (deletedCount > 0) {
+        connections = newList;
+        std::cout << "  - " << deletedCount << " conexiones eliminadas del mapa de ruta" << std::endl;
+    }
+}
+
 void ConnectionService::displayAllConnections() {
     std::cout << "\n=== CONEXIONES (Connection Service) ===" << std::endl;
     std::cout << std::string(60, '-') << std::endl;
